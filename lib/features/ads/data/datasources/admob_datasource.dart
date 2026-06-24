@@ -14,8 +14,7 @@ class AdmobDatasource {
     }
   }
 
-  BannerAd createBannerAd(
-      {required BannerAdListener listener}) {
+  BannerAd createBannerAd({required BannerAdListener listener}) {
     return BannerAd(
       adUnitId: bannerAdUnitId,
       size: AdSize.banner,
@@ -69,7 +68,9 @@ class InterstitialAdManager {
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
           _interstitialAd = ad;
-          debugPrint('[ADS] Ad loaded successfully | showWhenReady=$_showWhenReady');
+          debugPrint(
+            '[ADS] Ad loaded successfully | showWhenReady=$_showWhenReady',
+          );
           if (_showWhenReady) {
             _showWhenReady = false;
             _attachCallbackAndShow(ad);

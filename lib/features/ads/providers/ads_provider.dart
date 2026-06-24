@@ -12,15 +12,13 @@ final shouldShowAdsProvider = Provider<bool>((ref) {
   // Only show ads if subscription data is available and user is NOT premium
   return subscriptionAsync.maybeWhen(
     data: (subscription) => !subscription.isPremium,
-    orElse: () =>
-        true, // Default to showing ads if data not yet loaded
+    orElse: () => true, // Default to showing ads if data not yet loaded
   );
 });
 
 /// Provider for managing interstitial ad logic.
 /// Handles checking eligibility and triggering ad display.
-final interstitialAdServiceProvider =
-    Provider<InterstitialAdService>((ref) {
+final interstitialAdServiceProvider = Provider<InterstitialAdService>((ref) {
   // Initialize ad loading when service is created
   InterstitialAdManager.loadAd();
   return InterstitialAdService(ref);
@@ -44,17 +42,15 @@ class InterstitialAdService {
     final shouldShowAds = _ref.read(shouldShowAdsProvider);
 
     // Await real persisted value — fixes count=0 bug from AsyncValue not yet loaded
-    final currentCount =
-        await _ref.read(interstitialAdCounterProvider.future);
+    final currentCount = await _ref.read(interstitialAdCounterProvider.future);
 
     // Increment first, then check new value
-    await _ref
-        .read(interstitialAdCounterProvider.notifier)
-        .incrementCount();
+    await _ref.read(interstitialAdCounterProvider.notifier).incrementCount();
 
     final newCount = currentCount + 1;
     debugPrint(
-        '[ADS] checking: count=$newCount, isPremium=${!shouldShowAds}, adLoaded=${InterstitialAdManager.isAdLoaded}');
+      '[ADS] checking: count=$newCount, isPremium=${!shouldShowAds}, adLoaded=${InterstitialAdManager.isAdLoaded}',
+    );
 
     if (!shouldShowAds) return;
 

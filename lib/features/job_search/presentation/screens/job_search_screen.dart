@@ -11,29 +11,25 @@ const _defaultPortals = [
   JobPortal(
     id: 'bumeran',
     name: 'Bumeran',
-    url:
-        'https://www.bumeran.com.ar/empleos-busqueda-{query}.html',
+    url: 'https://www.bumeran.com.ar/empleos-busqueda-{query}.html',
     isDefault: true,
   ),
   JobPortal(
     id: 'zonajobs',
     name: 'ZonaJobs',
-    url:
-        'https://www.zonajobs.com.ar/empleos-busqueda-{query}.html',
+    url: 'https://www.zonajobs.com.ar/empleos-busqueda-{query}.html',
     isDefault: true,
   ),
   JobPortal(
     id: 'linkedin',
     name: 'LinkedIn Jobs',
-    url:
-        'https://www.linkedin.com/jobs/search/?keywords={query}',
+    url: 'https://www.linkedin.com/jobs/search/?keywords={query}',
     isDefault: true,
   ),
   JobPortal(
     id: 'computrabajo',
     name: 'Computrabajo',
-    url:
-        'https://www.computrabajo.com.ar/trabajo-de-{query}',
+    url: 'https://www.computrabajo.com.ar/trabajo-de-{query}',
     isDefault: true,
   ),
   JobPortal(
@@ -48,12 +44,10 @@ class JobSearchScreen extends ConsumerStatefulWidget {
   const JobSearchScreen({super.key});
 
   @override
-  ConsumerState<JobSearchScreen> createState() =>
-      _JobSearchScreenState();
+  ConsumerState<JobSearchScreen> createState() => _JobSearchScreenState();
 }
 
-class _JobSearchScreenState
-    extends ConsumerState<JobSearchScreen> {
+class _JobSearchScreenState extends ConsumerState<JobSearchScreen> {
   List<JobPortal> _portals = [];
   bool _loading = true;
 
@@ -82,8 +76,7 @@ class _JobSearchScreenState
       final data = doc.data();
       if (data != null && data['jobPortals'] != null) {
         final saved = (data['jobPortals'] as List)
-            .map((e) => JobPortal.fromJson(
-                Map<String, dynamic>.from(e as Map)))
+            .map((e) => JobPortal.fromJson(Map<String, dynamic>.from(e as Map)))
             .toList();
         if (mounted) {
           setState(() {
@@ -116,10 +109,7 @@ class _JobSearchScreenState
       await FirebaseFirestore.instance
           .collection('profiles')
           .doc(user.uid)
-          .update({
-        'jobPortals':
-            _portals.map((p) => p.toJson()).toList()
-      });
+          .update({'jobPortals': _portals.map((p) => p.toJson()).toList()});
     } catch (_) {}
   }
 
@@ -131,26 +121,26 @@ class _JobSearchScreenState
     }
   }
 
-  void _showSearchSheet(BuildContext context,
-      JobPortal portal, List<String> allSkills) {
+  void _showSearchSheet(
+    BuildContext context,
+    JobPortal portal,
+    List<String> allSkills,
+  ) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (_) => _SearchSheet(
-          portal: portal, allSkills: allSkills),
+      builder: (_) => _SearchSheet(portal: portal, allSkills: allSkills),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return const Scaffold(
-          body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    final profile =
-        ref.watch(userProfileProvider).asData?.value;
+    final profile = ref.watch(userProfileProvider).asData?.value;
     final allSkills = profile?.skills.toList() ?? [];
 
     return Scaffold(
@@ -160,77 +150,72 @@ class _JobSearchScreenState
         children: [
           Text(
             'Portales de empleo',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 8),
-          ..._portals.map((portal) => Card(
-                margin: const EdgeInsets.only(bottom: 8),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                      16, 12, 8, 12),
-                  child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  portal.name,
-                                  style: const TextStyle(
-                                      fontWeight:
-                                          FontWeight.bold,
-                                      fontSize: 15),
+          ..._portals.map(
+            (portal) => Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 8, 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                portal.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
                                 ),
-                                Text(
-                                  _domainOf(portal.url),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                                context)
-                                            .colorScheme
-                                            .onSurfaceVariant,
-                                      ),
-                                ),
-                              ],
-                            ),
+                              ),
+                              Text(
+                                _domainOf(portal.url),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
+                              ),
+                            ],
                           ),
-                          if (!portal.isDefault)
-                            IconButton(
-                              icon: const Icon(
-                                  Icons.delete_outline,
-                                  size: 20),
-                              onPressed: () {
-                                setState(() => _portals
-                                    .removeWhere((p) =>
-                                        p.id == portal.id));
-                                _savePortals();
-                              },
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 8),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () => _showSearchSheet(
-                              context, portal, allSkills),
-                          child: const Text('Visitar'),
                         ),
+                        if (!portal.isDefault)
+                          IconButton(
+                            icon: const Icon(Icons.delete_outline, size: 20),
+                            onPressed: () {
+                              setState(
+                                () => _portals.removeWhere(
+                                  (p) => p.id == portal.id,
+                                ),
+                              );
+                              _savePortals();
+                            },
+                          ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () =>
+                            _showSearchSheet(context, portal, allSkills),
+                        child: const Text('Visitar'),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )),
+              ),
+            ),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -259,8 +244,7 @@ class _JobSearchScreenState
 class _SearchSheet extends StatefulWidget {
   final JobPortal portal;
   final List<String> allSkills;
-  const _SearchSheet(
-      {required this.portal, required this.allSkills});
+  const _SearchSheet({required this.portal, required this.allSkills});
 
   @override
   State<_SearchSheet> createState() => _SearchSheetState();
@@ -284,67 +268,55 @@ class _SearchSheetState extends State<_SearchSheet> {
 
   Future<void> _search() async {
     final custom = _customCtrl.text.trim();
-    final query = custom.isNotEmpty
-        ? custom
-        : _selectedSkills.join(' ');
+    final query = custom.isNotEmpty ? custom : _selectedSkills.join(' ');
     if (query.isEmpty) return;
-    final urlStr = widget.portal.url
-        .replaceAll('{query}', Uri.encodeComponent(query));
+    final urlStr = widget.portal.url.replaceAll(
+      '{query}',
+      Uri.encodeComponent(query),
+    );
     final uri = Uri.parse(urlStr);
     if (await canLaunchUrl(uri)) {
-      await launchUrl(uri,
-          mode: LaunchMode.externalApplication);
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
     if (mounted) Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final canSearch = _customCtrl.text.trim().isNotEmpty ||
-        _selectedSkills.isNotEmpty;
+    final canSearch =
+        _customCtrl.text.trim().isNotEmpty || _selectedSkills.isNotEmpty;
 
     return Padding(
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
         top: 20,
-        bottom:
-            20 + MediaQuery.of(context).viewInsets.bottom,
+        bottom: 20 + MediaQuery.of(context).viewInsets.bottom,
       ),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '¿Qué buscás?',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text('¿Qué buscás?', style: Theme.of(context).textTheme.titleLarge),
             Text(
               'en ${widget.portal.name}',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant,
-                  ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 20),
             if (widget.allSkills.isNotEmpty) ...[
               Text(
                 'Tus habilidades',
-                style:
-                    Theme.of(context).textTheme.labelMedium,
+                style: Theme.of(context).textTheme.labelMedium,
               ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 6,
                 children: widget.allSkills.map((s) {
-                  final isSelected =
-                      _selectedSkills.contains(s);
+                  final isSelected = _selectedSkills.contains(s);
                   return FilterChip(
                     label: Text(s),
                     selected: isSelected,
@@ -363,10 +335,8 @@ class _SearchSheetState extends State<_SearchSheet> {
             TextField(
               controller: _customCtrl,
               decoration: const InputDecoration(
-                labelText:
-                    'O escribí una búsqueda personalizada',
-                hintText:
-                    'ej: Desarrollador Flutter senior...',
+                labelText: 'O escribí una búsqueda personalizada',
+                hintText: 'ej: Desarrollador Flutter senior...',
               ),
               onChanged: (_) => setState(() {}),
             ),
@@ -392,12 +362,10 @@ class _AddPortalDialog extends StatefulWidget {
   const _AddPortalDialog({required this.onAdd});
 
   @override
-  State<_AddPortalDialog> createState() =>
-      _AddPortalDialogState();
+  State<_AddPortalDialog> createState() => _AddPortalDialogState();
 }
 
-class _AddPortalDialogState
-    extends State<_AddPortalDialog> {
+class _AddPortalDialogState extends State<_AddPortalDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _urlCtrl = TextEditingController();
@@ -424,21 +392,17 @@ class _AddPortalDialogState
           children: [
             TextFormField(
               controller: _nameCtrl,
-              decoration: const InputDecoration(
-                  labelText: 'Nombre *'),
+              decoration: const InputDecoration(labelText: 'Nombre *'),
               textCapitalization: TextCapitalization.words,
               validator: (v) =>
-                  v == null || v.trim().isEmpty
-                      ? 'Requerido'
-                      : null,
+                  v == null || v.trim().isEmpty ? 'Requerido' : null,
             ),
             const SizedBox(height: 12),
             TextFormField(
               controller: _urlCtrl,
               decoration: const InputDecoration(
                 labelText: 'URL de búsqueda *',
-                helperText:
-                    'Usá {query} donde va la búsqueda',
+                helperText: 'Usá {query} donde va la búsqueda',
               ),
               keyboardType: TextInputType.url,
               validator: (v) {
@@ -463,11 +427,13 @@ class _AddPortalDialogState
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(JobPortal(
-                id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
-                name: _nameCtrl.text.trim(),
-                url: _urlCtrl.text.trim(),
-              ));
+              widget.onAdd(
+                JobPortal(
+                  id: 'custom_${DateTime.now().millisecondsSinceEpoch}',
+                  name: _nameCtrl.text.trim(),
+                  url: _urlCtrl.text.trim(),
+                ),
+              );
               Navigator.pop(context);
             }
           },

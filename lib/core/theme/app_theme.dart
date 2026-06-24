@@ -11,8 +11,10 @@ class AppTheme {
   AppTheme._();
 
   // Paleta de colores principal
-  static const _primaryColor = Color(0xFF1A56DB);    // Azul confiable, institucional
-  static const _secondaryColor = Color(0xFF0E9F6E);  // Verde para éxito/positivo
+  static const _primaryColor = Color(
+    0xFF1A56DB,
+  ); // Azul confiable, institucional
+  static const _secondaryColor = Color(0xFF0E9F6E); // Verde para éxito/positivo
   static const _errorColor = Color(0xFFE02424);
   static const _warningColor = Color(0xFFFF8A00);
 
@@ -36,21 +38,81 @@ class AppTheme {
 
       // Typography — tamaños grandes para accesibilidad
       textTheme: const TextTheme(
-        displayLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.w700, height: 1.2),
-        displayMedium: TextStyle(fontSize: 28, fontWeight: FontWeight.w700, height: 1.2),
-        displaySmall: TextStyle(fontSize: 24, fontWeight: FontWeight.w600, height: 1.3),
-        headlineLarge: TextStyle(fontSize: 22, fontWeight: FontWeight.w600, height: 1.3),
-        headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, height: 1.3),
-        headlineSmall: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, height: 1.4),
-        titleLarge: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, height: 1.4),
-        titleMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, height: 1.5),
-        titleSmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, height: 1.5),
-        bodyLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.6),
-        bodyMedium: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.6),
-        bodySmall: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, height: 1.6),
-        labelLarge: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, height: 1.4),
-        labelMedium: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, height: 1.4),
-        labelSmall: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, height: 1.4),
+        displayLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.w700,
+          height: 1.2,
+        ),
+        displayMedium: TextStyle(
+          fontSize: 28,
+          fontWeight: FontWeight.w700,
+          height: 1.2,
+        ),
+        displaySmall: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+        ),
+        headlineLarge: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+        ),
+        headlineMedium: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+          height: 1.4,
+        ),
+        titleLarge: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          height: 1.4,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          height: 1.5,
+        ),
+        titleSmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          height: 1.5,
+        ),
+        bodyLarge: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          height: 1.6,
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          height: 1.6,
+        ),
+        bodySmall: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+          height: 1.6,
+        ),
+        labelLarge: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
+          height: 1.4,
+        ),
+        labelMedium: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+          height: 1.4,
+        ),
+        labelSmall: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+          height: 1.4,
+        ),
       ),
 
       // AppBar
@@ -74,7 +136,9 @@ class AppTheme {
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 52), // ancho full, alto 52dp
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           textStyle: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 16,
@@ -89,7 +153,9 @@ class AppTheme {
           minimumSize: const Size(double.infinity, 52),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
           side: const BorderSide(color: _primaryColor, width: 1.5),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           textStyle: const TextStyle(
             fontFamily: 'Inter',
             fontSize: 16,
@@ -130,7 +196,10 @@ class AppTheme {
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: _errorColor, width: 1.5),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         labelStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
         hintStyle: TextStyle(fontSize: 16, color: Colors.grey[500]),
         errorStyle: const TextStyle(fontSize: 14),
@@ -155,7 +224,11 @@ class AppTheme {
         shadowColor: Colors.black12,
         indicatorColor: _primaryColor.withValues(alpha: 0.12),
         labelTextStyle: WidgetStateProperty.all(
-          const TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500),
+          const TextStyle(
+            fontFamily: 'Inter',
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
 
@@ -246,6 +319,5 @@ class AppColors extends ThemeExtension<AppColors> {
 }
 
 extension AppColorsContext on BuildContext {
-  AppColors get appColors =>
-      Theme.of(this).extension<AppColors>()!;
+  AppColors get appColors => Theme.of(this).extension<AppColors>()!;
 }

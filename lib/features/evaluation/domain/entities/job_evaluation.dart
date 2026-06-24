@@ -10,14 +10,15 @@ abstract class JobEvaluation with _$JobEvaluation {
   const factory JobEvaluation({
     required String id,
     required String userId,
-    required String jobTitle,           // Extraído por IA
-    required String company,            // Extraído por IA
-    required String rawJobText,         // El texto pegado por el usuario
-    required double score,              // 0.0 - 5.0 (equivalente al A-F de career-ops)
+    required String jobTitle, // Extraído por IA
+    required String company, // Extraído por IA
+    required String rawJobText, // El texto pegado por el usuario
+    required double score, // 0.0 - 5.0 (equivalente al A-F de career-ops)
     required EvaluationRecommendation recommendation,
-    required List<String> strengths,    // Puntos fuertes del candidato para esta oferta
-    required List<String> gaps,         // Brechas o faltantes
-    required String summary,            // Resumen en 2-3 oraciones
+    required List<String>
+    strengths, // Puntos fuertes del candidato para esta oferta
+    required List<String> gaps, // Brechas o faltantes
+    required String summary, // Resumen en 2-3 oraciones
     @Default([]) List<String> keywords, // Keywords de la oferta para el CV
     required DateTime createdAt,
   }) = _JobEvaluation;
@@ -27,9 +28,12 @@ abstract class JobEvaluation with _$JobEvaluation {
 }
 
 enum EvaluationRecommendation {
-  @JsonValue('apply') apply,       // Score >= 4.0 — aplicar
-  @JsonValue('consider') consider, // Score 2.5-3.9 — considerar
-  @JsonValue('skip') skip;         // Score < 2.5 — no vale
+  @JsonValue('apply')
+  apply, // Score >= 4.0 — aplicar
+  @JsonValue('consider')
+  consider, // Score 2.5-3.9 — considerar
+  @JsonValue('skip')
+  skip; // Score < 2.5 — no vale
 
   String get label {
     return switch (this) {
@@ -53,11 +57,16 @@ enum EvaluationRecommendation {
 
 /// Estado de una postulación dentro del tracker.
 enum ApplicationStatus {
-  @JsonValue('interested') interested,
-  @JsonValue('applied') applied,
-  @JsonValue('interview') interview,
-  @JsonValue('offer') offer,
-  @JsonValue('rejected') rejected;
+  @JsonValue('interested')
+  interested,
+  @JsonValue('applied')
+  applied,
+  @JsonValue('interview')
+  interview,
+  @JsonValue('offer')
+  offer,
+  @JsonValue('rejected')
+  rejected;
 
   String get label {
     return switch (this) {

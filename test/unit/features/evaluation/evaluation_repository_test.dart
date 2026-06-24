@@ -37,38 +37,41 @@ void main() {
     );
 
     test('retorna JobEvaluation cuando la evaluación es exitosa', () async {
-      when(() => mockRepo.evaluate(any()))
-          .thenAnswer((_) async => Right(testEvaluation));
+      when(
+        () => mockRepo.evaluate(any()),
+      ).thenAnswer((_) async => Right(testEvaluation));
 
       final result = await mockRepo.evaluate(testJobText);
 
       expect(result, isA<Right<Failure, JobEvaluation>>());
-      result.fold(
-        (f) => fail('No debería haber falla'),
-        (eval) {
-          expect(eval.score, 4.2);
-          expect(eval.recommendation, EvaluationRecommendation.apply);
-          expect(eval.strengths, hasLength(2));
-        },
-      );
+      result.fold((f) => fail('No debería haber falla'), (eval) {
+        expect(eval.score, 4.2);
+        expect(eval.recommendation, EvaluationRecommendation.apply);
+        expect(eval.strengths, hasLength(2));
+      });
     });
 
-    test('retorna LimitExceededFailure cuando el usuario alcanzó el límite', () async {
-      when(() => mockRepo.evaluate(any()))
-          .thenAnswer((_) async => const Left(LimitExceededFailure()));
+    test(
+      'retorna LimitExceededFailure cuando el usuario alcanzó el límite',
+      () async {
+        when(
+          () => mockRepo.evaluate(any()),
+        ).thenAnswer((_) async => const Left(LimitExceededFailure()));
 
-      final result = await mockRepo.evaluate(testJobText);
+        final result = await mockRepo.evaluate(testJobText);
 
-      expect(result, isA<Left<Failure, JobEvaluation>>());
-      result.fold(
-        (f) => expect(f, isA<LimitExceededFailure>()),
-        (_) => fail('Debería haber falla'),
-      );
-    });
+        expect(result, isA<Left<Failure, JobEvaluation>>());
+        result.fold(
+          (f) => expect(f, isA<LimitExceededFailure>()),
+          (_) => fail('Debería haber falla'),
+        );
+      },
+    );
 
     test('retorna ServerFailure cuando hay error del servidor', () async {
-      when(() => mockRepo.evaluate(any()))
-          .thenAnswer((_) async => const Left(ServerFailure()));
+      when(
+        () => mockRepo.evaluate(any()),
+      ).thenAnswer((_) async => const Left(ServerFailure()));
 
       final result = await mockRepo.evaluate(testJobText);
 
@@ -82,10 +85,7 @@ void main() {
     });
 
     test('skip tiene descripción disuasoria', () {
-      expect(
-        EvaluationRecommendation.skip.description,
-        contains('bajo'),
-      );
+      expect(EvaluationRecommendation.skip.description, contains('bajo'));
     });
   });
 }

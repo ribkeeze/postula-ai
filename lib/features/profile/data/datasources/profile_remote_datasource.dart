@@ -13,7 +13,7 @@ class ProfileRemoteDatasourceImpl implements ProfileRemoteDatasource {
   final FirebaseFirestore _firestore;
 
   ProfileRemoteDatasourceImpl({FirebaseFirestore? firestore})
-      : _firestore = firestore ?? FirebaseFirestore.instance;
+    : _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
   Future<UserProfile?> getProfile(String userId) async {

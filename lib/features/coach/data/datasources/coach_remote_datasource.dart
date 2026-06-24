@@ -13,7 +13,9 @@ class CoachRemoteDatasourceImpl implements CoachRemoteDatasource {
   Future<CoachSession?> getCachedCoach(String evaluationId) async {
     final doc = await _db.collection('coachSessions').doc(evaluationId).get();
     if (!doc.exists || doc.data() == null) return null;
-    return CoachSession.fromJson(
-        {...doc.data()!, 'evaluationId': evaluationId});
+    return CoachSession.fromJson({
+      ...doc.data()!,
+      'evaluationId': evaluationId,
+    });
   }
 }

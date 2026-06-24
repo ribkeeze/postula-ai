@@ -18,15 +18,35 @@ import 'login_screen.dart';
 // ── Static data ───────────────────────────────────────────────────────────────
 
 const _suggestedSkills = [
-  'Excel', 'Word', 'PowerPoint', 'Google Sheets', 'Outlook',
-  'Canva', 'SAP', 'SQL',
-  'Atención al cliente', 'Ventas', 'Facturación',
-  'Gestión del tiempo', 'Trabajo en equipo', 'Comunicación',
-  'Liderazgo', 'Resolución de problemas', 'Planificación',
-  'Inglés', 'Portugués',
-  'Redes sociales', 'Marketing digital', 'Contabilidad',
-  'Logística', 'Recursos humanos', 'Administración',
-  'Python', 'Java', 'JavaScript', 'Photoshop',
+  'Excel',
+  'Word',
+  'PowerPoint',
+  'Google Sheets',
+  'Outlook',
+  'Canva',
+  'SAP',
+  'SQL',
+  'Atención al cliente',
+  'Ventas',
+  'Facturación',
+  'Gestión del tiempo',
+  'Trabajo en equipo',
+  'Comunicación',
+  'Liderazgo',
+  'Resolución de problemas',
+  'Planificación',
+  'Inglés',
+  'Portugués',
+  'Redes sociales',
+  'Marketing digital',
+  'Contabilidad',
+  'Logística',
+  'Recursos humanos',
+  'Administración',
+  'Python',
+  'Java',
+  'JavaScript',
+  'Photoshop',
 ];
 
 // ── OnboardingScreen ──────────────────────────────────────────────────────────
@@ -188,25 +208,21 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           children: [
             // Header: back button + step counter
             Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               child: Row(
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back),
                     tooltip: _currentPage == 0 ? 'Cambiar cuenta' : 'Volver',
-                    onPressed:
-                        _currentPage == 0 ? _goBackToLogin : _prevPage,
+                    onPressed: _currentPage == 0 ? _goBackToLogin : _prevPage,
                   ),
                   const Spacer(),
                   if (_currentPage < 8)
                     Text(
                       'Paso ${_currentPage + 1} de 8',
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   const SizedBox(width: 8),
                 ],
@@ -420,8 +436,10 @@ class _Step1ContactInfoState extends State<_Step1ContactInfo> {
       child: ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          Text(StringsEs.onboardingPaso1Titulo,
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            StringsEs.onboardingPaso1Titulo,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 24),
           TextFormField(
             key: _nameKey,
@@ -430,8 +448,9 @@ class _Step1ContactInfoState extends State<_Step1ContactInfo> {
             autovalidateMode: _nameTouched
                 ? AutovalidateMode.onUserInteraction
                 : AutovalidateMode.disabled,
-            decoration:
-                const InputDecoration(labelText: StringsEs.perfilNombre),
+            decoration: const InputDecoration(
+              labelText: StringsEs.perfilNombre,
+            ),
             textCapitalization: TextCapitalization.words,
             validator: (v) =>
                 v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -444,8 +463,7 @@ class _Step1ContactInfoState extends State<_Step1ContactInfo> {
             autovalidateMode: _emailTouched
                 ? AutovalidateMode.onUserInteraction
                 : AutovalidateMode.disabled,
-            decoration:
-                const InputDecoration(labelText: StringsEs.perfilEmail),
+            decoration: const InputDecoration(labelText: StringsEs.perfilEmail),
             keyboardType: TextInputType.emailAddress,
             validator: (v) {
               if (v == null || v.trim().isEmpty) return 'Requerido';
@@ -520,29 +538,29 @@ class _Step1ContactInfoState extends State<_Step1ContactInfo> {
             fieldViewBuilder:
                 (context, fieldCtrl, focusNode, onFieldSubmitted) =>
                     TextFormField(
-              key: _cityKey,
-              controller: fieldCtrl,
-              focusNode: focusNode,
-              autovalidateMode: _cityTouched
-                  ? AutovalidateMode.onUserInteraction
-                  : AutovalidateMode.disabled,
-              decoration: const InputDecoration(
-                labelText: StringsEs.perfilCiudad,
-              ),
-              textCapitalization: TextCapitalization.words,
-              onChanged: (v) {
-                setState(() => _cityText = v);
-                widget.onCityChanged(v);
-                widget.onProvinciaChanged(null);
-                widget.onPostalCodeChanged(null);
-              },
-              onTapOutside: (_) {
-                if (!_cityTouched) setState(() => _cityTouched = true);
-                _cityKey.currentState?.validate();
-              },
-              validator: (_) =>
-                  _cityText.trim().isEmpty ? 'Requerido' : null,
-            ),
+                      key: _cityKey,
+                      controller: fieldCtrl,
+                      focusNode: focusNode,
+                      autovalidateMode: _cityTouched
+                          ? AutovalidateMode.onUserInteraction
+                          : AutovalidateMode.disabled,
+                      decoration: const InputDecoration(
+                        labelText: StringsEs.perfilCiudad,
+                      ),
+                      textCapitalization: TextCapitalization.words,
+                      onChanged: (v) {
+                        setState(() => _cityText = v);
+                        widget.onCityChanged(v);
+                        widget.onProvinciaChanged(null);
+                        widget.onPostalCodeChanged(null);
+                      },
+                      onTapOutside: (_) {
+                        if (!_cityTouched) setState(() => _cityTouched = true);
+                        _cityKey.currentState?.validate();
+                      },
+                      validator: (_) =>
+                          _cityText.trim().isEmpty ? 'Requerido' : null,
+                    ),
           ),
           const SizedBox(height: 32),
           ElevatedButton(
@@ -584,30 +602,37 @@ class _Step2Experience extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text(StringsEs.onboardingPaso2Titulo,
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          StringsEs.onboardingPaso2Titulo,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text(
           'Agregá tus empleos anteriores. Podés agregar más tarde desde tu perfil.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
-        ...experiences.map((e) => Card(
-              child: ListTile(
-                title: Text(e.position),
-                subtitle: Text(
-                    '${e.company}  •  ${e.startDate} → ${e.isCurrent ? 'Actual' : (e.endDate ?? '')}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () {
-                    onChanged(List<WorkExperience>.from(experiences)
-                      ..removeWhere((x) => x.id == e.id));
-                  },
-                ),
+        ...experiences.map(
+          (e) => Card(
+            child: ListTile(
+              title: Text(e.position),
+              subtitle: Text(
+                '${e.company}  •  ${e.startDate} → ${e.isCurrent ? 'Actual' : (e.endDate ?? '')}',
               ),
-            )),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () {
+                  onChanged(
+                    List<WorkExperience>.from(experiences)
+                      ..removeWhere((x) => x.id == e.id),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
         TextButton.icon(
           onPressed: () => _showAddDialog(context),
           icon: const Icon(Icons.add),
@@ -615,10 +640,15 @@ class _Step2Experience extends StatelessWidget {
         ),
         const SizedBox(height: 32),
         ElevatedButton(
-            onPressed: onNext, child: const Text(StringsEs.continuar)),
+          onPressed: onNext,
+          child: const Text(StringsEs.continuar),
+        ),
         const SizedBox(height: 12),
         OutlinedButton(
-          onPressed: () { onChanged([]); onNext(); },
+          onPressed: () {
+            onChanged([]);
+            onNext();
+          },
           child: const Text('Saltar por ahora'),
         ),
       ],
@@ -693,8 +723,9 @@ class _ExperienceDialogState extends State<_ExperienceDialog> {
             children: [
               TextFormField(
                 controller: _positionCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Puesto / Cargo *'),
+                decoration: const InputDecoration(
+                  labelText: 'Puesto / Cargo *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -723,8 +754,10 @@ class _ExperienceDialogState extends State<_ExperienceDialog> {
                 label: 'Fecha de inicio',
                 month: _startMonth,
                 year: _startYear,
-                onChanged: (m, y) =>
-                    setState(() { _startMonth = m; _startYear = y; }),
+                onChanged: (m, y) => setState(() {
+                  _startMonth = m;
+                  _startYear = y;
+                }),
               ),
               const SizedBox(height: 4),
               CheckboxListTile(
@@ -739,15 +772,19 @@ class _ExperienceDialogState extends State<_ExperienceDialog> {
                   label: 'Fecha de fin',
                   month: _endMonth ?? _now.month,
                   year: _endYear ?? _now.year,
-                  onChanged: (m, y) =>
-                      setState(() { _endMonth = m; _endYear = y; }),
+                  onChanged: (m, y) => setState(() {
+                    _endMonth = m;
+                    _endYear = y;
+                  }),
                 ),
               ],
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text('Referencias',
-                      style: Theme.of(context).textTheme.labelMedium),
+                  Text(
+                    'Referencias',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                   const Spacer(),
                   TextButton.icon(
                     onPressed: () => _showAddReference(context),
@@ -756,17 +793,20 @@ class _ExperienceDialogState extends State<_ExperienceDialog> {
                   ),
                 ],
               ),
-              ..._references.map((r) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(r.name),
-                    subtitle: Text('${r.position} · ${r.company}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.close, size: 18),
-                      onPressed: () => setState(
-                          () => _references.removeWhere((x) => x.id == r.id)),
+              ..._references.map(
+                (r) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(r.name),
+                  subtitle: Text('${r.position} · ${r.company}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => setState(
+                      () => _references.removeWhere((x) => x.id == r.id),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -780,21 +820,22 @@ class _ExperienceDialogState extends State<_ExperienceDialog> {
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(WorkExperience(
-                id: const Uuid().v4(),
-                company: _companyCtrl.text.trim(),
-                position: _positionCtrl.text.trim(),
-                startDate: _fmt(_startMonth, _startYear),
-                endDate: _isCurrent
-                    ? null
-                    : _fmt(
-                        _endMonth ?? _now.month, _endYear ?? _now.year),
-                isCurrent: _isCurrent,
-                description: _descriptionCtrl.text.trim().isEmpty
-                    ? null
-                    : _descriptionCtrl.text.trim(),
-                references: _references,
-              ));
+              widget.onAdd(
+                WorkExperience(
+                  id: const Uuid().v4(),
+                  company: _companyCtrl.text.trim(),
+                  position: _positionCtrl.text.trim(),
+                  startDate: _fmt(_startMonth, _startYear),
+                  endDate: _isCurrent
+                      ? null
+                      : _fmt(_endMonth ?? _now.month, _endYear ?? _now.year),
+                  isCurrent: _isCurrent,
+                  description: _descriptionCtrl.text.trim().isEmpty
+                      ? null
+                      : _descriptionCtrl.text.trim(),
+                  references: _references,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -823,23 +864,30 @@ class _Step3Education extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text(StringsEs.onboardingPaso3Titulo,
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          StringsEs.onboardingPaso3Titulo,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 24),
-        ...educations.map((e) => Card(
-              child: ListTile(
-                title: Text(e.degree),
-                subtitle: Text(
-                    '${e.institution}  •  ${e.startYear} → ${e.isOngoing ? 'En curso' : (e.endYear ?? '')}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () {
-                    onChanged(List<Education>.from(educations)
-                      ..removeWhere((x) => x.id == e.id));
-                  },
-                ),
+        ...educations.map(
+          (e) => Card(
+            child: ListTile(
+              title: Text(e.degree),
+              subtitle: Text(
+                '${e.institution}  •  ${e.startYear} → ${e.isOngoing ? 'En curso' : (e.endYear ?? '')}',
               ),
-            )),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () {
+                  onChanged(
+                    List<Education>.from(educations)
+                      ..removeWhere((x) => x.id == e.id),
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
         TextButton.icon(
           onPressed: () => _showAddDialog(context),
           icon: const Icon(Icons.add),
@@ -847,11 +895,17 @@ class _Step3Education extends StatelessWidget {
         ),
         const SizedBox(height: 32),
         ElevatedButton(
-            onPressed: onNext, child: const Text(StringsEs.continuar)),
+          onPressed: onNext,
+          child: const Text(StringsEs.continuar),
+        ),
         const SizedBox(height: 12),
         OutlinedButton(
-            onPressed: () { onChanged([]); onNext(); },
-            child: const Text('Saltar por ahora')),
+          onPressed: () {
+            onChanged([]);
+            onNext();
+          },
+          child: const Text('Saltar por ahora'),
+        ),
       ],
     );
   }
@@ -860,8 +914,7 @@ class _Step3Education extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => _EducationDialog(
-        onAdd: (edu) =>
-            onChanged(List<Education>.from(educations)..add(edu)),
+        onAdd: (edu) => onChanged(List<Education>.from(educations)..add(edu)),
       ),
     );
   }
@@ -910,7 +963,8 @@ class _EducationDialogState extends State<_EducationDialog> {
               TextFormField(
                 controller: _degreeCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Título / Carrera *'),
+                  labelText: 'Título / Carrera *',
+                ),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -919,14 +973,14 @@ class _EducationDialogState extends State<_EducationDialog> {
               TextFormField(
                 controller: _fieldCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Área / Especialidad (opcional)'),
+                  labelText: 'Área / Especialidad (opcional)',
+                ),
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _institutionCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Institución *'),
+                decoration: const InputDecoration(labelText: 'Institución *'),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -943,8 +997,7 @@ class _EducationDialogState extends State<_EducationDialog> {
                 dense: true,
                 title: const Text('En curso'),
                 value: _isOngoing,
-                onChanged: (v) =>
-                    setState(() => _isOngoing = v ?? true),
+                onChanged: (v) => setState(() => _isOngoing = v ?? true),
               ),
               if (!_isOngoing) ...[
                 _YearPicker(
@@ -966,19 +1019,21 @@ class _EducationDialogState extends State<_EducationDialog> {
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(Education(
-                id: const Uuid().v4(),
-                institution: _institutionCtrl.text.trim(),
-                degree: _degreeCtrl.text.trim(),
-                field: _fieldCtrl.text.trim().isEmpty
-                    ? 'General'
-                    : _fieldCtrl.text.trim(),
-                startYear: _startYear.toString(),
-                endYear: _isOngoing
-                    ? null
-                    : (_endYear ?? DateTime.now().year).toString(),
-                isOngoing: _isOngoing,
-              ));
+              widget.onAdd(
+                Education(
+                  id: const Uuid().v4(),
+                  institution: _institutionCtrl.text.trim(),
+                  degree: _degreeCtrl.text.trim(),
+                  field: _fieldCtrl.text.trim().isEmpty
+                      ? 'General'
+                      : _fieldCtrl.text.trim(),
+                  startYear: _startYear.toString(),
+                  endYear: _isOngoing
+                      ? null
+                      : (_endYear ?? DateTime.now().year).toString(),
+                  isOngoing: _isOngoing,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1028,9 +1083,9 @@ class _Step4SkillsState extends State<_Step4Skills> {
     }
 
     if (widget.skills.any((s) => s.toLowerCase() == trimmed.toLowerCase())) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('"$trimmed" ya está en tu lista')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('"$trimmed" ya está en tu lista')));
       return;
     }
 
@@ -1045,14 +1100,16 @@ class _Step4SkillsState extends State<_Step4Skills> {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text(StringsEs.onboardingPaso4Titulo,
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          StringsEs.onboardingPaso4Titulo,
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text(
           'Escribí una habilidad o elegí de las sugerencias.',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant),
         ),
         const SizedBox(height: 16),
 
@@ -1086,24 +1143,27 @@ class _Step4SkillsState extends State<_Step4Skills> {
         Text(
           'Sugerencias:',
           style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
+            color: colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
           runSpacing: 6,
           children: _suggestedSkills.map((skill) {
-            final isAdded = widget.skills
-                .any((s) => s.toLowerCase() == skill.toLowerCase());
+            final isAdded = widget.skills.any(
+              (s) => s.toLowerCase() == skill.toLowerCase(),
+            );
             return FilterChip(
               label: Text(skill),
               selected: isAdded,
               onSelected: (_) {
                 if (isAdded) {
-                  widget.onChanged(widget.skills
-                      .where((s) => s.toLowerCase() != skill.toLowerCase())
-                      .toList());
+                  widget.onChanged(
+                    widget.skills
+                        .where((s) => s.toLowerCase() != skill.toLowerCase())
+                        .toList(),
+                  );
                 } else {
                   _tryAdd(skill);
                 }
@@ -1120,17 +1180,17 @@ class _Step4SkillsState extends State<_Step4Skills> {
               Text(
                 'Tus habilidades',
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
+                  color: colorScheme.onSurfaceVariant,
+                ),
               ),
               const Spacer(),
               Text(
                 '${widget.skills.length}/$_maxSkills',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: widget.skills.length >= _maxSkills
-                          ? colorScheme.error
-                          : colorScheme.onSurfaceVariant,
-                    ),
+                  color: widget.skills.length >= _maxSkills
+                      ? colorScheme.error
+                      : colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
@@ -1139,25 +1199,33 @@ class _Step4SkillsState extends State<_Step4Skills> {
             spacing: 8,
             runSpacing: 8,
             children: widget.skills
-                .map((s) => Chip(
-                      label: Text(s),
-                      onDeleted: () {
-                        widget.onChanged(
-                            widget.skills.where((x) => x != s).toList());
-                      },
-                    ))
+                .map(
+                  (s) => Chip(
+                    label: Text(s),
+                    onDeleted: () {
+                      widget.onChanged(
+                        widget.skills.where((x) => x != s).toList(),
+                      );
+                    },
+                  ),
+                )
                 .toList(),
           ),
         ],
 
         const SizedBox(height: 32),
         ElevatedButton(
-            onPressed: widget.onNext,
-            child: const Text(StringsEs.continuar)),
+          onPressed: widget.onNext,
+          child: const Text(StringsEs.continuar),
+        ),
         const SizedBox(height: 12),
         OutlinedButton(
-            onPressed: () { widget.onChanged([]); widget.onNext(); },
-            child: const Text('Saltar por ahora')),
+          onPressed: () {
+            widget.onChanged([]);
+            widget.onNext();
+          },
+          child: const Text('Saltar por ahora'),
+        ),
       ],
     );
   }
@@ -1181,40 +1249,45 @@ class _Step5Languages extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text('Tus idiomas',
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text('Tus idiomas', style: Theme.of(context).textTheme.headlineSmall),
         const SizedBox(height: 8),
         Text(
           'Agregá los idiomas que manejás además del español.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
-        ...languages.map((l) => Card(
-              child: ListTile(
-                title: Text(l.name),
-                subtitle: Text(l.level.label),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  tooltip: 'Eliminar',
-                  onPressed: () => onChanged(
-                      languages.where((x) => x.name != l.name).toList()),
+        ...languages.map(
+          (l) => Card(
+            child: ListTile(
+              title: Text(l.name),
+              subtitle: Text(l.level.label),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                tooltip: 'Eliminar',
+                onPressed: () => onChanged(
+                  languages.where((x) => x.name != l.name).toList(),
                 ),
               ),
-            )),
+            ),
+          ),
+        ),
         TextButton.icon(
           onPressed: () => _showAddDialog(context),
           icon: const Icon(Icons.add),
           label: const Text('Agregar idioma'),
         ),
         const SizedBox(height: 32),
-        ElevatedButton(
-            onPressed: onNext, child: const Text('Continuar')),
+        ElevatedButton(onPressed: onNext, child: const Text('Continuar')),
         const SizedBox(height: 12),
         OutlinedButton(
-            onPressed: () { onChanged([]); onNext(); },
-            child: const Text('Saltar por ahora')),
+          onPressed: () {
+            onChanged([]);
+            onNext();
+          },
+          child: const Text('Saltar por ahora'),
+        ),
       ],
     );
   }
@@ -1222,9 +1295,8 @@ class _Step5Languages extends StatelessWidget {
   void _showAddDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => _LanguageDialog(
-        onAdd: (lang) => onChanged([...languages, lang]),
-      ),
+      builder: (_) =>
+          _LanguageDialog(onAdd: (lang) => onChanged([...languages, lang])),
     );
   }
 }
@@ -1243,8 +1315,14 @@ class _LanguageDialogState extends State<_LanguageDialog> {
   bool _showNameError = false;
 
   static const _suggestions = [
-    'Inglés', 'Portugués', 'Francés', 'Alemán', 'Italiano',
-    'Chino', 'Árabe', 'Japonés',
+    'Inglés',
+    'Portugués',
+    'Francés',
+    'Alemán',
+    'Italiano',
+    'Chino',
+    'Árabe',
+    'Japonés',
   ];
 
   @override
@@ -1278,13 +1356,15 @@ class _LanguageDialogState extends State<_LanguageDialog> {
               spacing: 6,
               runSpacing: 4,
               children: _suggestions
-                  .map((s) => ActionChip(
-                        label: Text(s),
-                        onPressed: () => setState(() {
-                          _nameCtrl.text = s;
-                          _showNameError = false;
-                        }),
-                      ))
+                  .map(
+                    (s) => ActionChip(
+                      label: Text(s),
+                      onPressed: () => setState(() {
+                        _nameCtrl.text = s;
+                        _showNameError = false;
+                      }),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 16),
@@ -1292,10 +1372,7 @@ class _LanguageDialogState extends State<_LanguageDialog> {
               initialValue: _level,
               decoration: const InputDecoration(labelText: 'Nivel'),
               items: LanguageLevel.values
-                  .map((l) => DropdownMenuItem(
-                        value: l,
-                        child: Text(l.label),
-                      ))
+                  .map((l) => DropdownMenuItem(value: l, child: Text(l.label)))
                   .toList(),
               onChanged: (v) {
                 if (v != null) setState(() => _level = v);
@@ -1396,24 +1473,28 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
   Widget build(BuildContext context) {
     final showCommute =
         widget.preferredModalities.contains(WorkModality.hybrid) ||
-            widget.preferredModalities.contains(WorkModality.onsite);
+        widget.preferredModalities.contains(WorkModality.onsite);
 
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text('Preferencias laborales',
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          'Preferencias laborales',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text(
           'Estos datos ayudan a la IA a encontrar ofertas más compatibles con vos.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
 
-        Text('Modalidad de trabajo',
-            style: Theme.of(context).textTheme.labelLarge),
+        Text(
+          'Modalidad de trabajo',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
         const SizedBox(height: 8),
         Wrap(
           spacing: 8,
@@ -1423,8 +1504,9 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
               label: Text(m.label),
               selected: isSelected,
               onSelected: (_) {
-                final updated =
-                    Set<WorkModality>.from(widget.preferredModalities);
+                final updated = Set<WorkModality>.from(
+                  widget.preferredModalities,
+                );
                 if (isSelected) {
                   updated.remove(m);
                 } else {
@@ -1456,8 +1538,10 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
         ),
 
         const SizedBox(height: 16),
-        Text('Pretensión salarial (opcional)',
-            style: Theme.of(context).textTheme.labelLarge),
+        Text(
+          'Pretensión salarial (opcional)',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
         const SizedBox(height: 8),
         Row(
           children: [
@@ -1467,8 +1551,10 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
                 decoration: const InputDecoration(
                   labelText: 'Moneda',
                   isDense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 10,
+                  ),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
@@ -1506,14 +1592,16 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
         ),
 
         const SizedBox(height: 24),
-        Text('Industrias a excluir (opcional)',
-            style: Theme.of(context).textTheme.labelLarge),
+        Text(
+          'Industrias a excluir (opcional)',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
         const SizedBox(height: 4),
         Text(
           'Ofertas de estos rubros no aparecerán en tus sugerencias.',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 8),
         if (widget.excludedIndustries.isNotEmpty) ...[
@@ -1521,14 +1609,14 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
             spacing: 8,
             runSpacing: 4,
             children: widget.excludedIndustries
-                .map((s) => Chip(
-                      label: Text(s),
-                      onDeleted: () => widget.onExcludedIndustriesChanged(
-                        widget.excludedIndustries
-                            .where((x) => x != s)
-                            .toList(),
-                      ),
-                    ))
+                .map(
+                  (s) => Chip(
+                    label: Text(s),
+                    onDeleted: () => widget.onExcludedIndustriesChanged(
+                      widget.excludedIndustries.where((x) => x != s).toList(),
+                    ),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 8),
@@ -1557,14 +1645,16 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
         ),
 
         const SizedBox(height: 24),
-        Text('Empresas a excluir (opcional)',
-            style: Theme.of(context).textTheme.labelLarge),
+        Text(
+          'Empresas a excluir (opcional)',
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
         const SizedBox(height: 4),
         Text(
           'No verás ofertas de estas empresas.',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 8),
         if (widget.excludedCompanies.isNotEmpty) ...[
@@ -1572,14 +1662,14 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
             spacing: 8,
             runSpacing: 4,
             children: widget.excludedCompanies
-                .map((s) => Chip(
-                      label: Text(s),
-                      onDeleted: () => widget.onExcludedCompaniesChanged(
-                        widget.excludedCompanies
-                            .where((x) => x != s)
-                            .toList(),
-                      ),
-                    ))
+                .map(
+                  (s) => Chip(
+                    label: Text(s),
+                    onDeleted: () => widget.onExcludedCompaniesChanged(
+                      widget.excludedCompanies.where((x) => x != s).toList(),
+                    ),
+                  ),
+                )
                 .toList(),
           ),
           const SizedBox(height: 8),
@@ -1608,9 +1698,15 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
         ),
 
         const SizedBox(height: 32),
-        ElevatedButton(onPressed: widget.onNext, child: const Text('Continuar')),
+        ElevatedButton(
+          onPressed: widget.onNext,
+          child: const Text('Continuar'),
+        ),
         const SizedBox(height: 12),
-        OutlinedButton(onPressed: widget.onNext, child: const Text('Saltar por ahora')),
+        OutlinedButton(
+          onPressed: widget.onNext,
+          child: const Text('Saltar por ahora'),
+        ),
       ],
     );
   }
@@ -1640,14 +1736,16 @@ class _Step8LinksAndCerts extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text('Links y certificaciones',
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          'Links y certificaciones',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text(
           'Agregá tus perfiles profesionales y certificaciones relevantes.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
 
@@ -1679,27 +1777,28 @@ class _Step8LinksAndCerts extends StatelessWidget {
         ),
 
         const SizedBox(height: 24),
-        Text('Certificaciones',
-            style: Theme.of(context).textTheme.labelLarge),
+        Text('Certificaciones', style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 8),
-        ...certifications.map((c) => Card(
-              child: ListTile(
-                title: Text(c.name),
-                subtitle: Text('${c.issuer} · ${c.year}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () => onCertificationsChanged(
-                    certifications.where((x) => x.id != c.id).toList(),
-                  ),
+        ...certifications.map(
+          (c) => Card(
+            child: ListTile(
+              title: Text(c.name),
+              subtitle: Text('${c.issuer} · ${c.year}'),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () => onCertificationsChanged(
+                  certifications.where((x) => x.id != c.id).toList(),
                 ),
               ),
-            )),
+            ),
+          ),
+        ),
         TextButton.icon(
           onPressed: () => showDialog(
             context: context,
             builder: (_) => _CertificationDialog(
-              onAdd: (cert) => onCertificationsChanged(
-                  [...certifications, cert]),
+              onAdd: (cert) =>
+                  onCertificationsChanged([...certifications, cert]),
             ),
           ),
           icon: const Icon(Icons.add),
@@ -1707,11 +1806,12 @@ class _Step8LinksAndCerts extends StatelessWidget {
         ),
 
         const SizedBox(height: 32),
-        ElevatedButton(
-            onPressed: onNext, child: const Text('Continuar')),
+        ElevatedButton(onPressed: onNext, child: const Text('Continuar')),
         const SizedBox(height: 12),
         OutlinedButton(
-            onPressed: onNext, child: const Text('Saltar por ahora')),
+          onPressed: onNext,
+          child: const Text('Saltar por ahora'),
+        ),
       ],
     );
   }
@@ -1762,8 +1862,9 @@ class _CertificationDialogState extends State<_CertificationDialog> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _issuerCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Institución emisora *'),
+                decoration: const InputDecoration(
+                  labelText: 'Institución emisora *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1787,12 +1888,14 @@ class _CertificationDialogState extends State<_CertificationDialog> {
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(Certification(
-                id: const Uuid().v4(),
-                name: _nameCtrl.text.trim(),
-                issuer: _issuerCtrl.text.trim(),
-                year: _year,
-              ));
+              widget.onAdd(
+                Certification(
+                  id: const Uuid().v4(),
+                  name: _nameCtrl.text.trim(),
+                  issuer: _issuerCtrl.text.trim(),
+                  year: _year,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1823,18 +1926,23 @@ class _Step9FinishState extends State<_Step9Finish> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.check_circle_rounded,
-              size: 72, color: Color(0xFF0E9F6E)),
+          const Icon(
+            Icons.check_circle_rounded,
+            size: 72,
+            color: Color(0xFF0E9F6E),
+          ),
           const SizedBox(height: 24),
-          Text(StringsEs.onboardingPaso5Titulo,
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center),
+          Text(
+            StringsEs.onboardingPaso5Titulo,
+            style: Theme.of(context).textTheme.headlineMedium,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 16),
           Text(
             StringsEs.onboardingCompletado,
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 48),
@@ -1881,34 +1989,40 @@ class _Step6Projects extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        Text('Tus proyectos destacados',
-            style: Theme.of(context).textTheme.headlineSmall),
+        Text(
+          'Tus proyectos destacados',
+          style: Theme.of(context).textTheme.headlineSmall,
+        ),
         const SizedBox(height: 8),
         Text(
           'Proyectos personales, freelance o académicos que muestren tus habilidades.',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 24),
-        ...projects.map((p) => Card(
-              child: ListTile(
-                title: Text(p.name),
-                subtitle: Text(p.description,
-                    maxLines: 2, overflow: TextOverflow.ellipsis),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () => onChanged(
-                      projects.where((x) => x.id != p.id).toList()),
-                ),
+        ...projects.map(
+          (p) => Card(
+            child: ListTile(
+              title: Text(p.name),
+              subtitle: Text(
+                p.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
-            )),
+              trailing: IconButton(
+                icon: const Icon(Icons.delete_outline),
+                onPressed: () =>
+                    onChanged(projects.where((x) => x.id != p.id).toList()),
+              ),
+            ),
+          ),
+        ),
         TextButton.icon(
           onPressed: () => showDialog(
             context: context,
-            builder: (_) => _ProjectDialog(
-              onAdd: (proj) => onChanged([...projects, proj]),
-            ),
+            builder: (_) =>
+                _ProjectDialog(onAdd: (proj) => onChanged([...projects, proj])),
           ),
           icon: const Icon(Icons.add),
           label: const Text('Agregar proyecto'),
@@ -1917,8 +2031,12 @@ class _Step6Projects extends StatelessWidget {
         ElevatedButton(onPressed: onNext, child: const Text('Continuar')),
         const SizedBox(height: 12),
         OutlinedButton(
-            onPressed: () { onChanged([]); onNext(); },
-            child: const Text('Saltar por ahora')),
+          onPressed: () {
+            onChanged([]);
+            onNext();
+          },
+          child: const Text('Saltar por ahora'),
+        ),
       ],
     );
   }
@@ -1960,7 +2078,9 @@ class _ProjectDialogState extends State<_ProjectDialog> {
 
   void _addTech() {
     final v = _techCtrl.text.trim();
-    if (v.isEmpty || _technologies.any((t) => t.toLowerCase() == v.toLowerCase())) return;
+    if (v.isEmpty ||
+        _technologies.any((t) => t.toLowerCase() == v.toLowerCase()))
+      return;
     setState(() => _technologies = [..._technologies, v]);
     _techCtrl.clear();
   }
@@ -1984,7 +2104,9 @@ class _ProjectDialogState extends State<_ProjectDialog> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration: const InputDecoration(labelText: 'Nombre del proyecto *'),
+                decoration: const InputDecoration(
+                  labelText: 'Nombre del proyecto *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -2021,8 +2143,10 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                 keyboardType: TextInputType.url,
               ),
               const SizedBox(height: 16),
-              Text('Tecnologías usadas',
-                  style: Theme.of(context).textTheme.labelMedium),
+              Text(
+                'Tecnologías usadas',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
               const SizedBox(height: 6),
               Row(
                 children: [
@@ -2053,11 +2177,16 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                   spacing: 6,
                   runSpacing: 4,
                   children: _technologies
-                      .map((t) => Chip(
-                            label: Text(t),
-                            onDeleted: () => setState(() => _technologies =
-                                _technologies.where((x) => x != t).toList()),
-                          ))
+                      .map(
+                        (t) => Chip(
+                          label: Text(t),
+                          onDeleted: () => setState(
+                            () => _technologies = _technologies
+                                .where((x) => x != t)
+                                .toList(),
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ],
@@ -2073,8 +2202,10 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                 label: 'Fecha de inicio (opcional)',
                 month: _startMonth ?? now.month,
                 year: _startYear ?? now.year,
-                onChanged: (m, y) =>
-                    setState(() { _startMonth = m; _startYear = y; }),
+                onChanged: (m, y) => setState(() {
+                  _startMonth = m;
+                  _startYear = y;
+                }),
               ),
               if (!_isCurrent) ...[
                 const SizedBox(height: 8),
@@ -2082,8 +2213,10 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                   label: 'Fecha de fin (opcional)',
                   month: _endMonth ?? now.month,
                   year: _endYear ?? now.year,
-                  onChanged: (m, y) =>
-                      setState(() { _endMonth = m; _endYear = y; }),
+                  onChanged: (m, y) => setState(() {
+                    _endMonth = m;
+                    _endYear = y;
+                  }),
                 ),
               ],
             ],
@@ -2099,23 +2232,28 @@ class _ProjectDialogState extends State<_ProjectDialog> {
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(Project(
-                id: const Uuid().v4(),
-                name: _nameCtrl.text.trim(),
-                description: _descCtrl.text.trim(),
-                technologies: _technologies,
-                url: _urlCtrl.text.trim().isEmpty ? null : _urlCtrl.text.trim(),
-                context: _contextCtrl.text.trim().isEmpty
-                    ? null
-                    : _contextCtrl.text.trim(),
-                startDate: _startMonth != null && _startYear != null
-                    ? _fmt(_startMonth!, _startYear!)
-                    : null,
-                endDate: (!_isCurrent && _endMonth != null && _endYear != null)
-                    ? _fmt(_endMonth!, _endYear!)
-                    : null,
-                isCurrent: _isCurrent,
-              ));
+              widget.onAdd(
+                Project(
+                  id: const Uuid().v4(),
+                  name: _nameCtrl.text.trim(),
+                  description: _descCtrl.text.trim(),
+                  technologies: _technologies,
+                  url: _urlCtrl.text.trim().isEmpty
+                      ? null
+                      : _urlCtrl.text.trim(),
+                  context: _contextCtrl.text.trim().isEmpty
+                      ? null
+                      : _contextCtrl.text.trim(),
+                  startDate: _startMonth != null && _startYear != null
+                      ? _fmt(_startMonth!, _startYear!)
+                      : null,
+                  endDate:
+                      (!_isCurrent && _endMonth != null && _endYear != null)
+                      ? _fmt(_endMonth!, _endYear!)
+                      : null,
+                  isCurrent: _isCurrent,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -2142,8 +2280,18 @@ class _MonthYearPicker extends StatelessWidget {
   });
 
   static const _monthLabels = [
-    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic',
   ];
 
   @override
@@ -2158,8 +2306,8 @@ class _MonthYearPicker extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 4),
         Row(
@@ -2172,7 +2320,9 @@ class _MonthYearPicker extends StatelessWidget {
                 items: List.generate(
                   12,
                   (i) => DropdownMenuItem(
-                      value: i + 1, child: Text(_monthLabels[i])),
+                    value: i + 1,
+                    child: Text(_monthLabels[i]),
+                  ),
                 ),
                 onChanged: (v) {
                   if (v != null) onChanged(v, year);
@@ -2186,8 +2336,10 @@ class _MonthYearPicker extends StatelessWidget {
               child: _StyledDropdown<int>(
                 value: year,
                 items: years
-                    .map((y) => DropdownMenuItem(
-                        value: y, child: Text(y.toString())))
+                    .map(
+                      (y) =>
+                          DropdownMenuItem(value: y, child: Text(y.toString())),
+                    )
                     .toList(),
                 onChanged: (v) {
                   if (v != null) onChanged(month, v);
@@ -2216,8 +2368,7 @@ class _YearPicker extends StatelessWidget {
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().year;
     // Range: current year down to 1955 (long academic careers)
-    final years =
-        List.generate(currentYear - 1955 + 1, (i) => currentYear - i);
+    final years = List.generate(currentYear - 1955 + 1, (i) => currentYear - i);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2225,15 +2376,14 @@ class _YearPicker extends StatelessWidget {
         Text(
           label,
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 4),
         _StyledDropdown<int>(
           value: year,
           items: years
-              .map((y) =>
-                  DropdownMenuItem(value: y, child: Text(y.toString())))
+              .map((y) => DropdownMenuItem(value: y, child: Text(y.toString())))
               .toList(),
           onChanged: (v) {
             if (v != null) onChanged(v);

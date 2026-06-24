@@ -17,9 +17,11 @@ class LoadingWidget extends StatelessWidget {
           const CircularProgressIndicator(),
           if (message != null) ...[
             const SizedBox(height: 16),
-            Text(message!,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center),
+            Text(
+              message!,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
           ],
         ],
       ),
@@ -45,12 +47,17 @@ class ErrorRetryWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline,
-                size: 48, color: Theme.of(context).colorScheme.error),
+            Icon(
+              Icons.error_outline,
+              size: 48,
+              color: Theme.of(context).colorScheme.error,
+            ),
             const SizedBox(height: 16),
-            Text(message,
-                style: Theme.of(context).textTheme.bodyLarge,
-                textAlign: TextAlign.center),
+            Text(
+              message,
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: onRetry,
@@ -81,10 +88,8 @@ class AsyncValueWidget<T> extends StatelessWidget {
     return value.when(
       data: builder,
       loading: () => LoadingWidget(message: loadingMessage),
-      error: (e, _) => ErrorRetryWidget(
-        message: friendlyError(e),
-        onRetry: () {},
-      ),
+      error: (e, _) =>
+          ErrorRetryWidget(message: friendlyError(e), onRetry: () {}),
     );
   }
 }

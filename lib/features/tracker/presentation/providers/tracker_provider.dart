@@ -18,7 +18,7 @@ part 'tracker_provider.g.dart';
 class TrackerRemoteDatasource {
   final FirebaseFirestore _db;
   TrackerRemoteDatasource({FirebaseFirestore? db})
-      : _db = db ?? FirebaseFirestore.instance;
+    : _db = db ?? FirebaseFirestore.instance;
 
   Stream<List<Application>> watchApplications() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -29,43 +29,36 @@ class TrackerRemoteDatasource {
         .where('userId', isEqualTo: uid)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snap) => snap.docs
-            .map((d) => Application.fromJson(d.data()))
-            .toList());
+        .map(
+          (snap) =>
+              snap.docs.map((d) => Application.fromJson(d.data())).toList(),
+        );
   }
 
-  Future<void> updateStatus(String applicationId,
-      ApplicationStatus status) async {
-    await _db
-        .collection('applications')
-        .doc(applicationId)
-        .update({
+  Future<void> updateStatus(
+    String applicationId,
+    ApplicationStatus status,
+  ) async {
+    await _db.collection('applications').doc(applicationId).update({
       'status': status.name,
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<void> updateNotes(
-      String applicationId, String notes) async {
-    await _db
-        .collection('applications')
-        .doc(applicationId)
-        .update({
+  Future<void> updateNotes(String applicationId, String notes) async {
+    await _db.collection('applications').doc(applicationId).update({
       'notes': notes,
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
 
-  Future<void> deleteApplication(
-      String id, String evaluationId) async {
+  Future<void> deleteApplication(String id, String evaluationId) async {
     final batch = _db.batch();
     batch.delete(_db.collection('applications').doc(id));
-    batch.delete(
-        _db.collection('evaluations').doc(evaluationId));
+    batch.delete(_db.collection('evaluations').doc(evaluationId));
 
     // Solo borrar cv y coach si existen
-    final cvDoc =
-        await _db.collection('cvs').doc(evaluationId).get();
+    final cvDoc = await _db.collection('cvs').doc(evaluationId).get();
     if (cvDoc.exists) {
       batch.delete(_db.collection('cvs').doc(evaluationId));
     }
@@ -75,9 +68,7 @@ class TrackerRemoteDatasource {
         .doc(evaluationId)
         .get();
     if (coachDoc.exists) {
-      batch.delete(_db
-          .collection('coachSessions')
-          .doc(evaluationId));
+      batch.delete(_db.collection('coachSessions').doc(evaluationId));
     }
 
     await batch.commit();
@@ -87,23 +78,18 @@ class TrackerRemoteDatasource {
 // ── Providers ─────────────────────────────────────────────────────────────────
 
 @riverpod
-TrackerRemoteDatasource trackerDatasource(Ref ref) =>
-    TrackerRemoteDatasource();
+TrackerRemoteDatasource trackerDatasource(Ref ref) => TrackerRemoteDatasource();
 
 /// Stream reactivo de todas las postulaciones del usuario.
 @riverpod
 Stream<List<Application>> applications(Ref ref) {
-  return ref
-      .watch(trackerDatasourceProvider)
-      .watchApplications();
+  return ref.watch(trackerDatasourceProvider).watchApplications();
 }
 
 /// Filtrar por estado
 @riverpod
-List<Application> filteredApplications(
-    Ref ref, ApplicationStatus? status) {
-  final all =
-      ref.watch(applicationsProvider).asData?.value ?? [];
+List<Application> filteredApplications(Ref ref, ApplicationStatus? status) {
+  final all = ref.watch(applicationsProvider).asData?.value ?? [];
   if (status == null) return all;
   return all.where((a) => a.status == status).toList();
 }
@@ -117,8 +103,9 @@ class TrackerNotifier extends _$TrackerNotifier {
   Set<String> build() => {};
 
   Future<Either<Failure, void>> updateStatus(
-      String applicationId,
-      ApplicationStatus status) async {
+    String applicationId,
+    ApplicationStatus status,
+  ) async {
     try {
       await ref
           .read(trackerDatasourceProvider)
@@ -129,11 +116,8 @@ class TrackerNotifier extends _$TrackerNotifier {
     }
   }
 
-  Future<void> deleteApplication(
-          String id, String evaluationId) =>
-      ref
-          .read(trackerDatasourceProvider)
-          .deleteApplication(id, evaluationId);
+  Future<void> deleteApplication(String id, String evaluationId) =>
+      ref.read(trackerDatasourceProvider).deleteApplication(id, evaluationId);
 
   void stageDeletion(String appId, String evaluationId) {
     _pendingDeletions[appId] = evaluationId;

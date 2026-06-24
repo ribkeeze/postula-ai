@@ -91,23 +91,23 @@ class UsageChip extends ConsumerWidget {
 
     return switch (trigger) {
       PaywallTrigger.evaluation => _buildCounter(
-          context,
-          used: usage.evaluations,
-          limit: 3,
-          label: 'evaluaciones',
-        ),
+        context,
+        used: usage.evaluations,
+        limit: 3,
+        label: 'evaluaciones',
+      ),
       PaywallTrigger.cvGeneration => _buildCounter(
-          context,
-          used: usage.cvGenerated,
-          limit: 1,
-          label: 'CV',
-        ),
+        context,
+        used: usage.cvGenerated,
+        limit: 1,
+        label: 'CV',
+      ),
       PaywallTrigger.coach => _buildCounter(
-          context,
-          used: usage.coachSessions,
-          limit: 3,
-          label: 'coach',
-        ),
+        context,
+        used: usage.coachSessions,
+        limit: 3,
+        label: 'coach',
+      ),
     };
   }
 

@@ -40,24 +40,20 @@ class CoachNotifier extends _$CoachNotifier {
     } catch (_) {}
   }
 
-  Future<Either<Failure, CoachSession>> prepare(
-      String evaluationId) async {
+  Future<Either<Failure, CoachSession>> prepare(String evaluationId) async {
     _isPreparing = true;
     state = const AsyncValue.loading();
 
     try {
-      final fn = FirebaseFunctions.instanceFor(
-          region: 'southamerica-east1');
-      final result = await fn
-          .httpsCallable('prepareCoach')
-          .call({'evaluationId': evaluationId});
+      final fn = FirebaseFunctions.instanceFor(region: 'southamerica-east1');
+      final result = await fn.httpsCallable('prepareCoach').call({
+        'evaluationId': evaluationId,
+      });
 
-      final rawData =
-          Map<String, dynamic>.from(result.data as Map);
+      final rawData = Map<String, dynamic>.from(result.data as Map);
 
       // Limpiar tipos anidados via JSON round-trip
-      final cleanData = jsonDecode(jsonEncode(rawData))
-          as Map<String, dynamic>;
+      final cleanData = jsonDecode(jsonEncode(rawData)) as Map<String, dynamic>;
 
       CoachSession session;
       try {
@@ -68,12 +64,10 @@ class CoachNotifier extends _$CoachNotifier {
       } catch (parseError) {
         debugPrint('Coach fromJson error: $parseError');
         state = AsyncValue.error(
-          const ServerFailure(
-              'Error procesando la sesión. Intentá de nuevo.'),
+          const ServerFailure('Error procesando la sesión. Intentá de nuevo.'),
           StackTrace.current,
         );
-        return const Left(
-            ServerFailure('Error procesando la sesión.'));
+        return const Left(ServerFailure('Error procesando la sesión.'));
       }
 
       state = AsyncValue.data(session);

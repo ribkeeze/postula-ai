@@ -119,10 +119,12 @@ abstract class StringsEs {
 
   // ── Errores ────────────────────────────────────────────────────────────────
   static const errorRed = 'Sin conexión a internet. Verificá tu conexión.';
-  static const errorServidor = 'El servicio no está disponible. Intentá más tarde.';
+  static const errorServidor =
+      'El servicio no está disponible. Intentá más tarde.';
   static const errorPerfilIncompleto =
       'Tu perfil está incompleto. Completalo para poder evaluar ofertas.';
-  static const errorOfertaVacia = 'Por favor pegá el texto de la oferta antes de continuar.';
+  static const errorOfertaVacia =
+      'Por favor pegá el texto de la oferta antes de continuar.';
   static const errorOfertaMuyCorta =
       'El texto es muy corto. Pegá el texto completo de la oferta.';
   static const errorSesion = 'Tu sesión expiró. Por favor volvé a ingresar.';
@@ -152,8 +154,7 @@ abstract class StringsEs {
 
   static String paywallLimiteEvaluaciones(int limite) =>
       '$limite evaluaciones por día (gratis)';
-  static String paywallLimiteCv(int limite) =>
-      '$limite CV por día (gratis)';
+  static String paywallLimiteCv(int limite) => '$limite CV por día (gratis)';
   static String paywallLimiteCoach(int limite) =>
       '$limite sesiones de coach por día (gratis)';
 
@@ -166,7 +167,8 @@ abstract class StringsEs {
   static const paywallBotonEsperar = 'Esperar a mañana (gratis)';
   static const paywallRestaurarCompra = 'Restaurar compra';
 
-  static const suscripcionActivada = '¡Premium activado! Gracias por apoyar PostulaAI.';
+  static const suscripcionActivada =
+      '¡Premium activado! Gracias por apoyar PostulaAI.';
   static const suscripcionError =
       'No pudimos procesar el pago. Intentá de nuevo o contactanos.';
   static const suscripcionVencida =

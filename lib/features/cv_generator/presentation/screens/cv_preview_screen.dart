@@ -24,249 +24,313 @@ import '../../domain/entities/generated_cv.dart';
 
 class CvPreviewScreen extends ConsumerStatefulWidget {
   final String applicationId;
-  const CvPreviewScreen(
-      {super.key, required this.applicationId});
+  const CvPreviewScreen({super.key, required this.applicationId});
 
   @override
-  ConsumerState<CvPreviewScreen> createState() =>
-      _CvPreviewScreenState();
+  ConsumerState<CvPreviewScreen> createState() => _CvPreviewScreenState();
 }
 
-class _CvPreviewScreenState
-    extends ConsumerState<CvPreviewScreen> {
+class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
   bool _isGeneratingPdf = false;
 
-  Future<List<int>> _buildPdf(
-      GeneratedCv cv, UserProfile? profile) async {
+  Future<List<int>> _buildPdf(GeneratedCv cv, UserProfile? profile) async {
     final pdf = pw.Document();
     final name = _sanitizeForPdf(profile?.personalInfo.fullName ?? '');
     final location = _formatLocation(profile?.personalInfo);
-    final contactParts = _sanitizeForPdf([
-      profile?.personalInfo.email ?? '',
-      if (profile?.personalInfo.phone?.isNotEmpty == true)
-        profile!.personalInfo.phone!,
-      if (location.isNotEmpty) location,
-    ].where((s) => s.isNotEmpty).join(' - '));
+    final contactParts = _sanitizeForPdf(
+      [
+        profile?.personalInfo.email ?? '',
+        if (profile?.personalInfo.phone?.isNotEmpty == true)
+          profile!.personalInfo.phone!,
+        if (location.isNotEmpty) location,
+      ].where((s) => s.isNotEmpty).join(' - '),
+    );
     final linkedIn = profile?.linkedIn;
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.symmetric(
-            horizontal: 40, vertical: 36),
+        margin: const pw.EdgeInsets.symmetric(horizontal: 40, vertical: 36),
         build: (pw.Context ctx) {
           final widgets = <pw.Widget>[];
 
           // Header
-          widgets.add(pw.Text(
-            name,
-            style: pw.TextStyle(
-                fontSize: 22,
-                fontWeight: pw.FontWeight.bold),
-          ));
+          widgets.add(
+            pw.Text(
+              name,
+              style: pw.TextStyle(fontSize: 22, fontWeight: pw.FontWeight.bold),
+            ),
+          );
           // Contact line
           if (contactParts.isNotEmpty) {
             widgets.add(pw.SizedBox(height: 4));
-            widgets.add(pw.Text(
-              contactParts,
-              style: const pw.TextStyle(
-                  fontSize: 10, color: PdfColors.grey700),
-            ));
+            widgets.add(
+              pw.Text(
+                contactParts,
+                style: const pw.TextStyle(
+                  fontSize: 10,
+                  color: PdfColors.grey700,
+                ),
+              ),
+            );
           }
           // LinkedIn on its own line
           if (linkedIn != null && linkedIn.isNotEmpty) {
             widgets.add(pw.SizedBox(height: 2));
-            widgets.add(pw.Text(
-              _sanitizeForPdf(linkedIn),
-              style: const pw.TextStyle(
-                  fontSize: 10, color: PdfColors.blue700),
-            ));
+            widgets.add(
+              pw.Text(
+                _sanitizeForPdf(linkedIn),
+                style: const pw.TextStyle(
+                  fontSize: 10,
+                  color: PdfColors.blue700,
+                ),
+              ),
+            );
           }
           // CV links (LinkedIn, GitHub, Portfolio from generated CV)
           for (final link in cv.links.where((l) => l.url.isNotEmpty)) {
             widgets.add(pw.SizedBox(height: 2));
-            widgets.add(pw.RichText(
-              text: pw.TextSpan(
-                children: [
-                  pw.TextSpan(
-                    text: '${_sanitizeForPdf(link.label)}: ',
-                    style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey800),
-                  ),
-                  pw.TextSpan(
-                    text: _sanitizeForPdf(link.url),
-                    style: const pw.TextStyle(fontSize: 10, color: PdfColors.blue700),
-                  ),
-                ],
+            widgets.add(
+              pw.RichText(
+                text: pw.TextSpan(
+                  children: [
+                    pw.TextSpan(
+                      text: '${_sanitizeForPdf(link.label)}: ',
+                      style: const pw.TextStyle(
+                        fontSize: 10,
+                        color: PdfColors.grey800,
+                      ),
+                    ),
+                    pw.TextSpan(
+                      text: _sanitizeForPdf(link.url),
+                      style: const pw.TextStyle(
+                        fontSize: 10,
+                        color: PdfColors.blue700,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ));
+            );
           }
           widgets.add(pw.SizedBox(height: 8));
-          widgets.add(pw.Divider(
-              thickness: 1, color: PdfColors.grey400));
+          widgets.add(pw.Divider(thickness: 1, color: PdfColors.grey400));
           widgets.add(pw.SizedBox(height: 10));
 
           // Resumen Profesional
-          widgets.addAll(_pdfSection('Resumen Profesional', [
-            pw.Text(_sanitizeForPdf(cv.personalizedSummary),
-                style: const pw.TextStyle(fontSize: 10)),
-          ]));
+          widgets.addAll(
+            _pdfSection('Resumen Profesional', [
+              pw.Text(
+                _sanitizeForPdf(cv.personalizedSummary),
+                style: const pw.TextStyle(fontSize: 10),
+              ),
+            ]),
+          );
 
           // Experiencia Laboral
           if (cv.workExperience.isNotEmpty) {
-            widgets.addAll(_pdfSection('Experiencia Laboral', [
-              for (final entry in cv.workExperience) ...[
-                pw.Text(
-                  _sanitizeForPdf('${entry.position} - ${entry.company}'),
-                  style: pw.TextStyle(
+            widgets.addAll(
+              _pdfSection('Experiencia Laboral', [
+                for (final entry in cv.workExperience) ...[
+                  pw.Text(
+                    _sanitizeForPdf('${entry.position} - ${entry.company}'),
+                    style: pw.TextStyle(
                       fontSize: 11,
-                      fontWeight: pw.FontWeight.bold),
-                ),
-                pw.Text(
-                  _sanitizeForPdf(entry.period),
-                  style: const pw.TextStyle(
-                      fontSize: 9,
-                      color: PdfColors.grey600),
-                ),
-                pw.SizedBox(height: 3),
-                for (final bullet in entry.bullets)
-                  pw.Row(
-                    crossAxisAlignment:
-                        pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('- ',
-                          style: const pw.TextStyle(
-                              fontSize: 10)),
-                      pw.Expanded(
-                        child: pw.Text(
-                          _sanitizeForPdf(_stripBullet(bullet)),
-                          style: const pw.TextStyle(
-                              fontSize: 10)),
-                      ),
-                    ],
+                      fontWeight: pw.FontWeight.bold,
+                    ),
                   ),
-                pw.SizedBox(height: 6),
-              ],
-            ]));
+                  pw.Text(
+                    _sanitizeForPdf(entry.period),
+                    style: const pw.TextStyle(
+                      fontSize: 9,
+                      color: PdfColors.grey600,
+                    ),
+                  ),
+                  pw.SizedBox(height: 3),
+                  for (final bullet in entry.bullets)
+                    pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('- ', style: const pw.TextStyle(fontSize: 10)),
+                        pw.Expanded(
+                          child: pw.Text(
+                            _sanitizeForPdf(_stripBullet(bullet)),
+                            style: const pw.TextStyle(fontSize: 10),
+                          ),
+                        ),
+                      ],
+                    ),
+                  pw.SizedBox(height: 6),
+                ],
+              ]),
+            );
           }
 
           // Educacion
           if (cv.education.isNotEmpty) {
-            widgets.addAll(_pdfSection('Educacion', [
-              for (final entry in cv.education) ...[
-                pw.Text(
-                  _sanitizeForPdf(_cvEducationTitle(entry.degree, entry.field)),
-                  style: pw.TextStyle(
+            widgets.addAll(
+              _pdfSection('Educacion', [
+                for (final entry in cv.education) ...[
+                  pw.Text(
+                    _sanitizeForPdf(
+                      _cvEducationTitle(entry.degree, entry.field),
+                    ),
+                    style: pw.TextStyle(
                       fontSize: 11,
-                      fontWeight: pw.FontWeight.bold),
-                ),
-                pw.Text(
-                  _sanitizeForPdf('${entry.institution} - ${entry.period}'),
-                  style: const pw.TextStyle(
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                  pw.Text(
+                    _sanitizeForPdf('${entry.institution} - ${entry.period}'),
+                    style: const pw.TextStyle(
                       fontSize: 9,
-                      color: PdfColors.grey600),
-                ),
-                pw.SizedBox(height: 6),
-              ],
-            ]));
+                      color: PdfColors.grey600,
+                    ),
+                  ),
+                  pw.SizedBox(height: 6),
+                ],
+              ]),
+            );
           }
 
           // Certificaciones
           if (cv.certifications.isNotEmpty) {
-            widgets.addAll(_pdfSection('Certificaciones', [
-              for (final cert in cv.certifications) ...[
-                pw.Text(
-                  _sanitizeForPdf('${cert.name} - ${cert.issuer} (${cert.year})'),
-                  style: const pw.TextStyle(fontSize: 10),
-                ),
-                if (cert.url != null && cert.url!.isNotEmpty)
+            widgets.addAll(
+              _pdfSection('Certificaciones', [
+                for (final cert in cv.certifications) ...[
                   pw.Text(
-                    _sanitizeForPdf(cert.url!),
-                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.blue700),
+                    _sanitizeForPdf(
+                      '${cert.name} - ${cert.issuer} (${cert.year})',
+                    ),
+                    style: const pw.TextStyle(fontSize: 10),
                   ),
-                pw.SizedBox(height: 4),
-              ],
-            ]));
+                  if (cert.url != null && cert.url!.isNotEmpty)
+                    pw.Text(
+                      _sanitizeForPdf(cert.url!),
+                      style: const pw.TextStyle(
+                        fontSize: 9,
+                        color: PdfColors.blue700,
+                      ),
+                    ),
+                  pw.SizedBox(height: 4),
+                ],
+              ]),
+            );
           }
 
           // Habilidades
           if (cv.skillsHighlighted.isNotEmpty) {
-            widgets.addAll(_pdfSection('Habilidades', [
-              pw.Text(
-                _sanitizeForPdf(cv.skillsHighlighted.join(', ')),
-                style: const pw.TextStyle(fontSize: 10)),
-            ]));
+            widgets.addAll(
+              _pdfSection('Habilidades', [
+                pw.Text(
+                  _sanitizeForPdf(cv.skillsHighlighted.join(', ')),
+                  style: const pw.TextStyle(fontSize: 10),
+                ),
+              ]),
+            );
           }
 
           // Idiomas
           if (cv.languages.isNotEmpty) {
-            widgets.addAll(_pdfSection('Idiomas', [
-              for (final lang in cv.languages)
-                pw.Text(
-                  '- ${_sanitizeForPdf(lang)}',
-                  style: const pw.TextStyle(fontSize: 10)),
-            ]));
+            widgets.addAll(
+              _pdfSection('Idiomas', [
+                for (final lang in cv.languages)
+                  pw.Text(
+                    '- ${_sanitizeForPdf(lang)}',
+                    style: const pw.TextStyle(fontSize: 10),
+                  ),
+              ]),
+            );
           }
 
           // Proyectos Destacados
           if (cv.projects.isNotEmpty) {
-            widgets.addAll(_pdfSection('Proyectos Destacados', [
-              for (final p in cv.projects) ...[
-                pw.Text(
-                  _sanitizeForPdf(p.name),
-                  style: pw.TextStyle(
+            widgets.addAll(
+              _pdfSection('Proyectos Destacados', [
+                for (final p in cv.projects) ...[
+                  pw.Text(
+                    _sanitizeForPdf(p.name),
+                    style: pw.TextStyle(
                       fontSize: 11,
-                      fontWeight: pw.FontWeight.bold),
-                ),
-                if (p.context != null || p.period != null)
-                  pw.Text(
-                    _sanitizeForPdf([if (p.context != null) p.context!, if (p.period != null) p.period!].join(' - ')),
-                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
+                      fontWeight: pw.FontWeight.bold,
+                    ),
                   ),
-                if (p.technologies.isNotEmpty)
-                  pw.Text(
-                    _sanitizeForPdf('Tecnologias: ${p.technologies.join(", ")}'),
-                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
-                  ),
-                if (p.url != null && p.url!.isNotEmpty)
-                  pw.Text(
-                    _sanitizeForPdf(p.url!),
-                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.blue700),
-                  ),
-                pw.SizedBox(height: 3),
-                for (final bullet in p.bullets)
-                  pw.Row(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Text('- ', style: const pw.TextStyle(fontSize: 10)),
-                      pw.Expanded(
-                        child: pw.Text(
-                          _sanitizeForPdf(_stripBullet(bullet)),
-                          style: const pw.TextStyle(fontSize: 10)),
+                  if (p.context != null || p.period != null)
+                    pw.Text(
+                      _sanitizeForPdf(
+                        [
+                          if (p.context != null) p.context!,
+                          if (p.period != null) p.period!,
+                        ].join(' - '),
                       ),
-                    ],
-                  ),
-                pw.SizedBox(height: 6),
-              ],
-            ]));
+                      style: const pw.TextStyle(
+                        fontSize: 9,
+                        color: PdfColors.grey600,
+                      ),
+                    ),
+                  if (p.technologies.isNotEmpty)
+                    pw.Text(
+                      _sanitizeForPdf(
+                        'Tecnologias: ${p.technologies.join(", ")}',
+                      ),
+                      style: const pw.TextStyle(
+                        fontSize: 9,
+                        color: PdfColors.grey600,
+                      ),
+                    ),
+                  if (p.url != null && p.url!.isNotEmpty)
+                    pw.Text(
+                      _sanitizeForPdf(p.url!),
+                      style: const pw.TextStyle(
+                        fontSize: 9,
+                        color: PdfColors.blue700,
+                      ),
+                    ),
+                  pw.SizedBox(height: 3),
+                  for (final bullet in p.bullets)
+                    pw.Row(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Text('- ', style: const pw.TextStyle(fontSize: 10)),
+                        pw.Expanded(
+                          child: pw.Text(
+                            _sanitizeForPdf(_stripBullet(bullet)),
+                            style: const pw.TextStyle(fontSize: 10),
+                          ),
+                        ),
+                      ],
+                    ),
+                  pw.SizedBox(height: 6),
+                ],
+              ]),
+            );
           }
 
           // Referencias
           if (cv.references.isNotEmpty) {
-            widgets.addAll(_pdfSection('Referencias', [
-              for (final ref in cv.references) ...[
-                pw.Text(
-                  _sanitizeForPdf('${ref.name} - ${ref.position}, ${ref.company}'),
-                  style: pw.TextStyle(
-                      fontSize: 10, fontWeight: pw.FontWeight.bold),
-                ),
-                pw.Text(
-                  _sanitizeForPdf(ref.contact),
-                  style: const pw.TextStyle(
-                      fontSize: 9, color: PdfColors.grey600),
-                ),
-                pw.SizedBox(height: 6),
-              ],
-            ]));
+            widgets.addAll(
+              _pdfSection('Referencias', [
+                for (final ref in cv.references) ...[
+                  pw.Text(
+                    _sanitizeForPdf(
+                      '${ref.name} - ${ref.position}, ${ref.company}',
+                    ),
+                    style: pw.TextStyle(
+                      fontSize: 10,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
+                  ),
+                  pw.Text(
+                    _sanitizeForPdf(ref.contact),
+                    style: const pw.TextStyle(
+                      fontSize: 9,
+                      color: PdfColors.grey600,
+                    ),
+                  ),
+                  pw.SizedBox(height: 6),
+                ],
+              ]),
+            );
           }
 
           return widgets;
@@ -277,8 +341,7 @@ class _CvPreviewScreenState
     return pdf.save();
   }
 
-  List<pw.Widget> _pdfSection(
-      String title, List<pw.Widget> children) {
+  List<pw.Widget> _pdfSection(String title, List<pw.Widget> children) {
     return [
       pw.Text(
         title,
@@ -300,30 +363,33 @@ class _CvPreviewScreenState
     return text
         .replaceAll(RegExp(r'[<>:"/\\|?*]'), '')
         .replaceAll(' ', '_')
-        .replaceAll(RegExp(r'_+'),
-            '_') // Replace multiple underscores with single
+        .replaceAll(
+          RegExp(r'_+'),
+          '_',
+        ) // Replace multiple underscores with single
         .toLowerCase();
   }
 
-  String _buildCvFilename(
-      String? fullName, String? jobTitle, String? company) {
+  String _buildCvFilename(String? fullName, String? jobTitle, String? company) {
     final name = _sanitizeFilename(fullName ?? 'CV');
-    final position =
-        _sanitizeFilename(jobTitle ?? 'posicion');
+    final position = _sanitizeFilename(jobTitle ?? 'posicion');
     final empresa = _sanitizeFilename(company ?? 'empresa');
     return 'CV_${name}_${position}_$empresa.pdf';
   }
 
-  Future<void> _generateAndSharePdf(BuildContext context,
-      GeneratedCv cv, UserProfile? profile) async {
+  Future<void> _generateAndSharePdf(
+    BuildContext context,
+    GeneratedCv cv,
+    UserProfile? profile,
+  ) async {
     if (_isGeneratingPdf) return;
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _isGeneratingPdf = true);
     try {
       // Fetch evaluation data for filename
       final evalAsyncValue = await ref.read(
-          evaluationByIdProvider(widget.applicationId)
-              .future);
+        evaluationByIdProvider(widget.applicationId).future,
+      );
       final jobTitle = evalAsyncValue.jobTitle;
       final company = evalAsyncValue.company;
 
@@ -337,28 +403,35 @@ class _CvPreviewScreenState
       final file = File('${tempDir.path}/$filename');
       await file.writeAsBytes(pdfBytes);
       if (!mounted) return;
-      await SharePlus.instance.share(ShareParams(
-        files: [XFile(file.path)],
-        subject:
-            'CV - ${profile?.personalInfo.fullName ?? ""}',
-      ));
+      await SharePlus.instance.share(
+        ShareParams(
+          files: [XFile(file.path)],
+          subject: 'CV - ${profile?.personalInfo.fullName ?? ""}',
+        ),
+      );
     } catch (e) {
-      messenger.showSnackBar(const SnackBar(
-          content: Text('Algo salió mal al generar el PDF. Intentá de nuevo.')));
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('Algo salió mal al generar el PDF. Intentá de nuevo.'),
+        ),
+      );
     } finally {
       if (mounted) setState(() => _isGeneratingPdf = false);
     }
   }
 
-  Future<void> _generateAndDownloadPdf(BuildContext context,
-      GeneratedCv cv, UserProfile? profile) async {
+  Future<void> _generateAndDownloadPdf(
+    BuildContext context,
+    GeneratedCv cv,
+    UserProfile? profile,
+  ) async {
     if (_isGeneratingPdf) return;
     final messenger = ScaffoldMessenger.of(context);
     setState(() => _isGeneratingPdf = true);
     try {
       final evalAsyncValue = await ref.read(
-          evaluationByIdProvider(widget.applicationId)
-              .future);
+        evaluationByIdProvider(widget.applicationId).future,
+      );
       final jobTitle = evalAsyncValue.jobTitle;
       final company = evalAsyncValue.company;
 
@@ -380,8 +453,13 @@ class _CvPreviewScreenState
       );
     } catch (e) {
       if (mounted) {
-        messenger.showSnackBar(const SnackBar(
-            content: Text('Algo salió mal al guardar el PDF. Intentá de nuevo.')));
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Algo salió mal al guardar el PDF. Intentá de nuevo.',
+            ),
+          ),
+        );
       }
     } finally {
       if (mounted) setState(() => _isGeneratingPdf = false);
@@ -394,8 +472,7 @@ class _CvPreviewScreenState
     if (info.city.isNotEmpty) parts.add(info.city);
     if (info.provincia?.isNotEmpty == true) {
       if (info.postalCode?.isNotEmpty == true) {
-        parts
-            .add('${info.provincia} CP ${info.postalCode}');
+        parts.add('${info.provincia} CP ${info.postalCode}');
       } else {
         parts.add(info.provincia!);
       }
@@ -406,11 +483,9 @@ class _CvPreviewScreenState
 
   @override
   Widget build(BuildContext context) {
-    final cvState =
-        ref.watch(cvProvider(widget.applicationId));
+    final cvState = ref.watch(cvProvider(widget.applicationId));
     final canGenerate = ref.watch(canGenerateCvProvider);
-    final profile =
-        ref.watch(userProfileProvider).asData?.value;
+    final profile = ref.watch(userProfileProvider).asData?.value;
 
     return Scaffold(
       appBar: AppBar(title: const Text(StringsEs.cvTitulo)),
@@ -422,32 +497,31 @@ class _CvPreviewScreenState
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.description_outlined,
-                      size: 64, color: Color(0xFF9CA3AF)),
+                  const Icon(
+                    Icons.description_outlined,
+                    size: 64,
+                    color: Color(0xFF9CA3AF),
+                  ),
                   const SizedBox(height: 16),
-                  Text(StringsEs.cvSubtitulo,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge,
-                      textAlign: TextAlign.center),
+                  Text(
+                    StringsEs.cvSubtitulo,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 32),
                   UsageGate(
                     trigger: PaywallTrigger.cvGeneration,
                     canUse: canGenerate,
                     child: ElevatedButton.icon(
                       onPressed: () => ref
-                          .read(cvProvider(
-                                  widget.applicationId)
-                              .notifier)
+                          .read(cvProvider(widget.applicationId).notifier)
                           .generate(widget.applicationId),
                       icon: const Icon(Icons.auto_awesome),
-                      label:
-                          const Text('Generar CV con IA'),
+                      label: const Text('Generar CV con IA'),
                     ),
                   ),
                   const SizedBox(height: 8),
-                  const UsageChip(
-                      trigger: PaywallTrigger.cvGeneration),
+                  const UsageChip(trigger: PaywallTrigger.cvGeneration),
                 ],
               ),
             );
@@ -468,23 +542,27 @@ class _CvPreviewScreenState
                     runSpacing: 4,
                     children: cv.links
                         .where((l) => l.url.isNotEmpty)
-                        .map((l) => GestureDetector(
-                              onTap: () => launchUrl(
-                                Uri.parse(l.url),
-                                mode: LaunchMode.externalApplication,
-                              ),
-                              child: Text(
-                                l.label,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall
-                                    ?.copyWith(
-                                      color: Theme.of(context).colorScheme.primary,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Theme.of(context).colorScheme.primary,
-                                    ),
-                              ),
-                            ))
+                        .map(
+                          (l) => GestureDetector(
+                            onTap: () => launchUrl(
+                              Uri.parse(l.url),
+                              mode: LaunchMode.externalApplication,
+                            ),
+                            child: Text(
+                              l.label,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                  ),
+                            ),
+                          ),
+                        )
                         .toList(),
                   ),
                 ),
@@ -494,10 +572,10 @@ class _CvPreviewScreenState
               // Resumen profesional
               _CvSection(
                 title: 'Resumen Profesional',
-                child: Text(cv.personalizedSummary,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium),
+                child: Text(
+                  cv.personalizedSummary,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -506,11 +584,9 @@ class _CvPreviewScreenState
                 _CvSection(
                   title: 'Experiencia Laboral',
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: cv.workExperience
-                        .map((e) =>
-                            _WorkEntryWidget(entry: e))
+                        .map((e) => _WorkEntryWidget(entry: e))
                         .toList(),
                   ),
                 ),
@@ -522,11 +598,9 @@ class _CvPreviewScreenState
                 _CvSection(
                   title: 'Educación',
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: cv.education
-                        .map((e) =>
-                            _EducationEntryWidget(entry: e))
+                        .map((e) => _EducationEntryWidget(entry: e))
                         .toList(),
                   ),
                 ),
@@ -567,18 +641,17 @@ class _CvPreviewScreenState
                 _CvSection(
                   title: 'Idiomas',
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: cv.languages
-                        .map((l) => Padding(
-                              padding:
-                                  const EdgeInsets.only(
-                                      bottom: 4),
-                              child: Text(l,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium),
-                            ))
+                        .map(
+                          (l) => Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Text(
+                              l,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                          ),
+                        )
                         .toList(),
                   ),
                 ),
@@ -590,8 +663,7 @@ class _CvPreviewScreenState
                 _CvSection(
                   title: 'Proyectos Destacados',
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: cv.projects
                         .map((p) => _ProjectEntryWidget(entry: p))
                         .toList(),
@@ -618,68 +690,57 @@ class _CvPreviewScreenState
               if (cv.keywordsUsed.isNotEmpty) ...[
                 Text(
                   'Keywords incluidas del aviso: ${cv.keywordsUsed.join(", ")}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelSmall
-                      ?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant,
-                      ),
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 16),
               ],
 
               // Action buttons
-              Row(children: [
-                Expanded(
-                  child: ElevatedButton.icon(
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: _isGeneratingPdf
+                          ? null
+                          : () => _generateAndSharePdf(context, cv, profile),
+                      icon: _isGeneratingPdf
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.share),
+                      label: const Text(StringsEs.cvCompartir),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton.outlined(
                     onPressed: _isGeneratingPdf
                         ? null
-                        : () => _generateAndSharePdf(
-                            context, cv, profile),
-                    icon: _isGeneratingPdf
-                        ? const SizedBox(
-                            width: 16,
-                            height: 16,
-                            child:
-                                CircularProgressIndicator(
-                                    strokeWidth: 2),
-                          )
-                        : const Icon(Icons.share),
-                    label:
-                        const Text(StringsEs.cvCompartir),
+                        : () => _generateAndDownloadPdf(context, cv, profile),
+                    icon: const Icon(Icons.download),
+                    tooltip: 'Descargar PDF',
                   ),
-                ),
-                const SizedBox(width: 8),
-                IconButton.outlined(
-                  onPressed: _isGeneratingPdf
-                      ? null
-                      : () => _generateAndDownloadPdf(
-                          context, cv, profile),
-                  icon: const Icon(Icons.download),
-                  tooltip: 'Descargar PDF',
-                ),
-                const SizedBox(width: 8),
-                IconButton.outlined(
-                  onPressed: () => ref
-                      .read(cvProvider(widget.applicationId)
-                          .notifier)
-                      .generate(widget.applicationId),
-                  icon: const Icon(Icons.refresh),
-                  tooltip: StringsEs.cvRegenerarCV,
-                ),
-              ]),
+                  const SizedBox(width: 8),
+                  IconButton.outlined(
+                    onPressed: () => ref
+                        .read(cvProvider(widget.applicationId).notifier)
+                        .generate(widget.applicationId),
+                    icon: const Icon(Icons.refresh),
+                    tooltip: StringsEs.cvRegenerarCV,
+                  ),
+                ],
+              ),
             ],
           );
         },
-        loading: () => const LoadingWidget(
-            message: StringsEs.cvGenerando),
+        loading: () => const LoadingWidget(message: StringsEs.cvGenerando),
         error: (e, _) => ErrorRetryWidget(
           message: friendlyError(e),
           onRetry: () => ref
-              .read(
-                  cvProvider(widget.applicationId).notifier)
+              .read(cvProvider(widget.applicationId).notifier)
               .generate(widget.applicationId),
         ),
       ),
@@ -696,8 +757,7 @@ class _ContactHeader extends StatelessWidget {
     if (info.city.isNotEmpty) parts.add(info.city);
     if (info.provincia?.isNotEmpty == true) {
       if (info.postalCode?.isNotEmpty == true) {
-        parts
-            .add('${info.provincia} CP ${info.postalCode}');
+        parts.add('${info.provincia} CP ${info.postalCode}');
       } else {
         parts.add(info.provincia!);
       }
@@ -725,37 +785,26 @@ class _ContactHeader extends StatelessWidget {
           children: [
             Text(
               info.fullName,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
             ),
             if (contactParts.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(
                 contactParts,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
             if (profile!.linkedIn?.isNotEmpty == true) ...[
               const SizedBox(height: 4),
               Text(
                 profile!.linkedIn!,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ],
           ],
@@ -768,8 +817,7 @@ class _ContactHeader extends StatelessWidget {
 class _CvSection extends StatelessWidget {
   final String title;
   final Widget child;
-  const _CvSection(
-      {required this.title, required this.child});
+  const _CvSection({required this.title, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -779,13 +827,12 @@ class _CvSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall
-                    ?.copyWith(
-                      fontWeight: FontWeight.w700,
-                    )),
+            Text(
+              title,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
+            ),
             const SizedBox(height: 10),
             child,
           ],
@@ -806,28 +853,24 @@ class _WorkEntryWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${entry.position} · ${entry.company}',
-              style:
-                  Theme.of(context).textTheme.titleSmall),
-          Text(entry.period,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant,
-                  )),
+          Text(
+            '${entry.position} · ${entry.company}',
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            entry.period,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 6),
           ...entry.bullets.map(
             (b) => Padding(
               padding: const EdgeInsets.only(bottom: 4),
               child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('- ',
-                      style: TextStyle(fontSize: 16)),
+                  const Text('- ', style: TextStyle(fontSize: 16)),
                   Expanded(child: Text(b)),
                 ],
               ),
@@ -854,18 +897,21 @@ class _ProjectEntryWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(entry.name,
-              style: Theme.of(context).textTheme.titleSmall),
+          Text(entry.name, style: Theme.of(context).textTheme.titleSmall),
           if (meta.isNotEmpty)
-            Text(meta,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    )),
+            Text(
+              meta,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           if (entry.technologies.isNotEmpty)
-            Text('Tecnologías: ${entry.technologies.join(", ")}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    )),
+            Text(
+              'Tecnologías: ${entry.technologies.join(", ")}',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+            ),
           if (entry.url != null && entry.url!.isNotEmpty)
             GestureDetector(
               onTap: () => launchUrl(
@@ -875,10 +921,10 @@ class _ProjectEntryWidget extends StatelessWidget {
               child: Text(
                 entry.url!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Theme.of(context).colorScheme.primary,
-                    ),
+                  color: Theme.of(context).colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
           if (entry.bullets.isNotEmpty) ...[
@@ -913,18 +959,16 @@ class _EducationEntryWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_cvEducationTitle(entry.degree, entry.field),
-              style:
-                  Theme.of(context).textTheme.titleSmall),
-          Text('${entry.institution} · ${entry.period}',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant,
-                  )),
+          Text(
+            _cvEducationTitle(entry.degree, entry.field),
+            style: Theme.of(context).textTheme.titleSmall,
+          ),
+          Text(
+            '${entry.institution} · ${entry.period}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );
@@ -942,12 +986,13 @@ class _CertificationEntryWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(entry.name,
-              style: Theme.of(context).textTheme.titleSmall),
-          Text('${entry.issuer} · ${entry.year}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  )),
+          Text(entry.name, style: Theme.of(context).textTheme.titleSmall),
+          Text(
+            '${entry.issuer} · ${entry.year}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           if (entry.url != null && entry.url!.isNotEmpty)
             GestureDetector(
               onTap: () => launchUrl(
@@ -957,10 +1002,10 @@ class _CertificationEntryWidget extends StatelessWidget {
               child: Text(
                 entry.url!,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Theme.of(context).colorScheme.primary,
-                    ),
+                  color: Theme.of(context).colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
         ],
@@ -980,18 +1025,19 @@ class _ReferenceEntryWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(entry.name,
-              style: Theme.of(context).textTheme.titleSmall),
-          Text('${entry.position} · ${entry.company}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  )),
+          Text(entry.name, style: Theme.of(context).textTheme.titleSmall),
+          Text(
+            '${entry.position} · ${entry.company}',
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
           if (entry.contact.isNotEmpty)
             Text(
               entry.contact,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
         ],
       ),
@@ -1026,4 +1072,3 @@ String _sanitizeForPdf(String text) {
 String _stripBullet(String text) {
   return text.replaceFirst(RegExp(r'^[•·▪▸→⟶\-–—\*]\s*'), '').trim();
 }
-

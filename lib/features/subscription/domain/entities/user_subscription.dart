@@ -10,8 +10,8 @@ abstract class UserSubscription with _$UserSubscription {
   const factory UserSubscription({
     required String userId,
     required SubscriptionPlan plan,
-    DateTime? expiresAt,       // null = free (sin vencimiento)
-    String? revenueCatId,      // ID de RevenueCat para reconciliar
+    DateTime? expiresAt, // null = free (sin vencimiento)
+    String? revenueCatId, // ID de RevenueCat para reconciliar
     required DateTime updatedAt,
   }) = _UserSubscription;
 
@@ -31,15 +31,17 @@ abstract class UserSubscription with _$UserSubscription {
 
   /// Plan gratuito por defecto para usuarios nuevos.
   factory UserSubscription.free(String userId) => UserSubscription(
-        userId: userId,
-        plan: SubscriptionPlan.free,
-        updatedAt: DateTime.now(),
-      );
+    userId: userId,
+    plan: SubscriptionPlan.free,
+    updatedAt: DateTime.now(),
+  );
 }
 
 enum SubscriptionPlan {
-  @JsonValue('free') free,
-  @JsonValue('premium') premium;
+  @JsonValue('free')
+  free,
+  @JsonValue('premium')
+  premium,
 }
 
 /// Uso diario del usuario.
@@ -47,7 +49,7 @@ enum SubscriptionPlan {
 @freezed
 abstract class DailyUsage with _$DailyUsage {
   const factory DailyUsage({
-    required String date,             // "2026-05-06"
+    required String date, // "2026-05-06"
     @Default(0) int evaluations,
     @Default(0) int cvGenerated,
     @Default(0) int coachSessions,

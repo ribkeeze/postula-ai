@@ -16,16 +16,14 @@ import '../providers/evaluation_provider.dart';
 
 class EvaluationResultScreen extends ConsumerWidget {
   final String evaluationId;
-  const EvaluationResultScreen(
-      {super.key, required this.evaluationId});
+  const EvaluationResultScreen({super.key, required this.evaluationId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Ensure ad is preloaded
     ref.read(interstitialAdServiceProvider);
 
-    final evalAsync =
-        ref.watch(evaluationByIdProvider(evaluationId));
+    final evalAsync = ref.watch(evaluationByIdProvider(evaluationId));
 
     return Scaffold(
       appBar: AppBar(
@@ -34,12 +32,10 @@ class EvaluationResultScreen extends ConsumerWidget {
       ),
       body: evalAsync.when(
         data: (eval) => _ResultBody(evaluation: eval),
-        loading: () => const LoadingWidget(
-            message: 'Cargando resultado...'),
+        loading: () => const LoadingWidget(message: 'Cargando resultado...'),
         error: (e, _) => ErrorRetryWidget(
           message: friendlyError(e),
-          onRetry: () => ref.invalidate(
-              evaluationByIdProvider(evaluationId)),
+          onRetry: () => ref.invalidate(evaluationByIdProvider(evaluationId)),
         ),
       ),
     );
@@ -61,10 +57,10 @@ class _ResultBodyState extends ConsumerState<_ResultBody> {
     debugPrint('[ADS] _ResultBody initState fired');
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
-        debugPrint('[ADS] postFrameCallback firing, calling showInterstitialIfEligible');
-        ref
-            .read(interstitialAdServiceProvider)
-            .showInterstitialIfEligible();
+        debugPrint(
+          '[ADS] postFrameCallback firing, calling showInterstitialIfEligible',
+        );
+        ref.read(interstitialAdServiceProvider).showInterstitialIfEligible();
       }
     });
   }
@@ -79,10 +75,10 @@ class _ResultBodyState extends ConsumerState<_ResultBody> {
             children: [
               _ScoreCard(evaluation: widget.evaluation),
               const SizedBox(height: 20),
-              Text(widget.evaluation.summary,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge),
+              Text(
+                widget.evaluation.summary,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
               const SizedBox(height: 20),
               _ListSection(
                 title: StringsEs.resultadoFortalezas,
@@ -106,8 +102,7 @@ class _ResultBodyState extends ConsumerState<_ResultBody> {
               _CoachButton(evaluation: widget.evaluation),
               const SizedBox(height: 12),
               TextButton(
-                onPressed: () =>
-                    context.go(AppRoutes.evaluate),
+                onPressed: () => context.go(AppRoutes.evaluate),
                 child: const Text('Evaluar otra oferta'),
               ),
             ],
@@ -142,12 +137,8 @@ class _CvButton extends ConsumerWidget {
     final hasCv = cvState.asData?.value != null;
     return ElevatedButton.icon(
       onPressed: () => context.push('/cv/${evaluation.id}'),
-      icon: Icon(hasCv
-          ? Icons.description
-          : Icons.description_outlined),
-      label: Text(hasCv
-          ? 'Ver CV generado'
-          : StringsEs.resultadoGenerarCV),
+      icon: Icon(hasCv ? Icons.description : Icons.description_outlined),
+      label: Text(hasCv ? 'Ver CV generado' : StringsEs.resultadoGenerarCV),
     );
   }
 }
@@ -158,20 +149,16 @@ class _CoachButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final hasSession = ref
-            .watch(coachProvider(evaluation.id))
-            .asData
-            ?.value !=
-        null;
+    final hasSession =
+        ref.watch(coachProvider(evaluation.id)).asData?.value != null;
     return OutlinedButton.icon(
-      onPressed: () =>
-          context.push('/coach/${evaluation.id}'),
-      icon: Icon(hasSession
-          ? Icons.school
-          : Icons.school_outlined),
-      label: Text(hasSession
-          ? 'Ver preparación de entrevista'
-          : StringsEs.resultadoPreparar),
+      onPressed: () => context.push('/coach/${evaluation.id}'),
+      icon: Icon(hasSession ? Icons.school : Icons.school_outlined),
+      label: Text(
+        hasSession
+            ? 'Ver preparación de entrevista'
+            : StringsEs.resultadoPreparar,
+      ),
     );
   }
 }
@@ -182,16 +169,14 @@ class _ScoreCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scoreColor =
-        context.appColors.scoreColor(evaluation.score);
+    final scoreColor = context.appColors.scoreColor(evaluation.score);
 
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: scoreColor.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-            color: scoreColor.withValues(alpha: 0.3)),
+        border: Border.all(color: scoreColor.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -215,20 +200,20 @@ class _ScoreCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(
-                    bottom: 8, left: 4),
-                child: Text('/5',
-                    style: TextStyle(
-                        fontSize: 20,
-                        color: scoreColor.withValues(
-                            alpha: 0.7))),
+                padding: const EdgeInsets.only(bottom: 8, left: 4),
+                child: Text(
+                  '/5',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: scoreColor.withValues(alpha: 0.7),
+                  ),
+                ),
               ),
             ],
           ),
           const SizedBox(height: 12),
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: scoreColor,
               borderRadius: BorderRadius.circular(20),
@@ -236,22 +221,18 @@ class _ScoreCard extends StatelessWidget {
             child: Text(
               evaluation.recommendation.label,
               style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 15,
+              ),
             ),
           ),
           const SizedBox(height: 8),
           Text(
             evaluation.recommendation.description,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant,
-                ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -278,42 +259,44 @@ class _ListSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(children: [
-          Icon(icon, size: 18, color: color),
-          const SizedBox(width: 8),
-          Text(title,
-              style: Theme.of(context)
-                  .textTheme
-                  .titleSmall
-                  ?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  )),
-        ]),
+        Row(
+          children: [
+            Icon(icon, size: 18, color: color),
+            const SizedBox(width: 8),
+            Text(
+              title,
+              style: Theme.of(
+                context,
+              ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
         const SizedBox(height: 10),
-        ...items.map((item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(
-                        top: 6, right: 10),
-                    width: 6,
-                    height: 6,
-                    decoration: BoxDecoration(
-                        color: color,
-                        shape: BoxShape.circle),
+        ...items.map(
+          (item) => Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(top: 6, right: 10),
+                  width: 6,
+                  height: 6,
+                  decoration: BoxDecoration(
+                    color: color,
+                    shape: BoxShape.circle,
                   ),
-                  Expanded(
-                    child: Text(item,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium),
+                ),
+                Expanded(
+                  child: Text(
+                    item,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }

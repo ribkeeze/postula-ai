@@ -10,12 +10,10 @@ class EvaluateScreen extends ConsumerStatefulWidget {
   const EvaluateScreen({super.key});
 
   @override
-  ConsumerState<EvaluateScreen> createState() =>
-      _EvaluateScreenState();
+  ConsumerState<EvaluateScreen> createState() => _EvaluateScreenState();
 }
 
-class _EvaluateScreenState
-    extends ConsumerState<EvaluateScreen> {
+class _EvaluateScreenState extends ConsumerState<EvaluateScreen> {
   final _controller = TextEditingController();
   final _scrollController = ScrollController();
   final _formKey = GlobalKey<FormState>();
@@ -31,29 +29,21 @@ class _EvaluateScreenState
     if (!_formKey.currentState!.validate()) return;
 
     final text = _controller.text.trim();
-    final result = await ref
-        .read(evaluationProvider.notifier)
-        .evaluate(text);
+    final result = await ref.read(evaluationProvider.notifier).evaluate(text);
 
     if (!mounted) return;
 
-    result.fold(
-      (failure) => _showError(failure.message),
-      (evaluation) {
-        debugPrint('Navigating to id: ${evaluation.id}');
-        context.push(
-            '${AppRoutes.evaluate}/result?id=${evaluation.id}');
-      },
-    );
+    result.fold((failure) => _showError(failure.message), (evaluation) {
+      debugPrint('Navigating to id: ${evaluation.id}');
+      context.push('${AppRoutes.evaluate}/result?id=${evaluation.id}');
+    });
   }
 
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message,
-            style: const TextStyle(fontSize: 16)),
-        backgroundColor:
-            Theme.of(context).colorScheme.error,
+        content: Text(message, style: const TextStyle(fontSize: 16)),
+        backgroundColor: Theme.of(context).colorScheme.error,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -77,14 +67,9 @@ class _EvaluateScreenState
           children: [
             Text(
               StringsEs.evaluadorSubtitulo,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyLarge
-                  ?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant,
-                  ),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 24),
             TextFormField(
@@ -130,16 +115,12 @@ class _LoadingCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Theme.of(context)
-            .colorScheme
-            .primaryContainer
-            .withValues(alpha: 0.3),
+        color: Theme.of(
+          context,
+        ).colorScheme.primaryContainer.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Theme.of(context)
-              .colorScheme
-              .primary
-              .withValues(alpha: 0.2),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -148,25 +129,17 @@ class _LoadingCard extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             StringsEs.evaluadorCargando,
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             StringsEs.evaluadorCargandoDetalle,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurfaceVariant,
-                ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -190,18 +163,18 @@ class _HowToTip extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.lightbulb_outline,
-                  color: Color(0xFF15803D), size: 20),
+              const Icon(
+                Icons.lightbulb_outline,
+                color: Color(0xFF15803D),
+                size: 20,
+              ),
               const SizedBox(width: 8),
               Text(
                 '¿Cómo conseguir el texto?',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleSmall
-                    ?.copyWith(
-                      color: const Color(0xFF15803D),
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: const Color(0xFF15803D),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
           ),
@@ -210,13 +183,10 @@ class _HowToTip extends StatelessWidget {
             'En el aviso de trabajo, seleccioná todo el texto '
             '(manteniendo presionado en el celular) y copialo. '
             'También podés copiar desde LinkedIn, Bumeran, ZonaJobs, etc.',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(
-                  color: const Color(0xFF166534),
-                  height: 1.5,
-                ),
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: const Color(0xFF166534),
+              height: 1.5,
+            ),
           ),
         ],
       ),

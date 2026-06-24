@@ -66,13 +66,9 @@ abstract class CvCertification with _$CvCertification {
 
 @freezed
 abstract class CvLink with _$CvLink {
-  const factory CvLink({
-    required String label,
-    required String url,
-  }) = _CvLink;
+  const factory CvLink({required String label, required String url}) = _CvLink;
 
-  factory CvLink.fromJson(Map<String, dynamic> json) =>
-      _$CvLinkFromJson(json);
+  factory CvLink.fromJson(Map<String, dynamic> json) => _$CvLinkFromJson(json);
 }
 
 @freezed

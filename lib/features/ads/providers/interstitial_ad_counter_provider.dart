@@ -9,8 +9,7 @@ const String _evaluationCountKey = 'evaluationCount';
 /// Provider to manage the local evaluation counter persisted via SharedPreferences.
 /// Automatically loads on first access and persists across app restarts.
 @riverpod
-class InterstitialAdCounter
-    extends _$InterstitialAdCounter {
+class InterstitialAdCounter extends _$InterstitialAdCounter {
   @override
   Future<int> build() async {
     final prefs = await SharedPreferences.getInstance();

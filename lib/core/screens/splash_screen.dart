@@ -49,8 +49,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: const Icon(Icons.work_outline_rounded,
-                  size: 48, color: Color(0xFF1A56DB)),
+              child: const Icon(
+                Icons.work_outline_rounded,
+                size: 48,
+                color: Color(0xFF1A56DB),
+              ),
             ),
             const SizedBox(height: 24),
             const Text(

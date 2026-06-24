@@ -35,8 +35,7 @@ class _RouterNotifier extends ChangeNotifier {
 
   final Ref _ref;
 
-  String? redirect(
-      BuildContext context, GoRouterState state) {
+  String? redirect(BuildContext context, GoRouterState state) {
     final authAsync = _ref.read(authStateProvider);
     final loc = state.matchedLocation;
     final isOnSplash = loc == AppRoutes.splash;
@@ -76,17 +75,13 @@ GoRouter appRouter(Ref ref) {
     refreshListenable: notifier,
     redirect: notifier.redirect,
     routes: [
-      GoRoute(
-        path: AppRoutes.splash,
-        builder: (_, _) => const SplashScreen(),
-      ),
+      GoRoute(path: AppRoutes.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (_, _) => const OnboardingScreen(),
       ),
       ShellRoute(
-        builder: (context, state, child) =>
-            HomeScreen(child: child),
+        builder: (context, state, child) => HomeScreen(child: child),
         routes: [
           GoRoute(
             path: AppRoutes.evaluate,
@@ -94,10 +89,8 @@ GoRouter appRouter(Ref ref) {
             routes: [
               GoRoute(
                 path: 'result',
-                builder: (context, state) =>
-                    EvaluationResultScreen(
-                  evaluationId:
-                      state.uri.queryParameters['id'] ?? '',
+                builder: (context, state) => EvaluationResultScreen(
+                  evaluationId: state.uri.queryParameters['id'] ?? '',
                 ),
               ),
             ],
@@ -123,15 +116,13 @@ GoRouter appRouter(Ref ref) {
           GoRoute(
             path: '/cv/:applicationId',
             builder: (context, state) => CvPreviewScreen(
-              applicationId:
-                  state.pathParameters['applicationId']!,
+              applicationId: state.pathParameters['applicationId']!,
             ),
           ),
           GoRoute(
             path: '/coach/:applicationId',
             builder: (context, state) => CoachScreen(
-              applicationId:
-                  state.pathParameters['applicationId']!,
+              applicationId: state.pathParameters['applicationId']!,
             ),
           ),
         ],

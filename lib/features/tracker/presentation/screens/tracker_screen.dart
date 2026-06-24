@@ -16,12 +16,10 @@ class TrackerScreen extends ConsumerStatefulWidget {
   const TrackerScreen({super.key});
 
   @override
-  ConsumerState<TrackerScreen> createState() =>
-      _TrackerScreenState();
+  ConsumerState<TrackerScreen> createState() => _TrackerScreenState();
 }
 
-class _TrackerScreenState
-    extends ConsumerState<TrackerScreen> {
+class _TrackerScreenState extends ConsumerState<TrackerScreen> {
   ApplicationStatus? _filter;
   ScaffoldMessengerState? _scaffoldMessenger;
 
@@ -43,14 +41,16 @@ class _TrackerScreenState
 
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text('${app.jobTitle} eliminado'),
-        action: SnackBarAction(
-          label: 'Deshacer',
-          onPressed: () =>
-              ref.read(trackerProvider.notifier).cancelDeletion(app.id),
+      ..showSnackBar(
+        SnackBar(
+          content: Text('${app.jobTitle} eliminado'),
+          action: SnackBarAction(
+            label: 'Deshacer',
+            onPressed: () =>
+                ref.read(trackerProvider.notifier).cancelDeletion(app.id),
+          ),
         ),
-      ));
+      );
   }
 
   @override
@@ -59,9 +59,7 @@ class _TrackerScreenState
     final pendingIds = ref.watch(trackerProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(StringsEs.trackerTitulo),
-      ),
+      appBar: AppBar(title: const Text(StringsEs.trackerTitulo)),
       bottomNavigationBar: const BannerAdWidget(),
       body: Column(
         children: [
@@ -79,9 +77,7 @@ class _TrackerScreenState
                     .toList();
                 final filtered = _filter == null
                     ? visible
-                    : visible
-                        .where((a) => a.status == _filter)
-                        .toList();
+                    : visible.where((a) => a.status == _filter).toList();
 
                 if (filtered.isEmpty) {
                   return Center(
@@ -91,14 +87,9 @@ class _TrackerScreenState
                         visible.isEmpty
                             ? StringsEs.trackerVacio
                             : 'No hay postulaciones con este estado.',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge
-                            ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            ),
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -108,41 +99,35 @@ class _TrackerScreenState
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, _) =>
-                      const SizedBox(height: 0),
+                  separatorBuilder: (_, _) => const SizedBox(height: 0),
                   itemBuilder: (_, i) => Dismissible(
                     key: Key(filtered[i].id),
                     direction: DismissDirection.endToStart,
-                    onDismissed: (_) =>
-                        _onDelete(filtered[i]),
+                    onDismissed: (_) => _onDelete(filtered[i]),
                     background: Container(
                       alignment: Alignment.centerRight,
                       decoration: BoxDecoration(
                         color: Colors.red.shade600,
-                        borderRadius:
-                            BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      padding:
-                          const EdgeInsets.only(right: 20),
+                      padding: const EdgeInsets.only(right: 20),
                       child: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.white,
-                          size: 28),
+                        Icons.delete_outline,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                     ),
-                    child:
-                        _ApplicationCard(app: filtered[i]),
+                    child: _ApplicationCard(app: filtered[i]),
                   ),
                 );
               },
               loading: () => const LoadingWidget(),
               error: (e, _) => ErrorRetryWidget(
                 message: friendlyError(e),
-                onRetry: () =>
-                    ref.invalidate(applicationsProvider),
+                onRetry: () => ref.invalidate(applicationsProvider),
               ),
             ),
           ),
-
         ],
       ),
     );
@@ -153,46 +138,29 @@ class _StatusFilterBar extends ConsumerWidget {
   final ApplicationStatus? selected;
   final Function(ApplicationStatus?) onSelected;
 
-  const _StatusFilterBar(
-      {required this.selected, required this.onSelected});
+  const _StatusFilterBar({required this.selected, required this.onSelected});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final apps =
-        ref.watch(applicationsProvider).asData?.value ??
-            const [];
+    final apps = ref.watch(applicationsProvider).asData?.value ?? const [];
 
-    int countFor(ApplicationStatus? status) =>
-        status == null
-            ? apps.length
-            : apps.where((a) => a.status == status).length;
+    int countFor(ApplicationStatus? status) => status == null
+        ? apps.length
+        : apps.where((a) => a.status == status).length;
 
     final options = [
       (null, StringsEs.trackerFiltroTodas),
-      (
-        ApplicationStatus.interested,
-        StringsEs.trackerFiltroInteresado
-      ),
-      (
-        ApplicationStatus.applied,
-        StringsEs.trackerFiltroAplicado
-      ),
-      (
-        ApplicationStatus.interview,
-        StringsEs.trackerFiltroEntrevista
-      ),
-      (
-        ApplicationStatus.offer,
-        StringsEs.trackerFiltroOferta
-      ),
+      (ApplicationStatus.interested, StringsEs.trackerFiltroInteresado),
+      (ApplicationStatus.applied, StringsEs.trackerFiltroAplicado),
+      (ApplicationStatus.interview, StringsEs.trackerFiltroEntrevista),
+      (ApplicationStatus.offer, StringsEs.trackerFiltroOferta),
     ];
 
     return SizedBox(
       height: 52,
       child: ListView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(
-            horizontal: 16, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         children: options.map((o) {
           final isSelected = selected == o.$1;
           final count = countFor(o.$1);
@@ -206,19 +174,16 @@ class _StatusFilterBar extends ConsumerWidget {
                   const SizedBox(width: 5),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 6, vertical: 1),
+                      horizontal: 6,
+                      vertical: 1,
+                    ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? Theme.of(context)
-                              .colorScheme
-                              .onPrimary
-                              .withAlpha(60)
-                          : Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withAlpha(30),
-                      borderRadius:
-                          BorderRadius.circular(10),
+                          ? Theme.of(
+                              context,
+                            ).colorScheme.onPrimary.withAlpha(60)
+                          : Theme.of(context).colorScheme.primary.withAlpha(30),
+                      borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
                       '$count',
@@ -226,12 +191,8 @@ class _StatusFilterBar extends ConsumerWidget {
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
                         color: isSelected
-                            ? Theme.of(context)
-                                .colorScheme
-                                .onPrimary
-                            : Theme.of(context)
-                                .colorScheme
-                                .primary,
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),
@@ -254,14 +215,12 @@ class _ApplicationCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final scoreColor =
-        context.appColors.scoreColor(app.score);
+    final scoreColor = context.appColors.scoreColor(app.score);
 
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: () => context.push(
-            '/evaluate/result?id=${app.evaluationId}'),
+        onTap: () => context.push('/evaluate/result?id=${app.evaluationId}'),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Row(
@@ -290,40 +249,29 @@ class _ApplicationCard extends ConsumerWidget {
               // Info
               Expanded(
                 child: Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(app.jobTitle,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleSmall
-                            ?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis),
+                    Text(
+                      app.jobTitle,
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 2),
-                    Text(app.company,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            )),
+                    Text(
+                      app.company,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                     const SizedBox(height: 6),
                     Text(
-                      DateFormat('dd/MM/yyyy')
-                          .format(app.createdAt),
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
+                      DateFormat('dd/MM/yyyy').format(app.createdAt),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ],
                 ),
@@ -332,9 +280,7 @@ class _ApplicationCard extends ConsumerWidget {
               // Status chip + menu
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _StatusMenu(app: app),
-                ],
+                children: [_StatusMenu(app: app)],
               ),
             ],
           ),
@@ -353,26 +299,18 @@ class _StatusMenu extends ConsumerWidget {
     return PopupMenuButton<ApplicationStatus>(
       initialValue: app.status,
       onSelected: (status) {
-        ref
-            .read(trackerProvider.notifier)
-            .updateStatus(app.id, status);
+        ref.read(trackerProvider.notifier).updateStatus(app.id, status);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text(StringsEs.trackerEstadoActualizado),
-          ),
+          const SnackBar(content: Text(StringsEs.trackerEstadoActualizado)),
         );
       },
       child: Chip(
-        label: Text(app.status.label,
-            style: const TextStyle(fontSize: 12)),
+        label: Text(app.status.label, style: const TextStyle(fontSize: 12)),
         padding: EdgeInsets.zero,
-        materialTapTargetSize:
-            MaterialTapTargetSize.shrinkWrap,
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
       itemBuilder: (_) => ApplicationStatus.values
-          .map((s) =>
-              PopupMenuItem(value: s, child: Text(s.label)))
+          .map((s) => PopupMenuItem(value: s, child: Text(s.label)))
           .toList(),
     );
   }

@@ -107,10 +107,8 @@ abstract class Education with _$Education {
 
 @freezed
 abstract class Language with _$Language {
-  const factory Language({
-    required String name,
-    required LanguageLevel level,
-  }) = _Language;
+  const factory Language({required String name, required LanguageLevel level}) =
+      _Language;
 
   factory Language.fromJson(Map<String, dynamic> json) =>
       _$LanguageFromJson(json);
@@ -140,7 +138,7 @@ abstract class Project with _$Project {
     String? url,
     String? context,
     String? startDate, // "MM/YYYY"
-    String? endDate,   // "MM/YYYY", null if ongoing
+    String? endDate, // "MM/YYYY", null if ongoing
     @Default(false) bool isCurrent,
   }) = _Project;
 
@@ -149,9 +147,12 @@ abstract class Project with _$Project {
 }
 
 enum WorkModality {
-  @JsonValue('remoto') remote,
-  @JsonValue('hibrido') hybrid,
-  @JsonValue('presencial') onsite;
+  @JsonValue('remoto')
+  remote,
+  @JsonValue('hibrido')
+  hybrid,
+  @JsonValue('presencial')
+  onsite;
 
   String get label => switch (this) {
     WorkModality.remote => 'Remoto',
@@ -161,10 +162,14 @@ enum WorkModality {
 }
 
 enum LanguageLevel {
-  @JsonValue('basico') basico,
-  @JsonValue('intermedio') intermedio,
-  @JsonValue('avanzado') avanzado,
-  @JsonValue('nativo') nativo;
+  @JsonValue('basico')
+  basico,
+  @JsonValue('intermedio')
+  intermedio,
+  @JsonValue('avanzado')
+  avanzado,
+  @JsonValue('nativo')
+  nativo;
 
   String get label {
     return switch (this) {

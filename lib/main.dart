@@ -17,8 +17,7 @@ const _webClientId =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // TODO: firebase_app_check package upgrade needed for new provider types
   await FirebaseAppCheck.instance.activate(
     // ignore: deprecated_member_use
@@ -26,8 +25,7 @@ void main() async {
     // ignore: deprecated_member_use
     appleProvider: AppleProvider.debug,
   );
-  await GoogleSignIn.instance
-      .initialize(serverClientId: _webClientId);
+  await GoogleSignIn.instance.initialize(serverClientId: _webClientId);
 
   await MobileAds.instance.initialize();
 
@@ -37,11 +35,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
 
-  runApp(
-    const ProviderScope(
-      child: PostulaAIApp(),
-    ),
-  );
+  runApp(const ProviderScope(child: PostulaAIApp()));
 }
 
 class PostulaAIApp extends ConsumerWidget {
@@ -64,10 +58,7 @@ class PostulaAIApp extends ConsumerWidget {
             // Máximo 1.3x de escalado — más que eso rompe algunos layouts
             // pero el diseño está hecho para tolerar hasta 1.3x
             textScaler: TextScaler.linear(
-              MediaQuery.of(context)
-                  .textScaler
-                  .scale(1.0)
-                  .clamp(1.0, 1.3),
+              MediaQuery.of(context).textScaler.scale(1.0).clamp(1.0, 1.3),
             ),
           ),
           child: child!,

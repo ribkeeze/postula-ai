@@ -20,12 +20,10 @@ class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  ConsumerState<ProfileScreen> createState() =>
-      _ProfileScreenState();
+  ConsumerState<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState
-    extends ConsumerState<ProfileScreen> {
+class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   final _linkedInCtrl = TextEditingController();
   final _githubCtrl = TextEditingController();
   final _portfolioCtrl = TextEditingController();
@@ -54,8 +52,7 @@ class _ProfileScreenState
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _initFromProfile());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initFromProfile());
   }
 
   @override
@@ -72,8 +69,7 @@ class _ProfileScreenState
   }
 
   void _initFromProfile() {
-    final profile =
-        ref.read(userProfileProvider).asData?.value;
+    final profile = ref.read(userProfileProvider).asData?.value;
     if (profile == null) {
       if (mounted) setState(() => _initialized = true);
       return;
@@ -91,17 +87,14 @@ class _ProfileScreenState
     _linkedInCtrl.text = info.linkedInUrl ?? '';
     _githubCtrl.text = info.githubUrl ?? '';
     _portfolioCtrl.text = info.portfolioUrl ?? '';
-    _salaryCtrl.text =
-        info.expectedSalaryAmount?.toStringAsFixed(0) ?? '';
+    _salaryCtrl.text = info.expectedSalaryAmount?.toStringAsFixed(0) ?? '';
     _salaryCurrency = info.expectedSalaryCurrency;
     _salaryNegotiable = info.salaryNegotiable;
     _hasOwnVehicle = info.hasOwnVehicle;
     _commuteCtrl.text = info.maxCommuteKm?.toString() ?? '';
-    _excludedIndustries =
-        List.from(info.excludedIndustries);
+    _excludedIndustries = List.from(info.excludedIndustries);
     _excludedCompanies = List.from(info.excludedCompanies);
-    _preferredModalities =
-        Set.from(info.preferredModalities);
+    _preferredModalities = Set.from(info.preferredModalities);
     _certifications = List.from(profile.certifications);
     _experiences = List.from(profile.workExperience);
     _educations = List.from(profile.education);
@@ -110,8 +103,7 @@ class _ProfileScreenState
   }
 
   void _cancelEdit() {
-    final profile =
-        ref.read(userProfileProvider).asData?.value;
+    final profile = ref.read(userProfileProvider).asData?.value;
     setState(() {
       _isEditing = false;
       if (profile != null) _applyProfile(profile);
@@ -119,8 +111,7 @@ class _ProfileScreenState
   }
 
   Future<void> _save() async {
-    final existing =
-        ref.read(userProfileProvider).asData?.value;
+    final existing = ref.read(userProfileProvider).asData?.value;
     if (existing == null) return;
 
     final updated = existing.copyWith(
@@ -134,10 +125,9 @@ class _ProfileScreenState
         portfolioUrl: _portfolioCtrl.text.trim().isEmpty
             ? null
             : _portfolioCtrl.text.trim(),
-        expectedSalaryAmount:
-            _salaryCtrl.text.trim().isEmpty
-                ? null
-                : double.tryParse(_salaryCtrl.text.trim()),
+        expectedSalaryAmount: _salaryCtrl.text.trim().isEmpty
+            ? null
+            : double.tryParse(_salaryCtrl.text.trim()),
         expectedSalaryCurrency: _salaryCurrency,
         salaryNegotiable: _salaryNegotiable,
         hasOwnVehicle: _hasOwnVehicle,
@@ -174,15 +164,14 @@ class _ProfileScreenState
       (f) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(f.message),
-          backgroundColor:
-              Theme.of(context).colorScheme.error,
+          backgroundColor: Theme.of(context).colorScheme.error,
         ),
       ),
       (_) {
         setState(() => _isEditing = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Perfil guardado')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Perfil guardado')));
       },
     );
   }
@@ -197,37 +186,29 @@ class _ProfileScreenState
         title: const Text(StringsEs.perfilTitulo),
         actions: [
           if (_isEditing)
-            TextButton(
-              onPressed: _cancelEdit,
-              child: const Text('Cancelar'),
-            )
+            TextButton(onPressed: _cancelEdit, child: const Text('Cancelar'))
           else
             IconButton(
               icon: const Icon(Icons.logout_outlined),
               tooltip: 'Cerrar sesión',
-              onPressed: () =>
-                  ref.read(authProvider.notifier).signOut(),
+              onPressed: () => ref.read(authProvider.notifier).signOut(),
             ),
         ],
       ),
       body: profileAsync.when(
         data: (profile) {
           if (profile == null) {
-            return const Center(
-                child: Text('No hay perfil guardado'));
+            return const Center(child: Text('No hay perfil guardado'));
           }
           if (!_initialized) {
-            return const Center(
-                child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           return ListView(
-            padding:
-                const EdgeInsets.fromLTRB(16, 16, 16, 100),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
             children: [
               subAsync.when(
-                data: (sub) =>
-                    _PlanBadge(isPremium: sub.isPremium),
+                data: (sub) => _PlanBadge(isPremium: sub.isPremium),
                 loading: () => const SizedBox.shrink(),
                 error: (_, _) => const SizedBox.shrink(),
               ),
@@ -242,8 +223,7 @@ class _ProfileScreenState
         loading: () => const LoadingWidget(),
         error: (e, _) => ErrorRetryWidget(
           message: friendlyError(e),
-          onRetry: () =>
-              ref.invalidate(userProfileProvider),
+          onRetry: () => ref.invalidate(userProfileProvider),
         ),
       ),
     );
@@ -251,8 +231,7 @@ class _ProfileScreenState
 
   // ── Read mode ────────────────────────────────────────────────────────────────
 
-  List<Widget> _buildReadSections(
-      BuildContext context, UserProfile profile) {
+  List<Widget> _buildReadSections(BuildContext context, UserProfile profile) {
     final info = profile.personalInfo;
     final sections = <Widget>[];
 
@@ -272,262 +251,251 @@ class _ProfileScreenState
       }
       locParts.add(info.country);
 
-      add(_SectionCard(
-        title: 'Datos de contacto',
-        icon: Icons.person_outline,
-        children: [
-          _InfoRow('Nombre', info.fullName),
-          _InfoRow('Email', info.email),
-          if (info.phone?.isNotEmpty == true)
-            _InfoRow('Teléfono', info.phone!),
-          _InfoRow('Ubicación', locParts.join(', ')),
-          if (info.linkedInUrl?.isNotEmpty == true)
-            _LinkInfoRow('LinkedIn', info.linkedInUrl!),
-          if (info.githubUrl?.isNotEmpty == true)
-            _LinkInfoRow('GitHub', info.githubUrl!),
-          if (info.portfolioUrl?.isNotEmpty == true)
-            _LinkInfoRow('Portfolio', info.portfolioUrl!),
-        ],
-      ));
+      add(
+        _SectionCard(
+          title: 'Datos de contacto',
+          icon: Icons.person_outline,
+          children: [
+            _InfoRow('Nombre', info.fullName),
+            _InfoRow('Email', info.email),
+            if (info.phone?.isNotEmpty == true)
+              _InfoRow('Teléfono', info.phone!),
+            _InfoRow('Ubicación', locParts.join(', ')),
+            if (info.linkedInUrl?.isNotEmpty == true)
+              _LinkInfoRow('LinkedIn', info.linkedInUrl!),
+            if (info.githubUrl?.isNotEmpty == true)
+              _LinkInfoRow('GitHub', info.githubUrl!),
+            if (info.portfolioUrl?.isNotEmpty == true)
+              _LinkInfoRow('Portfolio', info.portfolioUrl!),
+          ],
+        ),
+      );
     }
 
     // ─ 2. Experiencia laboral ──────────────────────────────────────────────
     if (profile.workExperience.isNotEmpty) {
-      add(_SectionCard(
-        title: StringsEs.perfilExperiencia,
-        icon: Icons.work_outline,
-        children: [
-          for (final e in profile.workExperience)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(e.position,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                              fontWeight: FontWeight.w600)),
-                  Text(
-                    '${e.company}  ·  ${e.startDate} → '
-                    '${e.isCurrent ? "Actual" : (e.endDate ?? "")}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
-                        ),
-                  ),
-                  if (e.description?.isNotEmpty == true) ...[
-                    const SizedBox(height: 4),
-                    Text(e.description!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall),
-                  ],
-                  if (e.references.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(
-                        '${e.references.length} referencia'
-                        '${e.references.length > 1 ? "s" : ""}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall
-                            ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary,
-                            ),
+      add(
+        _SectionCard(
+          title: StringsEs.perfilExperiencia,
+          icon: Icons.work_outline,
+          children: [
+            for (final e in profile.workExperience)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      e.position,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                ],
+                    Text(
+                      '${e.company}  ·  ${e.startDate} → '
+                      '${e.isCurrent ? "Actual" : (e.endDate ?? "")}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    if (e.description?.isNotEmpty == true) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        e.description!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                    if (e.references.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          '${e.references.length} referencia'
+                          '${e.references.length > 1 ? "s" : ""}',
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-            ),
-        ],
-      ));
+          ],
+        ),
+      );
     }
 
     // ─ 3. Proyectos destacados ─────────────────────────────────────────────
     if (profile.projects.isNotEmpty) {
-      add(_SectionCard(
-        title: 'Proyectos destacados',
-        icon: Icons.rocket_launch_outlined,
-        children: [
-          for (final p in profile.projects)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(p.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                              fontWeight: FontWeight.w600)),
-                  if (p.context?.isNotEmpty == true)
-                    Text(p.context!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            )),
-                  if (p.technologies.isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Wrap(
-                      spacing: 4,
-                      runSpacing: 4,
-                      children: p.technologies
-                          .map((t) => Chip(
-                                label: Text(t,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall),
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize
-                                        .shrinkWrap,
-                                visualDensity:
-                                    VisualDensity.compact,
-                              ))
-                          .toList(),
+      add(
+        _SectionCard(
+          title: 'Proyectos destacados',
+          icon: Icons.rocket_launch_outlined,
+          children: [
+            for (final p in profile.projects)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      p.name,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
+                    if (p.context?.isNotEmpty == true)
+                      Text(
+                        p.context!,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    if (p.technologies.isNotEmpty) ...[
+                      const SizedBox(height: 6),
+                      Wrap(
+                        spacing: 4,
+                        runSpacing: 4,
+                        children: p.technologies
+                            .map(
+                              (t) => Chip(
+                                label: Text(
+                                  t,
+                                  style: Theme.of(context).textTheme.labelSmall,
+                                ),
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                    if (p.url?.isNotEmpty == true) ...[
+                      const SizedBox(height: 4),
+                      _LinkInfoRow('URL', p.url!),
+                    ],
                   ],
-                  if (p.url?.isNotEmpty == true) ...[
-                    const SizedBox(height: 4),
-                    _LinkInfoRow('URL', p.url!),
-                  ],
-                ],
+                ),
               ),
-            ),
-        ],
-      ));
+          ],
+        ),
+      );
     }
 
     // ─ 4. Educación ───────────────────────────────────────────────────────
     if (profile.education.isNotEmpty) {
-      add(_SectionCard(
-        title: StringsEs.perfilEducacion,
-        icon: Icons.school_outlined,
-        children: [
-          for (final e in profile.education)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(e.degree,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                              fontWeight: FontWeight.w600)),
-                  if (e.field.isNotEmpty &&
-                      e.field != 'General')
-                    Text(e.field,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurfaceVariant,
-                            )),
-                  Text(
-                    '${e.institution}  ·  ${e.startYear} → '
-                    '${e.isOngoing ? "En curso" : (e.endYear ?? "")}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
+      add(
+        _SectionCard(
+          title: StringsEs.perfilEducacion,
+          icon: Icons.school_outlined,
+          children: [
+            for (final e in profile.education)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      e.degree,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    if (e.field.isNotEmpty && e.field != 'General')
+                      Text(
+                        e.field,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
-                  ),
-                ],
+                      ),
+                    Text(
+                      '${e.institution}  ·  ${e.startYear} → '
+                      '${e.isOngoing ? "En curso" : (e.endYear ?? "")}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-        ],
-      ));
+          ],
+        ),
+      );
     }
 
     // ─ 5. Certificaciones ─────────────────────────────────────────────────
     if (profile.certifications.isNotEmpty) {
-      add(_SectionCard(
-        title: 'Certificaciones',
-        icon: Icons.verified_outlined,
-        children: [
-          for (final c in profile.certifications)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(c.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(
-                              fontWeight: FontWeight.w600)),
-                  Text(
-                    '${c.issuer}  ·  ${c.year}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
-                        ),
-                  ),
-                  if (c.url?.isNotEmpty == true) ...[
-                    const SizedBox(height: 2),
-                    _LinkInfoRow('URL', c.url!),
+      add(
+        _SectionCard(
+          title: 'Certificaciones',
+          icon: Icons.verified_outlined,
+          children: [
+            for (final c in profile.certifications)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      c.name,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      '${c.issuer}  ·  ${c.year}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    if (c.url?.isNotEmpty == true) ...[
+                      const SizedBox(height: 2),
+                      _LinkInfoRow('URL', c.url!),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-        ],
-      ));
+          ],
+        ),
+      );
     }
 
     // ─ 6. Habilidades ─────────────────────────────────────────────────────
     if (profile.skills.isNotEmpty) {
-      add(_SectionCard(
-        title: StringsEs.perfilHabilidades,
-        icon: Icons.star_outline,
-        children: [
-          Wrap(
-            spacing: 6,
-            runSpacing: 6,
-            children: profile.skills
-                .map((s) => Chip(label: Text(s)))
-                .toList(),
-          ),
-        ],
-      ));
+      add(
+        _SectionCard(
+          title: StringsEs.perfilHabilidades,
+          icon: Icons.star_outline,
+          children: [
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: profile.skills
+                  .map((s) => Chip(label: Text(s)))
+                  .toList(),
+            ),
+          ],
+        ),
+      );
     }
 
     // ─ 7. Idiomas ─────────────────────────────────────────────────────────
     if (profile.languages.isNotEmpty) {
-      add(_SectionCard(
-        title: 'Idiomas',
-        icon: Icons.language_outlined,
-        children: profile.languages
-            .map((l) => _InfoRow(l.name, l.level.label))
-            .toList(),
-      ));
+      add(
+        _SectionCard(
+          title: 'Idiomas',
+          icon: Icons.language_outlined,
+          children: profile.languages
+              .map((l) => _InfoRow(l.name, l.level.label))
+              .toList(),
+        ),
+      );
     }
 
     // ─ 8. Preferencias laborales ──────────────────────────────────────────
-    final hasPrefs = info.preferredModalities.isNotEmpty ||
+    final hasPrefs =
+        info.preferredModalities.isNotEmpty ||
         info.expectedSalaryAmount != null ||
         info.hasOwnVehicle ||
         info.maxCommuteKm != null ||
@@ -535,93 +503,90 @@ class _ProfileScreenState
         info.excludedCompanies.isNotEmpty;
 
     if (hasPrefs) {
-      add(_SectionCard(
-        title: 'Preferencias laborales',
-        icon: Icons.tune_outlined,
-        children: [
-          if (info.preferredModalities.isNotEmpty) ...[
-            Text('Modalidad',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall
-                    ?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
-                    )),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: info.preferredModalities
-                  .map((m) => Chip(
+      add(
+        _SectionCard(
+          title: 'Preferencias laborales',
+          icon: Icons.tune_outlined,
+          children: [
+            if (info.preferredModalities.isNotEmpty) ...[
+              Text(
+                'Modalidad',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: info.preferredModalities
+                    .map(
+                      (m) => Chip(
                         label: Text(m.label),
                         visualDensity: VisualDensity.compact,
-                      ))
-                  .toList(),
-            ),
-            const SizedBox(height: 8),
-          ],
-          if (info.expectedSalaryAmount != null)
-            _InfoRow(
-              'Pretensión',
-              '${info.expectedSalaryAmount!.toStringAsFixed(0)} '
-              '${info.expectedSalaryCurrency}'
-              '${info.salaryNegotiable ? " (negociable)" : ""}',
-            ),
-          _InfoRow(
-              'Vehículo', info.hasOwnVehicle ? 'Sí' : 'No'),
-          if (info.maxCommuteKm != null)
-            _InfoRow(
-                'Distancia máx.', '${info.maxCommuteKm} km'),
-          if (info.excludedIndustries.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text('Industrias a evitar',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall
-                    ?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
-                    )),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: info.excludedIndustries
-                  .map((s) => Chip(
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: 8),
+            ],
+            if (info.expectedSalaryAmount != null)
+              _InfoRow(
+                'Pretensión',
+                '${info.expectedSalaryAmount!.toStringAsFixed(0)} '
+                    '${info.expectedSalaryCurrency}'
+                    '${info.salaryNegotiable ? " (negociable)" : ""}',
+              ),
+            _InfoRow('Vehículo', info.hasOwnVehicle ? 'Sí' : 'No'),
+            if (info.maxCommuteKm != null)
+              _InfoRow('Distancia máx.', '${info.maxCommuteKm} km'),
+            if (info.excludedIndustries.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Industrias a evitar',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: info.excludedIndustries
+                    .map(
+                      (s) => Chip(
                         label: Text(s),
                         visualDensity: VisualDensity.compact,
-                      ))
-                  .toList(),
-            ),
-          ],
-          if (info.excludedCompanies.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text('Empresas a evitar',
-                style: Theme.of(context)
-                    .textTheme
-                    .labelSmall
-                    ?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
-                    )),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 6,
-              runSpacing: 4,
-              children: info.excludedCompanies
-                  .map((s) => Chip(
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+            if (info.excludedCompanies.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Text(
+                'Empresas a evitar',
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: info.excludedCompanies
+                    .map(
+                      (s) => Chip(
                         label: Text(s),
                         visualDensity: VisualDensity.compact,
-                      ))
-                  .toList(),
-            ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
           ],
-        ],
-      ));
+        ),
+      );
     }
 
     sections.addAll([
@@ -637,10 +602,9 @@ class _ProfileScreenState
 
   // ── Edit mode ────────────────────────────────────────────────────────────────
 
-  List<Widget> _buildEditSections(
-      BuildContext context, UserProfile profile) {
-    final showCommute = _preferredModalities
-            .contains(WorkModality.hybrid) ||
+  List<Widget> _buildEditSections(BuildContext context, UserProfile profile) {
+    final showCommute =
+        _preferredModalities.contains(WorkModality.hybrid) ||
         _preferredModalities.contains(WorkModality.onsite);
 
     return [
@@ -687,24 +651,24 @@ class _ProfileScreenState
         title: StringsEs.perfilExperiencia,
         icon: Icons.work_outline,
         children: [
-          ..._experiences.map((e) => _ExperienceTile(
-                exp: e,
-                onEdit: (updated) => setState(() {
-                  final idx = _experiences
-                      .indexWhere((x) => x.id == e.id);
-                  if (idx != -1) {
-                    _experiences[idx] = updated;
-                  }
-                }),
-                onDelete: () => setState(() => _experiences
-                    .removeWhere((x) => x.id == e.id)),
-              )),
+          ..._experiences.map(
+            (e) => _ExperienceTile(
+              exp: e,
+              onEdit: (updated) => setState(() {
+                final idx = _experiences.indexWhere((x) => x.id == e.id);
+                if (idx != -1) {
+                  _experiences[idx] = updated;
+                }
+              }),
+              onDelete: () =>
+                  setState(() => _experiences.removeWhere((x) => x.id == e.id)),
+            ),
+          ),
           TextButton.icon(
             onPressed: () => showDialog(
               context: context,
               builder: (_) => _ExperienceDialog(
-                onSave: (exp) =>
-                    setState(() => _experiences.add(exp)),
+                onSave: (exp) => setState(() => _experiences.add(exp)),
               ),
             ),
             icon: const Icon(Icons.add),
@@ -717,16 +681,16 @@ class _ProfileScreenState
         title: 'Preferencias laborales',
         icon: Icons.tune_outlined,
         children: [
-          Text('Modalidad de trabajo',
-              style:
-                  Theme.of(context).textTheme.labelMedium),
+          Text(
+            'Modalidad de trabajo',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
             runSpacing: 4,
             children: WorkModality.values.map((m) {
-              final isSelected =
-                  _preferredModalities.contains(m);
+              final isSelected = _preferredModalities.contains(m);
               return FilterChip(
                 label: Text(m.label),
                 selected: isSelected,
@@ -745,12 +709,10 @@ class _ProfileScreenState
             TextField(
               controller: _commuteCtrl,
               decoration: const InputDecoration(
-                  labelText:
-                      'Distancia máxima de viaje (km)'),
+                labelText: 'Distancia máxima de viaje (km)',
+              ),
               keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly
-              ],
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
           ],
           const SizedBox(height: 8),
@@ -759,13 +721,13 @@ class _ProfileScreenState
             dense: true,
             title: const Text('Tengo vehículo propio'),
             value: _hasOwnVehicle,
-            onChanged: (v) =>
-                setState(() => _hasOwnVehicle = v),
+            onChanged: (v) => setState(() => _hasOwnVehicle = v),
           ),
           const SizedBox(height: 8),
-          Text('Pretensión salarial',
-              style:
-                  Theme.of(context).textTheme.labelMedium),
+          Text(
+            'Pretensión salarial',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -776,7 +738,9 @@ class _ProfileScreenState
                     labelText: 'Moneda',
                     isDense: true,
                     contentPadding: EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 10),
+                      horizontal: 8,
+                      vertical: 10,
+                    ),
                   ),
                   child: DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
@@ -784,18 +748,13 @@ class _ProfileScreenState
                       isDense: true,
                       isExpanded: true,
                       items: const [
-                        DropdownMenuItem(
-                            value: 'ARS',
-                            child: Text('ARS')),
-                        DropdownMenuItem(
-                            value: 'USD',
-                            child: Text('USD')),
+                        DropdownMenuItem(value: 'ARS', child: Text('ARS')),
+                        DropdownMenuItem(value: 'USD', child: Text('USD')),
                       ],
                       onChanged: (v) {
                         if (v != null) {
-                        setState(
-                            () => _salaryCurrency = v);
-                      }
+                          setState(() => _salaryCurrency = v);
+                        }
                       },
                     ),
                   ),
@@ -805,12 +764,9 @@ class _ProfileScreenState
               Expanded(
                 child: TextField(
                   controller: _salaryCtrl,
-                  decoration: const InputDecoration(
-                      labelText: 'Monto'),
+                  decoration: const InputDecoration(labelText: 'Monto'),
                   keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 ),
               ),
             ],
@@ -820,36 +776,33 @@ class _ProfileScreenState
             dense: true,
             title: const Text('Negociable'),
             value: _salaryNegotiable,
-            onChanged: (v) =>
-                setState(() => _salaryNegotiable = v),
+            onChanged: (v) => setState(() => _salaryNegotiable = v),
           ),
           const SizedBox(height: 8),
-          Text('Industrias a evitar',
-              style:
-                  Theme.of(context).textTheme.labelMedium),
+          Text(
+            'Industrias a evitar',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
           const SizedBox(height: 6),
           _ChipListEditor(
             items: _excludedIndustries,
             controller: _excludedIndustryCtrl,
             hint: 'ej: Tabaco, Juego...',
-            onAdd: (v) =>
-                setState(() => _excludedIndustries.add(v)),
-            onDelete: (v) => setState(
-                () => _excludedIndustries.remove(v)),
+            onAdd: (v) => setState(() => _excludedIndustries.add(v)),
+            onDelete: (v) => setState(() => _excludedIndustries.remove(v)),
           ),
           const SizedBox(height: 10),
-          Text('Empresas a evitar',
-              style:
-                  Theme.of(context).textTheme.labelMedium),
+          Text(
+            'Empresas a evitar',
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
           const SizedBox(height: 6),
           _ChipListEditor(
             items: _excludedCompanies,
             controller: _excludedCompanyCtrl,
             hint: 'ej: Empresa XYZ...',
-            onAdd: (v) =>
-                setState(() => _excludedCompanies.add(v)),
-            onDelete: (v) => setState(
-                () => _excludedCompanies.remove(v)),
+            onAdd: (v) => setState(() => _excludedCompanies.add(v)),
+            onDelete: (v) => setState(() => _excludedCompanies.remove(v)),
           ),
         ],
       ),
@@ -858,50 +811,51 @@ class _ProfileScreenState
         title: StringsEs.perfilEducacion,
         icon: Icons.school_outlined,
         children: [
-          ..._educations.map((e) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(e.degree),
-                subtitle: Text(
-                    '${e.institution} · ${e.startYear}–${e.isOngoing ? "En curso" : (e.endYear ?? "")}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit_outlined,
-                          size: 18),
-                      tooltip: 'Editar',
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (_) => _EducationDialog(
-                          initial: e,
-                          onSave: (updated) => setState(() {
-                            final idx = _educations
-                                .indexWhere((x) => x.id == e.id);
-                            if (idx != -1) {
-                              _educations[idx] = updated;
-                            }
-                          }),
-                        ),
+          ..._educations.map(
+            (e) => ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: Text(e.degree),
+              subtitle: Text(
+                '${e.institution} · ${e.startYear}–${e.isOngoing ? "En curso" : (e.endYear ?? "")}',
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    tooltip: 'Editar',
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) => _EducationDialog(
+                        initial: e,
+                        onSave: (updated) => setState(() {
+                          final idx = _educations.indexWhere(
+                            (x) => x.id == e.id,
+                          );
+                          if (idx != -1) {
+                            _educations[idx] = updated;
+                          }
+                        }),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline,
-                          size: 18),
-                      tooltip: 'Eliminar',
-                      onPressed: () => setState(() =>
-                          _educations
-                              .removeWhere((x) => x.id == e.id)),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    tooltip: 'Eliminar',
+                    onPressed: () => setState(
+                      () => _educations.removeWhere((x) => x.id == e.id),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           TextButton.icon(
             onPressed: () => showDialog(
               context: context,
               builder: (_) => _EducationDialog(
-                onSave: (edu) =>
-                    setState(() => _educations.add(edu)),
+                onSave: (edu) => setState(() => _educations.add(edu)),
               ),
             ),
             icon: const Icon(Icons.add),
@@ -914,49 +868,49 @@ class _ProfileScreenState
         title: 'Certificaciones',
         icon: Icons.verified_outlined,
         children: [
-          ..._certifications.map((c) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(c.name),
-                subtitle: Text('${c.issuer} · ${c.year}'),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit_outlined,
-                          size: 18),
-                      tooltip: 'Editar',
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (_) => _CertDialog(
-                          initial: c,
-                          onSave: (updated) => setState(() {
-                            final idx = _certifications
-                                .indexWhere((x) => x.id == c.id);
-                            if (idx != -1) {
-                              _certifications[idx] = updated;
-                            }
-                          }),
-                        ),
+          ..._certifications.map(
+            (c) => ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: Text(c.name),
+              subtitle: Text('${c.issuer} · ${c.year}'),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    tooltip: 'Editar',
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) => _CertDialog(
+                        initial: c,
+                        onSave: (updated) => setState(() {
+                          final idx = _certifications.indexWhere(
+                            (x) => x.id == c.id,
+                          );
+                          if (idx != -1) {
+                            _certifications[idx] = updated;
+                          }
+                        }),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline,
-                          size: 18),
-                      tooltip: 'Eliminar',
-                      onPressed: () => setState(() =>
-                          _certifications
-                              .removeWhere((x) => x.id == c.id)),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    tooltip: 'Eliminar',
+                    onPressed: () => setState(
+                      () => _certifications.removeWhere((x) => x.id == c.id),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           TextButton.icon(
             onPressed: () => showDialog(
               context: context,
               builder: (_) => _CertDialog(
-                onSave: (cert) =>
-                    setState(() => _certifications.add(cert)),
+                onSave: (cert) => setState(() => _certifications.add(cert)),
               ),
             ),
             icon: const Icon(Icons.add),
@@ -969,49 +923,49 @@ class _ProfileScreenState
         title: 'Idiomas',
         icon: Icons.language_outlined,
         children: [
-          ..._languages.map((l) => ListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: Text(l.name),
-                subtitle: Text(l.level.label),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.edit_outlined,
-                          size: 18),
-                      tooltip: 'Editar',
-                      onPressed: () => showDialog(
-                        context: context,
-                        builder: (_) => _LanguageDialog(
-                          initial: l,
-                          onSave: (updated) => setState(() {
-                            final idx = _languages.indexWhere(
-                                (x) => x.name == l.name);
-                            if (idx != -1) {
-                              _languages[idx] = updated;
-                            }
-                          }),
-                        ),
+          ..._languages.map(
+            (l) => ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              title: Text(l.name),
+              subtitle: Text(l.level.label),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.edit_outlined, size: 18),
+                    tooltip: 'Editar',
+                    onPressed: () => showDialog(
+                      context: context,
+                      builder: (_) => _LanguageDialog(
+                        initial: l,
+                        onSave: (updated) => setState(() {
+                          final idx = _languages.indexWhere(
+                            (x) => x.name == l.name,
+                          );
+                          if (idx != -1) {
+                            _languages[idx] = updated;
+                          }
+                        }),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline,
-                          size: 18),
-                      tooltip: 'Eliminar',
-                      onPressed: () => setState(() =>
-                          _languages
-                              .removeWhere((x) => x.name == l.name)),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete_outline, size: 18),
+                    tooltip: 'Eliminar',
+                    onPressed: () => setState(
+                      () => _languages.removeWhere((x) => x.name == l.name),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
           TextButton.icon(
             onPressed: () => showDialog(
               context: context,
               builder: (_) => _LanguageDialog(
-                onSave: (lang) =>
-                    setState(() => _languages.add(lang)),
+                onSave: (lang) => setState(() => _languages.add(lang)),
               ),
             ),
             icon: const Icon(Icons.add),
@@ -1029,11 +983,12 @@ class _ProfileScreenState
               spacing: 8,
               runSpacing: 6,
               children: _skills
-                  .map((s) => Chip(
-                        label: Text(s),
-                        onDeleted: () => setState(
-                            () => _skills.remove(s)),
-                      ))
+                  .map(
+                    (s) => Chip(
+                      label: Text(s),
+                      onDeleted: () => setState(() => _skills.remove(s)),
+                    ),
+                  )
                   .toList(),
             ),
           const SizedBox(height: 8),
@@ -1048,8 +1003,7 @@ class _ProfileScreenState
                   ),
                   onSubmitted: (v) {
                     final t = v.trim();
-                    if (t.isNotEmpty &&
-                        !_skills.contains(t)) {
+                    if (t.isNotEmpty && !_skills.contains(t)) {
                       setState(() => _skills.add(t));
                       _skillCtrl.clear();
                     }
@@ -1059,14 +1013,12 @@ class _ProfileScreenState
               const SizedBox(width: 8),
               ValueListenableBuilder<TextEditingValue>(
                 valueListenable: _skillCtrl,
-                builder: (_, val, _) =>
-                    IconButton.outlined(
+                builder: (_, val, _) => IconButton.outlined(
                   onPressed: val.text.trim().isEmpty
                       ? null
                       : () {
                           final t = val.text.trim();
-                          if (t.isNotEmpty &&
-                              !_skills.contains(t)) {
+                          if (t.isNotEmpty && !_skills.contains(t)) {
                             setState(() => _skills.add(t));
                             _skillCtrl.clear();
                           }
@@ -1086,8 +1038,7 @@ class _ProfileScreenState
             ? const SizedBox(
                 height: 20,
                 width: 20,
-                child: CircularProgressIndicator(
-                    strokeWidth: 2),
+                child: CircularProgressIndicator(strokeWidth: 2),
               )
             : const Text('Guardar cambios'),
       ),
@@ -1101,10 +1052,11 @@ class _SectionCard extends StatelessWidget {
   final String title;
   final IconData icon;
   final List<Widget> children;
-  const _SectionCard(
-      {required this.title,
-      required this.icon,
-      required this.children});
+  const _SectionCard({
+    required this.title,
+    required this.icon,
+    required this.children,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1116,19 +1068,17 @@ class _SectionCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(icon,
-                    size: 18,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .primary),
+                Icon(
+                  icon,
+                  size: 18,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(
-                          fontWeight: FontWeight.w600),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -1150,29 +1100,21 @@ class _PlanBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isPremium
             ? const Color(0xFFFFFBEB)
-            : Theme.of(context)
-                .colorScheme
-                .surfaceContainerHighest,
+            : Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: isPremium
-              ? const Color(0xFFFCD34D)
-              : Colors.transparent,
+          color: isPremium ? const Color(0xFFFCD34D) : Colors.transparent,
         ),
       ),
       child: Row(
         children: [
           Icon(
-            isPremium
-                ? Icons.workspace_premium_rounded
-                : Icons.person_outline,
-            color:
-                isPremium ? const Color(0xFFD97706) : null,
+            isPremium ? Icons.workspace_premium_rounded : Icons.person_outline,
+            color: isPremium ? const Color(0xFFD97706) : null,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -1180,30 +1122,18 @@ class _PlanBadge extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isPremium
-                      ? StringsEs.planPremium
-                      : StringsEs.planGratuito,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isPremium
-                            ? const Color(0xFF92400E)
-                            : null,
-                      ),
+                  isPremium ? StringsEs.planPremium : StringsEs.planGratuito,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: isPremium ? const Color(0xFF92400E) : null,
+                  ),
                 ),
                 if (!isPremium)
                   Text(
                     '3 evaluaciones · 1 CV por día',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurfaceVariant,
-                        ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
               ],
             ),
@@ -1223,8 +1153,7 @@ class _PlanBadge extends StatelessWidget {
                   builder: (_, controller) => PaywallScreen(
                     trigger: PaywallTrigger.evaluation,
                     isLimitReached: false,
-                    onDismiss: () =>
-                        Navigator.of(context).pop(),
+                    onDismiss: () => Navigator.of(context).pop(),
                   ),
                 ),
               ),
@@ -1253,20 +1182,13 @@ class _InfoRow extends StatelessWidget {
             width: 90,
             child: Text(
               label,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall
-                  ?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurfaceVariant,
-                  ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
           Expanded(
-            child: Text(value,
-                style:
-                    Theme.of(context).textTheme.bodyMedium),
+            child: Text(value, style: Theme.of(context).textTheme.bodyMedium),
           ),
         ],
       ),
@@ -1301,18 +1223,18 @@ class _LinkInfoRow extends StatelessWidget {
               child: Text(
                 label,
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
             Expanded(
               child: Text(
                 url,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Theme.of(context).colorScheme.primary,
-                    ),
+                  color: Theme.of(context).colorScheme.primary,
+                  decoration: TextDecoration.underline,
+                  decorationColor: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
           ],
@@ -1328,10 +1250,11 @@ class _ExperienceTile extends StatelessWidget {
   final WorkExperience exp;
   final ValueChanged<WorkExperience> onEdit;
   final VoidCallback onDelete;
-  const _ExperienceTile(
-      {required this.exp,
-      required this.onEdit,
-      required this.onDelete});
+  const _ExperienceTile({
+    required this.exp,
+    required this.onEdit,
+    required this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1340,7 +1263,8 @@ class _ExperienceTile extends StatelessWidget {
       dense: true,
       title: Text(exp.position),
       subtitle: Text(
-          '${exp.company}  ·  ${exp.startDate} → ${exp.isCurrent ? "Actual" : (exp.endDate ?? "")}'),
+        '${exp.company}  ·  ${exp.startDate} → ${exp.isCurrent ? "Actual" : (exp.endDate ?? "")}',
+      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -1349,15 +1273,11 @@ class _ExperienceTile extends StatelessWidget {
             tooltip: 'Editar',
             onPressed: () => showDialog(
               context: context,
-              builder: (_) => _ExperienceDialog(
-                initial: exp,
-                onSave: onEdit,
-              ),
+              builder: (_) => _ExperienceDialog(initial: exp, onSave: onEdit),
             ),
           ),
           IconButton(
-            icon:
-                const Icon(Icons.delete_outline, size: 18),
+            icon: const Icon(Icons.delete_outline, size: 18),
             tooltip: 'Eliminar',
             onPressed: onDelete,
           ),
@@ -1370,23 +1290,23 @@ class _ExperienceTile extends StatelessWidget {
 class _ExperienceDialog extends StatefulWidget {
   final WorkExperience? initial;
   final ValueChanged<WorkExperience> onSave;
-  const _ExperienceDialog(
-      {this.initial, required this.onSave});
+  const _ExperienceDialog({this.initial, required this.onSave});
 
   @override
-  State<_ExperienceDialog> createState() =>
-      _ExperienceDialogState();
+  State<_ExperienceDialog> createState() => _ExperienceDialogState();
 }
 
-class _ExperienceDialogState
-    extends State<_ExperienceDialog> {
+class _ExperienceDialogState extends State<_ExperienceDialog> {
   final _formKey = GlobalKey<FormState>();
   late final _positionCtrl = TextEditingController(
-      text: widget.initial?.position ?? '');
+    text: widget.initial?.position ?? '',
+  );
   late final _companyCtrl = TextEditingController(
-      text: widget.initial?.company ?? '');
+    text: widget.initial?.company ?? '',
+  );
   late final _descriptionCtrl = TextEditingController(
-      text: widget.initial?.description ?? '');
+    text: widget.initial?.description ?? '',
+  );
   bool _autovalidate = false;
 
   final _now = DateTime.now();
@@ -1400,16 +1320,14 @@ class _ExperienceDialogState
     if (date == null || date.length < 2) {
       return DateTime.now().month;
     }
-    return int.tryParse(date.split('/').first) ??
-        DateTime.now().month;
+    return int.tryParse(date.split('/').first) ?? DateTime.now().month;
   }
 
   static int _parseYear(String? date) {
     if (date == null || !date.contains('/')) {
       return DateTime.now().year;
     }
-    return int.tryParse(date.split('/').last) ??
-        DateTime.now().year;
+    return int.tryParse(date.split('/').last) ?? DateTime.now().year;
   }
 
   late List<WorkReference> _references;
@@ -1421,12 +1339,8 @@ class _ExperienceDialogState
     _startMonth = _parseMonth(init?.startDate);
     _startYear = _parseYear(init?.startDate);
     _isCurrent = init?.isCurrent ?? true;
-    _endMonth = init?.endDate != null
-        ? _parseMonth(init!.endDate)
-        : null;
-    _endYear = init?.endDate != null
-        ? _parseYear(init!.endDate)
-        : null;
+    _endMonth = init?.endDate != null ? _parseMonth(init!.endDate) : null;
+    _endYear = init?.endDate != null ? _parseYear(init!.endDate) : null;
     _references = List.from(init?.references ?? []);
   }
 
@@ -1446,14 +1360,12 @@ class _ExperienceDialogState
     if (ref != null && mounted) setState(() => _references.add(ref));
   }
 
-  String _fmt(int m, int y) =>
-      '${m.toString().padLeft(2, '0')}/$y';
+  String _fmt(int m, int y) => '${m.toString().padLeft(2, '0')}/$y';
 
   @override
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().year;
-    final years = List.generate(
-        currentYear - 1960 + 1, (i) => currentYear - i);
+    final years = List.generate(currentYear - 1960 + 1, (i) => currentYear - i);
     const months = [
       'Ene',
       'Feb',
@@ -1470,9 +1382,9 @@ class _ExperienceDialogState
     ];
 
     return AlertDialog(
-      title: Text(widget.initial == null
-          ? 'Agregar experiencia'
-          : 'Editar experiencia'),
+      title: Text(
+        widget.initial == null ? 'Agregar experiencia' : 'Editar experiencia',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1486,121 +1398,55 @@ class _ExperienceDialogState
               TextFormField(
                 controller: _positionCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Puesto / Cargo *'),
-                textCapitalization:
-                    TextCapitalization.words,
+                  labelText: 'Puesto / Cargo *',
+                ),
+                textCapitalization: TextCapitalization.words,
                 validator: (v) =>
-                    v == null || v.trim().isEmpty
-                        ? 'Requerido'
-                        : null,
+                    v == null || v.trim().isEmpty ? 'Requerido' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _companyCtrl,
-                decoration: const InputDecoration(
-                    labelText: 'Empresa *'),
-                textCapitalization:
-                    TextCapitalization.words,
+                decoration: const InputDecoration(labelText: 'Empresa *'),
+                textCapitalization: TextCapitalization.words,
                 validator: (v) =>
-                    v == null || v.trim().isEmpty
-                        ? 'Requerido'
-                        : null,
+                    v == null || v.trim().isEmpty ? 'Requerido' : null,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _descriptionCtrl,
                 decoration: const InputDecoration(
-                  labelText:
-                      'Responsabilidades y logros (opcional)',
+                  labelText: 'Responsabilidades y logros (opcional)',
                   alignLabelWithHint: true,
                 ),
-                textCapitalization:
-                    TextCapitalization.sentences,
+                textCapitalization: TextCapitalization.sentences,
                 maxLines: 5,
                 minLines: 2,
               ),
               const SizedBox(height: 16),
               Text(
                 'Fecha de inicio',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodySmall
-                    ?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurfaceVariant,
-                    ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: 4),
-              Row(children: [
-                Expanded(
-                  flex: 2,
-                  child: _DropdownField<int>(
-                    value: _startMonth,
-                    items: List.generate(
-                        12,
-                        (i) => DropdownMenuItem(
-                            value: i + 1,
-                            child: Text(months[i]))),
-                    onChanged: (v) {
-                      if (v != null) {
-                        setState(() => _startMonth = v);
-                      }
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  flex: 3,
-                  child: _DropdownField<int>(
-                    value: _startYear,
-                    items: years
-                        .map((y) => DropdownMenuItem(
-                            value: y,
-                            child: Text(y.toString())))
-                        .toList(),
-                    onChanged: (v) {
-                      if (v != null) {
-                        setState(() => _startYear = v);
-                      }
-                    },
-                  ),
-                ),
-              ]),
-              CheckboxListTile(
-                contentPadding: EdgeInsets.zero,
-                dense: true,
-                title: const Text('Trabajo actual'),
-                value: _isCurrent,
-                onChanged: (v) =>
-                    setState(() => _isCurrent = v ?? true),
-              ),
-              if (!_isCurrent) ...[
-                Text(
-                  'Fecha de fin',
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurfaceVariant,
-                      ),
-                ),
-                const SizedBox(height: 4),
-                Row(children: [
+              Row(
+                children: [
                   Expanded(
                     flex: 2,
                     child: _DropdownField<int>(
-                      value: _endMonth ?? _now.month,
+                      value: _startMonth,
                       items: List.generate(
-                          12,
-                          (i) => DropdownMenuItem(
-                              value: i + 1,
-                              child: Text(months[i]))),
+                        12,
+                        (i) => DropdownMenuItem(
+                          value: i + 1,
+                          child: Text(months[i]),
+                        ),
+                      ),
                       onChanged: (v) {
                         if (v != null) {
-                          setState(() => _endMonth = v);
+                          setState(() => _startMonth = v);
                         }
                       },
                     ),
@@ -1609,78 +1455,140 @@ class _ExperienceDialogState
                   Expanded(
                     flex: 3,
                     child: _DropdownField<int>(
-                      value: _endYear ?? _now.year,
+                      value: _startYear,
                       items: years
-                          .map((y) => DropdownMenuItem(
+                          .map(
+                            (y) => DropdownMenuItem(
                               value: y,
-                              child: Text(y.toString())))
+                              child: Text(y.toString()),
+                            ),
+                          )
                           .toList(),
                       onChanged: (v) {
                         if (v != null) {
-                          setState(() => _endYear = v);
+                          setState(() => _startYear = v);
                         }
                       },
                     ),
                   ),
-                ]),
+                ],
+              ),
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                dense: true,
+                title: const Text('Trabajo actual'),
+                value: _isCurrent,
+                onChanged: (v) => setState(() => _isCurrent = v ?? true),
+              ),
+              if (!_isCurrent) ...[
+                Text(
+                  'Fecha de fin',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: _DropdownField<int>(
+                        value: _endMonth ?? _now.month,
+                        items: List.generate(
+                          12,
+                          (i) => DropdownMenuItem(
+                            value: i + 1,
+                            child: Text(months[i]),
+                          ),
+                        ),
+                        onChanged: (v) {
+                          if (v != null) {
+                            setState(() => _endMonth = v);
+                          }
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      flex: 3,
+                      child: _DropdownField<int>(
+                        value: _endYear ?? _now.year,
+                        items: years
+                            .map(
+                              (y) => DropdownMenuItem(
+                                value: y,
+                                child: Text(y.toString()),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (v) {
+                          if (v != null) {
+                            setState(() => _endYear = v);
+                          }
+                        },
+                      ),
+                    ),
+                  ],
+                ),
               ],
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text('Referencias',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium),
+                  Text(
+                    'Referencias',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                   const Spacer(),
                   TextButton.icon(
-                    onPressed: () =>
-                        _showAddReference(context),
+                    onPressed: () => _showAddReference(context),
                     icon: const Icon(Icons.add, size: 18),
                     label: const Text('Agregar'),
                   ),
                 ],
               ),
-              ..._references.map((r) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(r.name),
-                    subtitle:
-                        Text('${r.position} · ${r.company}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.close, size: 18),
-                      onPressed: () => setState(() =>
-                          _references
-                              .removeWhere((x) => x.id == r.id)),
+              ..._references.map(
+                (r) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(r.name),
+                  subtitle: Text('${r.position} · ${r.company}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => setState(
+                      () => _references.removeWhere((x) => x.id == r.id),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onSave(WorkExperience(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                company: _companyCtrl.text.trim(),
-                position: _positionCtrl.text.trim(),
-                startDate: _fmt(_startMonth, _startYear),
-                endDate: _isCurrent
-                    ? null
-                    : _fmt(_endMonth ?? _now.month,
-                        _endYear ?? _now.year),
-                isCurrent: _isCurrent,
-                description:
-                    _descriptionCtrl.text.trim().isEmpty
-                        ? null
-                        : _descriptionCtrl.text.trim(),
-                references: _references,
-              ));
+              widget.onSave(
+                WorkExperience(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  company: _companyCtrl.text.trim(),
+                  position: _positionCtrl.text.trim(),
+                  startDate: _fmt(_startMonth, _startYear),
+                  endDate: _isCurrent
+                      ? null
+                      : _fmt(_endMonth ?? _now.month, _endYear ?? _now.year),
+                  isCurrent: _isCurrent,
+                  description: _descriptionCtrl.text.trim().isEmpty
+                      ? null
+                      : _descriptionCtrl.text.trim(),
+                  references: _references,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1702,12 +1610,13 @@ class _CertDialog extends StatefulWidget {
 
 class _CertDialogState extends State<_CertDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _nameCtrl =
-      TextEditingController(text: widget.initial?.name ?? '');
-  late final _issuerCtrl =
-      TextEditingController(text: widget.initial?.issuer ?? '');
-  late final _urlCtrl =
-      TextEditingController(text: widget.initial?.url ?? '');
+  late final _nameCtrl = TextEditingController(
+    text: widget.initial?.name ?? '',
+  );
+  late final _issuerCtrl = TextEditingController(
+    text: widget.initial?.issuer ?? '',
+  );
+  late final _urlCtrl = TextEditingController(text: widget.initial?.url ?? '');
   bool _autovalidate = false;
   late int _year = widget.initial?.year ?? DateTime.now().year;
 
@@ -1722,13 +1631,14 @@ class _CertDialogState extends State<_CertDialog> {
   @override
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().year;
-    final years = List.generate(
-        currentYear - 1980 + 1, (i) => currentYear - i);
+    final years = List.generate(currentYear - 1980 + 1, (i) => currentYear - i);
 
     return AlertDialog(
-      title: Text(widget.initial == null
-          ? 'Agregar certificación'
-          : 'Editar certificación'),
+      title: Text(
+        widget.initial == null
+            ? 'Agregar certificación'
+            : 'Editar certificación',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1740,8 +1650,7 @@ class _CertDialogState extends State<_CertDialog> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Nombre *'),
+                decoration: const InputDecoration(labelText: 'Nombre *'),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1750,7 +1659,8 @@ class _CertDialogState extends State<_CertDialog> {
               TextFormField(
                 controller: _issuerCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Institución emisora *'),
+                  labelText: 'Institución emisora *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1758,8 +1668,7 @@ class _CertDialogState extends State<_CertDialog> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _urlCtrl,
-                decoration: const InputDecoration(
-                    labelText: 'URL (opcional)'),
+                decoration: const InputDecoration(labelText: 'URL (opcional)'),
                 keyboardType: TextInputType.url,
               ),
               const SizedBox(height: 16),
@@ -1768,7 +1677,9 @@ class _CertDialogState extends State<_CertDialog> {
                   labelText: 'Año',
                   isDense: true,
                   contentPadding: EdgeInsets.symmetric(
-                      horizontal: 8, vertical: 10),
+                    horizontal: 8,
+                    vertical: 10,
+                  ),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
@@ -1776,8 +1687,12 @@ class _CertDialogState extends State<_CertDialog> {
                     isExpanded: true,
                     isDense: true,
                     items: years
-                        .map((y) => DropdownMenuItem(
-                            value: y, child: Text(y.toString())))
+                        .map(
+                          (y) => DropdownMenuItem(
+                            value: y,
+                            child: Text(y.toString()),
+                          ),
+                        )
                         .toList(),
                     onChanged: (v) {
                       if (v != null) setState(() => _year = v);
@@ -1791,21 +1706,24 @@ class _CertDialogState extends State<_CertDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onSave(Certification(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                name: _nameCtrl.text.trim(),
-                issuer: _issuerCtrl.text.trim(),
-                year: _year,
-                url: _urlCtrl.text.trim().isEmpty
-                    ? null
-                    : _urlCtrl.text.trim(),
-              ));
+              widget.onSave(
+                Certification(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  name: _nameCtrl.text.trim(),
+                  issuer: _issuerCtrl.text.trim(),
+                  year: _year,
+                  url: _urlCtrl.text.trim().isEmpty
+                      ? null
+                      : _urlCtrl.text.trim(),
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1829,21 +1747,22 @@ class _EducationDialog extends StatefulWidget {
 
 class _EducationDialogState extends State<_EducationDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _degreeCtrl =
-      TextEditingController(text: widget.initial?.degree ?? '');
-  late final _fieldCtrl =
-      TextEditingController(text: widget.initial?.field ?? '');
-  late final _institutionCtrl =
-      TextEditingController(text: widget.initial?.institution ?? '');
+  late final _degreeCtrl = TextEditingController(
+    text: widget.initial?.degree ?? '',
+  );
+  late final _fieldCtrl = TextEditingController(
+    text: widget.initial?.field ?? '',
+  );
+  late final _institutionCtrl = TextEditingController(
+    text: widget.initial?.institution ?? '',
+  );
   bool _autovalidate = false;
 
   late int _startYear =
-      int.tryParse(widget.initial?.startYear ?? '') ??
-          DateTime.now().year;
-  late int? _endYear =
-      widget.initial?.endYear != null
-          ? int.tryParse(widget.initial!.endYear!)
-          : null;
+      int.tryParse(widget.initial?.startYear ?? '') ?? DateTime.now().year;
+  late int? _endYear = widget.initial?.endYear != null
+      ? int.tryParse(widget.initial!.endYear!)
+      : null;
   late bool _isOngoing = widget.initial?.isOngoing ?? true;
 
   @override
@@ -1857,13 +1776,12 @@ class _EducationDialogState extends State<_EducationDialog> {
   @override
   Widget build(BuildContext context) {
     final currentYear = DateTime.now().year;
-    final years =
-        List.generate(currentYear - 1955 + 1, (i) => currentYear - i);
+    final years = List.generate(currentYear - 1955 + 1, (i) => currentYear - i);
 
     return AlertDialog(
-      title: Text(widget.initial == null
-          ? 'Agregar educación'
-          : 'Editar educación'),
+      title: Text(
+        widget.initial == null ? 'Agregar educación' : 'Editar educación',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1876,7 +1794,8 @@ class _EducationDialogState extends State<_EducationDialog> {
               TextFormField(
                 controller: _degreeCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Título / Carrera *'),
+                  labelText: 'Título / Carrera *',
+                ),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1885,14 +1804,14 @@ class _EducationDialogState extends State<_EducationDialog> {
               TextFormField(
                 controller: _fieldCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Área / Especialidad (opcional)'),
+                  labelText: 'Área / Especialidad (opcional)',
+                ),
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _institutionCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Institución *'),
+                decoration: const InputDecoration(labelText: 'Institución *'),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1901,8 +1820,10 @@ class _EducationDialogState extends State<_EducationDialog> {
               _DropdownField<int>(
                 value: _startYear,
                 items: years
-                    .map((y) => DropdownMenuItem(
-                        value: y, child: Text('Inicio: $y')))
+                    .map(
+                      (y) =>
+                          DropdownMenuItem(value: y, child: Text('Inicio: $y')),
+                    )
                     .toList(),
                 onChanged: (v) {
                   if (v != null) setState(() => _startYear = v);
@@ -1913,16 +1834,19 @@ class _EducationDialogState extends State<_EducationDialog> {
                 dense: true,
                 title: const Text('En curso'),
                 value: _isOngoing,
-                onChanged: (v) =>
-                    setState(() => _isOngoing = v ?? true),
+                onChanged: (v) => setState(() => _isOngoing = v ?? true),
               ),
               if (!_isOngoing) ...[
                 const SizedBox(height: 4),
                 _DropdownField<int>(
                   value: _endYear ?? currentYear,
                   items: years
-                      .map((y) => DropdownMenuItem(
-                          value: y, child: Text('Egreso: $y')))
+                      .map(
+                        (y) => DropdownMenuItem(
+                          value: y,
+                          child: Text('Egreso: $y'),
+                        ),
+                      )
                       .toList(),
                   onChanged: (v) {
                     if (v != null) setState(() => _endYear = v);
@@ -1935,25 +1859,28 @@ class _EducationDialogState extends State<_EducationDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onSave(Education(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                institution: _institutionCtrl.text.trim(),
-                degree: _degreeCtrl.text.trim(),
-                field: _fieldCtrl.text.trim().isEmpty
-                    ? 'General'
-                    : _fieldCtrl.text.trim(),
-                startYear: _startYear.toString(),
-                endYear: _isOngoing
-                    ? null
-                    : (_endYear ?? DateTime.now().year).toString(),
-                isOngoing: _isOngoing,
-              ));
+              widget.onSave(
+                Education(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  institution: _institutionCtrl.text.trim(),
+                  degree: _degreeCtrl.text.trim(),
+                  field: _fieldCtrl.text.trim().isEmpty
+                      ? 'General'
+                      : _fieldCtrl.text.trim(),
+                  startYear: _startYear.toString(),
+                  endYear: _isOngoing
+                      ? null
+                      : (_endYear ?? DateTime.now().year).toString(),
+                  isOngoing: _isOngoing,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1976,15 +1903,21 @@ class _LanguageDialog extends StatefulWidget {
 }
 
 class _LanguageDialogState extends State<_LanguageDialog> {
-  late final _nameCtrl =
-      TextEditingController(text: widget.initial?.name ?? '');
-  late LanguageLevel _level =
-      widget.initial?.level ?? LanguageLevel.intermedio;
+  late final _nameCtrl = TextEditingController(
+    text: widget.initial?.name ?? '',
+  );
+  late LanguageLevel _level = widget.initial?.level ?? LanguageLevel.intermedio;
   bool _showNameError = false;
 
   static const _suggestions = [
-    'Inglés', 'Portugués', 'Francés', 'Alemán',
-    'Italiano', 'Chino', 'Árabe', 'Japonés',
+    'Inglés',
+    'Portugués',
+    'Francés',
+    'Alemán',
+    'Italiano',
+    'Chino',
+    'Árabe',
+    'Japonés',
   ];
 
   @override
@@ -1996,8 +1929,7 @@ class _LanguageDialogState extends State<_LanguageDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-          widget.initial == null ? 'Agregar idioma' : 'Editar idioma'),
+      title: Text(widget.initial == null ? 'Agregar idioma' : 'Editar idioma'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -2021,13 +1953,15 @@ class _LanguageDialogState extends State<_LanguageDialog> {
               spacing: 6,
               runSpacing: 4,
               children: _suggestions
-                  .map((s) => ActionChip(
-                        label: Text(s),
-                        onPressed: () => setState(() {
-                          _nameCtrl.text = s;
-                          _showNameError = false;
-                        }),
-                      ))
+                  .map(
+                    (s) => ActionChip(
+                      label: Text(s),
+                      onPressed: () => setState(() {
+                        _nameCtrl.text = s;
+                        _showNameError = false;
+                      }),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 16),
@@ -2035,8 +1969,7 @@ class _LanguageDialogState extends State<_LanguageDialog> {
               initialValue: _level,
               decoration: const InputDecoration(labelText: 'Nivel'),
               items: LanguageLevel.values
-                  .map((l) => DropdownMenuItem(
-                      value: l, child: Text(l.label)))
+                  .map((l) => DropdownMenuItem(value: l, child: Text(l.label)))
                   .toList(),
               onChanged: (v) {
                 if (v != null) setState(() => _level = v);
@@ -2047,8 +1980,9 @@ class _LanguageDialogState extends State<_LanguageDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             final name = _nameCtrl.text.trim();
@@ -2091,11 +2025,13 @@ class _ChipListEditor extends StatelessWidget {
             spacing: 6,
             runSpacing: 4,
             children: items
-                .map((item) => Chip(
-                      label: Text(item),
-                      onDeleted: () => onDelete(item),
-                      visualDensity: VisualDensity.compact,
-                    ))
+                .map(
+                  (item) => Chip(
+                    label: Text(item),
+                    onDeleted: () => onDelete(item),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                )
                 .toList(),
           ),
         const SizedBox(height: 6),
@@ -2104,14 +2040,10 @@ class _ChipListEditor extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: controller,
-                decoration: InputDecoration(
-                  hintText: hint,
-                  isDense: true,
-                ),
+                decoration: InputDecoration(hintText: hint, isDense: true),
                 onSubmitted: (v) {
                   final trimmed = v.trim();
-                  if (trimmed.isNotEmpty &&
-                      !items.contains(trimmed)) {
+                  if (trimmed.isNotEmpty && !items.contains(trimmed)) {
                     onAdd(trimmed);
                     controller.clear();
                   }
@@ -2126,8 +2058,7 @@ class _ChipListEditor extends StatelessWidget {
                     ? null
                     : () {
                         final trimmed = val.text.trim();
-                        if (trimmed.isNotEmpty &&
-                            !items.contains(trimmed)) {
+                        if (trimmed.isNotEmpty && !items.contains(trimmed)) {
                           onAdd(trimmed);
                           controller.clear();
                         }
@@ -2159,8 +2090,7 @@ class _DropdownField<T> extends StatelessWidget {
     return InputDecorator(
       decoration: const InputDecoration(
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(
-            horizontal: 8, vertical: 6),
+        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(

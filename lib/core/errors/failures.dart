@@ -22,19 +22,24 @@ class NetworkFailure extends Failure {
 
 /// Recurso no encontrado en Firestore
 class NotFoundFailure extends Failure {
-  const NotFoundFailure([super.message = 'No encontramos los datos. Intentá de nuevo.']);
+  const NotFoundFailure([
+    super.message = 'No encontramos los datos. Intentá de nuevo.',
+  ]);
 }
 
 /// Usuario alcanzó su límite diario del plan gratuito
 class LimitExceededFailure extends Failure {
   const LimitExceededFailure([
-    super.message = 'Alcanzaste tu límite diario. Volvé mañana o activá Premium.',
+    super.message =
+        'Alcanzaste tu límite diario. Volvé mañana o activá Premium.',
   ]);
 }
 
 /// Error de autenticación
 class AuthFailure extends Failure {
-  const AuthFailure([super.message = 'Tu sesión expiró. Volvé a iniciar sesión.']);
+  const AuthFailure([
+    super.message = 'Tu sesión expiró. Volvé a iniciar sesión.',
+  ]);
 }
 
 /// Error de caché / almacenamiento local
@@ -60,7 +65,8 @@ String friendlyError(Object e) {
   if (msg.contains('not-found') || msg.contains('notfound')) {
     return 'No encontramos los datos. Intentá de nuevo.';
   }
-  if (msg.contains('network') || msg.contains('socketexception') ||
+  if (msg.contains('network') ||
+      msg.contains('socketexception') ||
       msg.contains('connection refused')) {
     return 'Sin conexión. Verificá tu internet.';
   }

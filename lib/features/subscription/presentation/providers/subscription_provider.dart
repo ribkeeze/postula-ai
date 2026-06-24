@@ -26,11 +26,11 @@ Stream<UserSubscription> subscription(Ref ref) {
       .doc(user.uid)
       .snapshots()
       .map((doc) {
-    if (!doc.exists || doc.data() == null) {
-      return UserSubscription.free(user.uid);
-    }
-    return UserSubscription.fromJson({...doc.data()!, 'userId': user.uid});
-  });
+        if (!doc.exists || doc.data() == null) {
+          return UserSubscription.free(user.uid);
+        }
+        return UserSubscription.fromJson({...doc.data()!, 'userId': user.uid});
+      });
 }
 
 /// Uso diario del usuario — se resetea cada día automáticamente
@@ -49,11 +49,11 @@ Stream<DailyUsage> dailyUsage(Ref ref) {
       .doc(_todayKey())
       .snapshots()
       .map((doc) {
-    if (!doc.exists || doc.data() == null) {
-      return DailyUsage.empty(_todayKey());
-    }
-    return DailyUsage.fromJson(doc.data()!);
-  });
+        if (!doc.exists || doc.data() == null) {
+          return DailyUsage.empty(_todayKey());
+        }
+        return DailyUsage.fromJson(doc.data()!);
+      });
 }
 
 /// Si el usuario puede hacer una acción según su plan y uso del día.
@@ -104,9 +104,7 @@ class PurchaseNotifier extends _$PurchaseNotifier {
       // TODO: revenuecat package upgrade needed for new PurchaseParams API
       // ignore: deprecated_member_use
       final purchaseResult = await Purchases.purchasePackage(monthly);
-      final isPremium = purchaseResult.customerInfo
-          .entitlements
-          .active
+      final isPremium = purchaseResult.customerInfo.entitlements.active
           .containsKey(_premiumEntitlementId);
 
       state = const AsyncValue.data(null);
@@ -125,10 +123,9 @@ class PurchaseNotifier extends _$PurchaseNotifier {
     state = const AsyncValue.loading();
     try {
       final customerInfo = await Purchases.restorePurchases();
-      final isPremium = customerInfo
-          .entitlements
-          .active
-          .containsKey(_premiumEntitlementId);
+      final isPremium = customerInfo.entitlements.active.containsKey(
+        _premiumEntitlementId,
+      );
       state = const AsyncValue.data(null);
       return isPremium;
     } catch (e, st) {

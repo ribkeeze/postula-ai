@@ -11,18 +11,15 @@ import '../providers/coach_provider.dart';
 
 class CoachScreen extends ConsumerWidget {
   final String applicationId;
-  const CoachScreen(
-      {super.key, required this.applicationId});
+  const CoachScreen({super.key, required this.applicationId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sessionState =
-        ref.watch(coachProvider(applicationId));
+    final sessionState = ref.watch(coachProvider(applicationId));
     final canCoach = ref.watch(canCoachProvider);
 
     return Scaffold(
-      appBar:
-          AppBar(title: const Text(StringsEs.coachTitulo)),
+      appBar: AppBar(title: const Text(StringsEs.coachTitulo)),
       body: sessionState.when(
         data: (session) {
           if (session == null) {
@@ -31,26 +28,27 @@ class CoachScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.school_outlined,
-                      size: 64, color: Color(0xFF9CA3AF)),
+                  const Icon(
+                    Icons.school_outlined,
+                    size: 64,
+                    color: Color(0xFF9CA3AF),
+                  ),
                   const SizedBox(height: 16),
-                  Text(StringsEs.coachSubtitulo,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge),
+                  Text(
+                    StringsEs.coachSubtitulo,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
                   const SizedBox(height: 32),
                   UsageGate(
                     trigger: PaywallTrigger.coach,
                     canUse: canCoach,
                     child: ElevatedButton.icon(
                       onPressed: () => ref
-                          .read(coachProvider(applicationId)
-                              .notifier)
+                          .read(coachProvider(applicationId).notifier)
                           .prepare(applicationId),
                       icon: const Icon(Icons.auto_awesome),
-                      label: const Text(
-                          'Preparar entrevista con IA'),
+                      label: const Text('Preparar entrevista con IA'),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -65,31 +63,31 @@ class CoachScreen extends ConsumerWidget {
             children: [
               // Tips
               if (session.interviewTips.isNotEmpty) ...[
-                Text(StringsEs.coachConsejos,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(
-                          fontWeight: FontWeight.w700,
-                        )),
+                Text(
+                  StringsEs.coachConsejos,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
                 const SizedBox(height: 10),
                 ...session.interviewTips.map(
                   (tip) => Padding(
-                    padding:
-                        const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: Row(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.lightbulb_outline,
-                            size: 18,
-                            color: Color(0xFFD97706)),
+                        const Icon(
+                          Icons.lightbulb_outline,
+                          size: 18,
+                          color: Color(0xFFD97706),
+                        ),
                         const SizedBox(width: 8),
                         Expanded(
-                            child: Text(tip,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium)),
+                          child: Text(
+                            tip,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -98,13 +96,12 @@ class CoachScreen extends ConsumerWidget {
               ],
 
               // Preguntas
-              Text(StringsEs.coachPreguntasSugeridas,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      )),
+              Text(
+                StringsEs.coachPreguntasSugeridas,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              ),
               const SizedBox(height: 10),
               ...session.probableQuestions.map(
                 (q) => _QuestionCard(question: q),
@@ -113,8 +110,8 @@ class CoachScreen extends ConsumerWidget {
           );
         },
         loading: () => const LoadingWidget(
-            message:
-                'Preparando tu coach de entrevista...'),
+          message: 'Preparando tu coach de entrevista...',
+        ),
         error: (e, _) => ErrorRetryWidget(
           message: friendlyError(e),
           onRetry: () => ref
@@ -131,8 +128,7 @@ class _QuestionCard extends StatefulWidget {
   const _QuestionCard({required this.question});
 
   @override
-  State<_QuestionCard> createState() =>
-      _QuestionCardState();
+  State<_QuestionCard> createState() => _QuestionCardState();
 }
 
 class _QuestionCardState extends State<_QuestionCard> {
@@ -152,23 +148,17 @@ class _QuestionCardState extends State<_QuestionCard> {
             children: [
               Row(
                 children: [
-                  _TypeBadge(
-                      type: widget.question.type as String),
+                  _TypeBadge(type: widget.question.type as String),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       widget.question.question as String,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge
-                          ?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                  Icon(_expanded
-                      ? Icons.expand_less
-                      : Icons.expand_more),
+                  Icon(_expanded ? Icons.expand_less : Icons.expand_more),
                 ],
               ),
               if (_expanded) ...[
@@ -176,42 +166,35 @@ class _QuestionCardState extends State<_QuestionCard> {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .surfaceContainerHighest,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Qué busca el entrevistador:',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              )),
-                      const SizedBox(height: 4),
-                      Text(widget.question.hint as String,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall),
-                      const SizedBox(height: 10),
-                      Text('Cómo encararlo:',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              )),
+                      Text(
+                        'Qué busca el entrevistador:',
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
                       const SizedBox(height: 4),
                       Text(
-                          widget.question.suggestedApproach
-                              as String,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall),
+                        widget.question.hint as String,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                        'Cómo encararlo:',
+                        style: Theme.of(context).textTheme.labelMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.question.suggestedApproach as String,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),
@@ -232,21 +215,14 @@ class _TypeBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final (label, color) = switch (type) {
       'tecnica' => ('Técnica', const Color(0xFF1A56DB)),
-      'conductual' => (
-          'Conductual',
-          const Color(0xFF0E9F6E)
-        ),
-      'motivacional' => (
-          'Motivación',
-          const Color(0xFF7E3AF2)
-        ),
+      'conductual' => ('Conductual', const Color(0xFF0E9F6E)),
+      'motivacional' => ('Motivación', const Color(0xFF7E3AF2)),
       'trampa' => ('¡Ojo!', const Color(0xFFE02424)),
       _ => ('General', const Color(0xFF6B7280)),
     };
 
     return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(6),
@@ -254,9 +230,10 @@ class _TypeBadge extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            color: color),
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: color,
+        ),
       ),
     );
   }

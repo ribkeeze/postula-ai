@@ -64,17 +64,17 @@ class PaywallScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             Text(
               isLimitReached ? StringsEs.paywallTitulo : 'Mejorá tu plan',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 12),
             Text(
               StringsEs.paywallSubtitulo,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
               textAlign: TextAlign.center,
             ),
 
@@ -94,8 +94,8 @@ class PaywallScreen extends ConsumerWidget {
                   child: Text(
                     'Con Premium tenés',
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
                 const Expanded(child: Divider()),
@@ -114,8 +114,11 @@ class PaywallScreen extends ConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_circle_rounded,
-                        color: Color(0xFF0E9F6E), size: 22),
+                    const Icon(
+                      Icons.check_circle_rounded,
+                      color: Color(0xFF0E9F6E),
+                      size: 22,
+                    ),
                     const SizedBox(width: 12),
                     Text(b, style: Theme.of(context).textTheme.bodyLarge),
                   ],
@@ -139,7 +142,8 @@ class PaywallScreen extends ConsumerWidget {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: Theme.of(context).colorScheme.onSurface,
                   side: BorderSide(
-                      color: Theme.of(context).colorScheme.outline),
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
                 ),
                 child: const Text(StringsEs.paywallBotonEsperar),
               ),
@@ -160,8 +164,8 @@ class PaywallScreen extends ConsumerWidget {
                 'Se renueva automáticamente. Cancelá cuando quieras\n'
                 'desde la configuración de tu tienda de aplicaciones.',
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -172,9 +176,7 @@ class PaywallScreen extends ConsumerWidget {
   }
 
   Future<void> _purchase(BuildContext context, WidgetRef ref) async {
-    final success = await ref
-        .read(purchaseProvider.notifier)
-        .purchasePremium();
+    final success = await ref.read(purchaseProvider.notifier).purchasePremium();
 
     if (!context.mounted) return;
 
@@ -195,9 +197,11 @@ class PaywallScreen extends ConsumerWidget {
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(success
-            ? StringsEs.suscripcionActivada
-            : 'No encontramos compras anteriores.'),
+        content: Text(
+          success
+              ? StringsEs.suscripcionActivada
+              : 'No encontramos compras anteriores.',
+        ),
       ),
     );
 
@@ -223,9 +227,9 @@ class _LimitesGratis extends ConsumerWidget {
           Text(
             'Tu uso de hoy',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  color: const Color(0xFF92400E),
-                  fontWeight: FontWeight.w600,
-                ),
+              color: const Color(0xFF92400E),
+              fontWeight: FontWeight.w600,
+            ),
           ),
           const SizedBox(height: 10),
           _UsageRow(
@@ -265,26 +269,26 @@ class _UsageRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isExhausted = used >= limit;
-    final statusColor =
-        isExhausted ? const Color(0xFFDC2626) : const Color(0xFF0E9F6E);
+    final statusColor = isExhausted
+        ? const Color(0xFFDC2626)
+        : const Color(0xFF0E9F6E);
 
     return Row(
       children: [
         Expanded(
           child: Text(
             label,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: const Color(0xFF78350F),
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: const Color(0xFF78350F)),
           ),
         ),
         Text(
           '$used de $limit usado${used == 1 ? '' : 's'} hoy',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: statusColor,
-                fontWeight:
-                    isExhausted ? FontWeight.w600 : FontWeight.w400,
-              ),
+            color: statusColor,
+            fontWeight: isExhausted ? FontWeight.w600 : FontWeight.w400,
+          ),
         ),
       ],
     );

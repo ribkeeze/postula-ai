@@ -44,8 +44,9 @@ class _WorkReferenceDialogState extends State<WorkReferenceDialog> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Nombre completo *'),
+                decoration: const InputDecoration(
+                  labelText: 'Nombre completo *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -69,15 +70,17 @@ class _WorkReferenceDialogState extends State<WorkReferenceDialog> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _phoneCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Teléfono (opcional)'),
+                decoration: const InputDecoration(
+                  labelText: 'Teléfono (opcional)',
+                ),
                 keyboardType: TextInputType.phone,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _emailCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Email (opcional)'),
+                decoration: const InputDecoration(
+                  labelText: 'Email (opcional)',
+                ),
                 keyboardType: TextInputType.emailAddress,
               ),
             ],

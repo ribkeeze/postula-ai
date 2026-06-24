@@ -12,8 +12,7 @@ import '../../domain/entities/generated_cv.dart';
 part 'cv_provider.g.dart';
 
 @riverpod
-CvRemoteDatasourceImpl cvDatasource(Ref ref) =>
-    CvRemoteDatasourceImpl();
+CvRemoteDatasourceImpl cvDatasource(Ref ref) => CvRemoteDatasourceImpl();
 
 @Riverpod(keepAlive: true)
 class CvNotifier extends _$CvNotifier {
@@ -40,38 +39,33 @@ class CvNotifier extends _$CvNotifier {
     } catch (_) {}
   }
 
-  Future<Either<Failure, GeneratedCv>> generate(
-      String evaluationId) async {
+  Future<Either<Failure, GeneratedCv>> generate(String evaluationId) async {
     _isGenerating = true;
     state = const AsyncValue.loading();
 
     try {
       final functions = FirebaseFunctions.instanceFor(
-          region: 'southamerica-east1');
-      final result = await functions
-          .httpsCallable('generateCv')
-          .call({'evaluationId': evaluationId});
+        region: 'southamerica-east1',
+      );
+      final result = await functions.httpsCallable('generateCv').call({
+        'evaluationId': evaluationId,
+      });
 
-      final rawData =
-          Map<String, dynamic>.from(result.data as Map);
+      final rawData = Map<String, dynamic>.from(result.data as Map);
 
       // Limpiar tipos anidados via JSON round-trip
-      final cleanData = jsonDecode(jsonEncode(rawData))
-          as Map<String, dynamic>;
+      final cleanData = jsonDecode(jsonEncode(rawData)) as Map<String, dynamic>;
 
       GeneratedCv cv;
       try {
-        cv = GeneratedCv.fromJson(
-            {...cleanData, 'evaluationId': evaluationId});
+        cv = GeneratedCv.fromJson({...cleanData, 'evaluationId': evaluationId});
       } catch (parseError) {
         debugPrint('CV fromJson error: $parseError');
         state = AsyncValue.error(
-          const ServerFailure(
-              'Error procesando el CV. Intentá de nuevo.'),
+          const ServerFailure('Error procesando el CV. Intentá de nuevo.'),
           StackTrace.current,
         );
-        return const Left(
-            ServerFailure('Error procesando el CV.'));
+        return const Left(ServerFailure('Error procesando el CV.'));
       }
 
       state = AsyncValue.data(cv);

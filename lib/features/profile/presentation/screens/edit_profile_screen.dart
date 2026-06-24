@@ -15,8 +15,7 @@ class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
 
   @override
-  ConsumerState<EditProfileScreen> createState() =>
-      _EditProfileScreenState();
+  ConsumerState<EditProfileScreen> createState() => _EditProfileScreenState();
 }
 
 class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
@@ -89,8 +88,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     super.initState();
     _nameFocus = FocusNode()..addListener(_onNameFocus);
     _emailFocus = FocusNode()..addListener(_onEmailFocus);
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _initFromProfile());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initFromProfile());
   }
 
   @override
@@ -145,8 +143,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       _portfolioCtrl.text = info.portfolioUrl ?? '';
       // Preferences
       _preferredModalities = Set.from(info.preferredModalities);
-      _salaryCtrl.text =
-          info.expectedSalaryAmount?.toStringAsFixed(0) ?? '';
+      _salaryCtrl.text = info.expectedSalaryAmount?.toStringAsFixed(0) ?? '';
       _salaryCurrency = info.expectedSalaryCurrency;
       _salaryNegotiable = info.salaryNegotiable;
       _hasOwnVehicle = info.hasOwnVehicle;
@@ -208,7 +205,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
     final existing = ref.read(userProfileProvider).asData?.value;
     final now = DateTime.now();
-    final base = existing ??
+    final base =
+        existing ??
         UserProfile(
           uid: user.uid,
           personalInfo: PersonalInfo(
@@ -282,13 +280,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     if (!_initialized) {
-      return const Scaffold(
-          body: Center(child: CircularProgressIndicator()));
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final showCommute =
         _preferredModalities.contains(WorkModality.hybrid) ||
-            _preferredModalities.contains(WorkModality.onsite);
+        _preferredModalities.contains(WorkModality.onsite);
 
     return Scaffold(
       appBar: AppBar(
@@ -304,10 +301,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               ),
             )
           else
-            TextButton(
-              onPressed: _save,
-              child: const Text('Guardar'),
-            ),
+            TextButton(onPressed: _save, child: const Text('Guardar')),
         ],
       ),
       body: Form(
@@ -328,8 +322,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   autovalidateMode: _nameTouched
                       ? AutovalidateMode.onUserInteraction
                       : AutovalidateMode.disabled,
-                  decoration:
-                      const InputDecoration(labelText: 'Nombre completo *'),
+                  decoration: const InputDecoration(
+                    labelText: 'Nombre completo *',
+                  ),
                   textCapitalization: TextCapitalization.words,
                   validator: (v) =>
                       v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -374,8 +369,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       return const Iterable<Localidad>.empty();
                     }
                     return kLocalidadesArgentina
-                        .where(
-                            (l) => l.localidad.toLowerCase().contains(q))
+                        .where((l) => l.localidad.toLowerCase().contains(q))
                         .take(6);
                   },
                   onSelected: (loc) {
@@ -392,8 +386,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       elevation: 4,
                       borderRadius: BorderRadius.circular(8),
                       child: ConstrainedBox(
-                        constraints:
-                            const BoxConstraints(maxHeight: 220),
+                        constraints: const BoxConstraints(maxHeight: 220),
                         child: ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
@@ -418,8 +411,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     autovalidateMode: _cityTouched
                         ? AutovalidateMode.onUserInteraction
                         : AutovalidateMode.disabled,
-                    decoration:
-                        const InputDecoration(labelText: 'Ciudad *'),
+                    decoration: const InputDecoration(labelText: 'Ciudad *'),
                     textCapitalization: TextCapitalization.words,
                     onChanged: (v) {
                       setState(() {
@@ -434,8 +426,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       }
                       _cityKey.currentState?.validate();
                     },
-                    validator: (_) =>
-                        _city.trim().isEmpty ? 'Requerido' : null,
+                    validator: (_) => _city.trim().isEmpty ? 'Requerido' : null,
                   ),
                 ),
               ],
@@ -482,14 +473,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Experiencia laboral',
               icon: Icons.work_outline,
               children: [
-                ..._experiences.map((e) => _ItemTile(
-                      title: e.position,
-                      subtitle:
-                          '${e.company}  •  ${e.startDate} → ${e.isCurrent ? "Actual" : (e.endDate ?? "")}',
-                      onEdit: () => _showExpDialog(context, initial: e),
-                      onDelete: () => setState(() =>
-                          _experiences.removeWhere((x) => x.id == e.id)),
-                    )),
+                ..._experiences.map(
+                  (e) => _ItemTile(
+                    title: e.position,
+                    subtitle:
+                        '${e.company}  •  ${e.startDate} → ${e.isCurrent ? "Actual" : (e.endDate ?? "")}',
+                    onEdit: () => _showExpDialog(context, initial: e),
+                    onDelete: () => setState(
+                      () => _experiences.removeWhere((x) => x.id == e.id),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
                   onPressed: () => _showExpDialog(context),
                   icon: const Icon(Icons.add),
@@ -504,14 +498,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Educación',
               icon: Icons.school_outlined,
               children: [
-                ..._educations.map((e) => _ItemTile(
-                      title: e.degree,
-                      subtitle:
-                          '${e.institution}  •  ${e.startYear} → ${e.isOngoing ? "En curso" : (e.endYear ?? "")}',
-                      onEdit: () => _showEduDialog(context, initial: e),
-                      onDelete: () => setState(() =>
-                          _educations.removeWhere((x) => x.id == e.id)),
-                    )),
+                ..._educations.map(
+                  (e) => _ItemTile(
+                    title: e.degree,
+                    subtitle:
+                        '${e.institution}  •  ${e.startYear} → ${e.isOngoing ? "En curso" : (e.endYear ?? "")}',
+                    onEdit: () => _showEduDialog(context, initial: e),
+                    onDelete: () => setState(
+                      () => _educations.removeWhere((x) => x.id == e.id),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
                   onPressed: () => _showEduDialog(context),
                   icon: const Icon(Icons.add),
@@ -532,7 +529,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: TextField(
                         controller: _skillCtrl,
                         decoration: const InputDecoration(
-                            hintText: 'ej: Excel, liderazgo...'),
+                          hintText: 'ej: Excel, liderazgo...',
+                        ),
                         onSubmitted: _tryAddSkill,
                       ),
                     ),
@@ -554,11 +552,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     spacing: 8,
                     runSpacing: 8,
                     children: _skills
-                        .map((s) => Chip(
-                              label: Text(s),
-                              onDeleted: () =>
-                                  setState(() => _skills.remove(s)),
-                            ))
+                        .map(
+                          (s) => Chip(
+                            label: Text(s),
+                            onDeleted: () => setState(() => _skills.remove(s)),
+                          ),
+                        )
                         .toList(),
                   ),
                 ],
@@ -571,13 +570,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Idiomas',
               icon: Icons.language_outlined,
               children: [
-                ..._languages.map((l) => _ItemTile(
-                      title: l.name,
-                      subtitle: l.level.label,
-                      onEdit: () => _showLangDialog(context, initial: l),
-                      onDelete: () => setState(() =>
-                          _languages.removeWhere((x) => x.name == l.name)),
-                    )),
+                ..._languages.map(
+                  (l) => _ItemTile(
+                    title: l.name,
+                    subtitle: l.level.label,
+                    onEdit: () => _showLangDialog(context, initial: l),
+                    onDelete: () => setState(
+                      () => _languages.removeWhere((x) => x.name == l.name),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
                   onPressed: () => _showLangDialog(context),
                   icon: const Icon(Icons.add),
@@ -592,8 +594,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Preferencias laborales',
               icon: Icons.tune_outlined,
               children: [
-                Text('Modalidad de trabajo',
-                    style: Theme.of(context).textTheme.labelMedium),
+                Text(
+                  'Modalidad de trabajo',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 8,
@@ -618,11 +622,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   TextField(
                     controller: _commuteCtrl,
                     decoration: const InputDecoration(
-                        labelText: 'Distancia máxima de viaje (km)'),
+                      labelText: 'Distancia máxima de viaje (km)',
+                    ),
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   ),
                 ],
                 const SizedBox(height: 8),
@@ -634,8 +637,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   onChanged: (v) => setState(() => _hasOwnVehicle = v),
                 ),
                 const SizedBox(height: 8),
-                Text('Pretensión salarial (opcional)',
-                    style: Theme.of(context).textTheme.labelMedium),
+                Text(
+                  'Pretensión salarial (opcional)',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
@@ -646,7 +651,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                           labelText: 'Moneda',
                           isDense: true,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 10),
+                            horizontal: 8,
+                            vertical: 10,
+                          ),
                         ),
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
@@ -655,9 +662,13 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             isExpanded: true,
                             items: const [
                               DropdownMenuItem(
-                                  value: 'ARS', child: Text('ARS')),
+                                value: 'ARS',
+                                child: Text('ARS'),
+                              ),
                               DropdownMenuItem(
-                                  value: 'USD', child: Text('USD')),
+                                value: 'USD',
+                                child: Text('USD'),
+                              ),
                             ],
                             onChanged: (v) {
                               if (v != null) {
@@ -672,11 +683,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     Expanded(
                       child: TextField(
                         controller: _salaryCtrl,
-                        decoration:
-                            const InputDecoration(labelText: 'Monto'),
+                        decoration: const InputDecoration(labelText: 'Monto'),
                         keyboardType: TextInputType.number,
                         inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly
+                          FilteringTextInputFormatter.digitsOnly,
                         ],
                       ),
                     ),
@@ -698,30 +708,31 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Exclusiones',
               icon: Icons.block_outlined,
               children: [
-                Text('Industrias a evitar',
-                    style: Theme.of(context).textTheme.labelMedium),
+                Text(
+                  'Industrias a evitar',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
                 const SizedBox(height: 6),
                 _ChipListEditor(
                   items: _excludedIndustries,
                   controller: _excludedIndustryCtrl,
                   hint: 'ej: Tabaco, Juego...',
-                  onAdd: (v) =>
-                      setState(() => _excludedIndustries.add(v)),
+                  onAdd: (v) => setState(() => _excludedIndustries.add(v)),
                   onDelete: (v) =>
                       setState(() => _excludedIndustries.remove(v)),
                 ),
                 const SizedBox(height: 12),
-                Text('Empresas a evitar',
-                    style: Theme.of(context).textTheme.labelMedium),
+                Text(
+                  'Empresas a evitar',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
                 const SizedBox(height: 6),
                 _ChipListEditor(
                   items: _excludedCompanies,
                   controller: _excludedCompanyCtrl,
                   hint: 'ej: Empresa XYZ...',
-                  onAdd: (v) =>
-                      setState(() => _excludedCompanies.add(v)),
-                  onDelete: (v) =>
-                      setState(() => _excludedCompanies.remove(v)),
+                  onAdd: (v) => setState(() => _excludedCompanies.add(v)),
+                  onDelete: (v) => setState(() => _excludedCompanies.remove(v)),
                 ),
               ],
             ),
@@ -732,13 +743,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Certificaciones',
               icon: Icons.verified_outlined,
               children: [
-                ..._certifications.map((c) => _ItemTile(
-                      title: c.name,
-                      subtitle: '${c.issuer}  •  ${c.year}',
-                      onEdit: () => _showCertDialog(context, initial: c),
-                      onDelete: () => setState(() =>
-                          _certifications.removeWhere((x) => x.id == c.id)),
-                    )),
+                ..._certifications.map(
+                  (c) => _ItemTile(
+                    title: c.name,
+                    subtitle: '${c.issuer}  •  ${c.year}',
+                    onEdit: () => _showCertDialog(context, initial: c),
+                    onDelete: () => setState(
+                      () => _certifications.removeWhere((x) => x.id == c.id),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
                   onPressed: () => _showCertDialog(context),
                   icon: const Icon(Icons.add),
@@ -753,13 +767,16 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               title: 'Proyectos destacados',
               icon: Icons.rocket_launch_outlined,
               children: [
-                ..._projects.map((p) => _ItemTile(
-                      title: p.name,
-                      subtitle: p.description,
-                      onEdit: () => _showProjectDialog(context, initial: p),
-                      onDelete: () => setState(() =>
-                          _projects.removeWhere((x) => x.id == p.id)),
-                    )),
+                ..._projects.map(
+                  (p) => _ItemTile(
+                    title: p.name,
+                    subtitle: p.description,
+                    onEdit: () => _showProjectDialog(context, initial: p),
+                    onDelete: () => setState(
+                      () => _projects.removeWhere((x) => x.id == p.id),
+                    ),
+                  ),
+                ),
                 TextButton.icon(
                   onPressed: () => _showProjectDialog(context),
                   icon: const Icon(Icons.add),
@@ -883,17 +900,22 @@ class _EditSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
-              Icon(icon,
+            Row(
+              children: [
+                Icon(
+                  icon,
                   size: 18,
-                  color: Theme.of(context).colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.w600)),
-            ]),
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
             const SizedBox(height: 12),
             ...children,
           ],
@@ -924,8 +946,8 @@ class _ItemTile extends StatelessWidget {
       subtitle: Text(
         subtitle,
         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+        ),
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
@@ -972,11 +994,13 @@ class _ChipListEditor extends StatelessWidget {
             spacing: 6,
             runSpacing: 4,
             children: items
-                .map((item) => Chip(
-                      label: Text(item),
-                      onDeleted: () => onDelete(item),
-                      visualDensity: VisualDensity.compact,
-                    ))
+                .map(
+                  (item) => Chip(
+                    label: Text(item),
+                    onDeleted: () => onDelete(item),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                )
                 .toList(),
           ),
         const SizedBox(height: 6),
@@ -985,8 +1009,7 @@ class _ChipListEditor extends StatelessWidget {
             Expanded(
               child: TextField(
                 controller: controller,
-                decoration:
-                    InputDecoration(hintText: hint, isDense: true),
+                decoration: InputDecoration(hintText: hint, isDense: true),
                 onSubmitted: (v) {
                   final t = v.trim();
                   if (t.isNotEmpty && !items.contains(t)) {
@@ -1084,12 +1107,15 @@ class _ExpDialog extends StatefulWidget {
 
 class _ExpDialogState extends State<_ExpDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _posCtrl =
-      TextEditingController(text: widget.initial?.position ?? '');
-  late final _compCtrl =
-      TextEditingController(text: widget.initial?.company ?? '');
-  late final _descCtrl =
-      TextEditingController(text: widget.initial?.description ?? '');
+  late final _posCtrl = TextEditingController(
+    text: widget.initial?.position ?? '',
+  );
+  late final _compCtrl = TextEditingController(
+    text: widget.initial?.company ?? '',
+  );
+  late final _descCtrl = TextEditingController(
+    text: widget.initial?.description ?? '',
+  );
   bool _autovalidate = false;
 
   final _now = DateTime.now();
@@ -1145,7 +1171,8 @@ class _ExpDialogState extends State<_ExpDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-          widget.initial == null ? 'Agregar experiencia' : 'Editar experiencia'),
+        widget.initial == null ? 'Agregar experiencia' : 'Editar experiencia',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1157,8 +1184,9 @@ class _ExpDialogState extends State<_ExpDialog> {
             children: [
               TextFormField(
                 controller: _posCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Puesto / Cargo *'),
+                decoration: const InputDecoration(
+                  labelText: 'Puesto / Cargo *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1197,8 +1225,7 @@ class _ExpDialogState extends State<_ExpDialog> {
                 dense: true,
                 title: const Text('Trabajo actual'),
                 value: _isCurrent,
-                onChanged: (v) =>
-                    setState(() => _isCurrent = v ?? true),
+                onChanged: (v) => setState(() => _isCurrent = v ?? true),
               ),
               if (!_isCurrent)
                 _MonthYearPicker(
@@ -1213,8 +1240,10 @@ class _ExpDialogState extends State<_ExpDialog> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text('Referencias',
-                      style: Theme.of(context).textTheme.labelMedium),
+                  Text(
+                    'Referencias',
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
                   const Spacer(),
                   TextButton.icon(
                     onPressed: () => _showAddReference(context),
@@ -1223,43 +1252,49 @@ class _ExpDialogState extends State<_ExpDialog> {
                   ),
                 ],
               ),
-              ..._references.map((r) => ListTile(
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                    title: Text(r.name),
-                    subtitle: Text('${r.position} · ${r.company}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.close, size: 18),
-                      onPressed: () => setState(() =>
-                          _references.removeWhere((x) => x.id == r.id)),
+              ..._references.map(
+                (r) => ListTile(
+                  dense: true,
+                  contentPadding: EdgeInsets.zero,
+                  title: Text(r.name),
+                  subtitle: Text('${r.position} · ${r.company}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.close, size: 18),
+                    onPressed: () => setState(
+                      () => _references.removeWhere((x) => x.id == r.id),
                     ),
-                  )),
+                  ),
+                ),
+              ),
             ],
           ),
         ),
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(WorkExperience(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                company: _compCtrl.text.trim(),
-                position: _posCtrl.text.trim(),
-                startDate: _fmt(_sm, _sy),
-                endDate: _isCurrent
-                    ? null
-                    : _fmt(_em ?? _now.month, _ey ?? _now.year),
-                isCurrent: _isCurrent,
-                description: _descCtrl.text.trim().isEmpty
-                    ? null
-                    : _descCtrl.text.trim(),
-                references: _references,
-              ));
+              widget.onAdd(
+                WorkExperience(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  company: _compCtrl.text.trim(),
+                  position: _posCtrl.text.trim(),
+                  startDate: _fmt(_sm, _sy),
+                  endDate: _isCurrent
+                      ? null
+                      : _fmt(_em ?? _now.month, _ey ?? _now.year),
+                  isCurrent: _isCurrent,
+                  description: _descCtrl.text.trim().isEmpty
+                      ? null
+                      : _descCtrl.text.trim(),
+                  references: _references,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1283,12 +1318,16 @@ class _EduDialog extends StatefulWidget {
 
 class _EduDialogState extends State<_EduDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _degCtrl =
-      TextEditingController(text: widget.initial?.degree ?? '');
+  late final _degCtrl = TextEditingController(
+    text: widget.initial?.degree ?? '',
+  );
   late final _fieldCtrl = TextEditingController(
-      text: (widget.initial?.field == 'General' ? '' : widget.initial?.field) ?? '');
-  late final _instCtrl =
-      TextEditingController(text: widget.initial?.institution ?? '');
+    text:
+        (widget.initial?.field == 'General' ? '' : widget.initial?.field) ?? '',
+  );
+  late final _instCtrl = TextEditingController(
+    text: widget.initial?.institution ?? '',
+  );
   bool _autovalidate = false;
 
   late int _sy;
@@ -1316,7 +1355,8 @@ class _EduDialogState extends State<_EduDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-          widget.initial == null ? 'Agregar educación' : 'Editar educación'),
+        widget.initial == null ? 'Agregar educación' : 'Editar educación',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1329,7 +1369,8 @@ class _EduDialogState extends State<_EduDialog> {
               TextFormField(
                 controller: _degCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Título / Carrera *'),
+                  labelText: 'Título / Carrera *',
+                ),
                 textCapitalization: TextCapitalization.sentences,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1338,14 +1379,14 @@ class _EduDialogState extends State<_EduDialog> {
               TextFormField(
                 controller: _fieldCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Área / Especialidad (opcional)'),
+                  labelText: 'Área / Especialidad (opcional)',
+                ),
                 textCapitalization: TextCapitalization.sentences,
               ),
               const SizedBox(height: 12),
               TextFormField(
                 controller: _instCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Institución *'),
+                decoration: const InputDecoration(labelText: 'Institución *'),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1361,8 +1402,7 @@ class _EduDialogState extends State<_EduDialog> {
                 dense: true,
                 title: const Text('En curso'),
                 value: _isOngoing,
-                onChanged: (v) =>
-                    setState(() => _isOngoing = v ?? true),
+                onChanged: (v) => setState(() => _isOngoing = v ?? true),
               ),
               if (!_isOngoing)
                 _YearPicker(
@@ -1376,25 +1416,28 @@ class _EduDialogState extends State<_EduDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(Education(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                institution: _instCtrl.text.trim(),
-                degree: _degCtrl.text.trim(),
-                field: _fieldCtrl.text.trim().isEmpty
-                    ? 'General'
-                    : _fieldCtrl.text.trim(),
-                startYear: _sy.toString(),
-                endYear: _isOngoing
-                    ? null
-                    : (_ey ?? DateTime.now().year).toString(),
-                isOngoing: _isOngoing,
-              ));
+              widget.onAdd(
+                Education(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  institution: _instCtrl.text.trim(),
+                  degree: _degCtrl.text.trim(),
+                  field: _fieldCtrl.text.trim().isEmpty
+                      ? 'General'
+                      : _fieldCtrl.text.trim(),
+                  startYear: _sy.toString(),
+                  endYear: _isOngoing
+                      ? null
+                      : (_ey ?? DateTime.now().year).toString(),
+                  isOngoing: _isOngoing,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1417,15 +1460,21 @@ class _LangDialog extends StatefulWidget {
 }
 
 class _LangDialogState extends State<_LangDialog> {
-  late final _nameCtrl =
-      TextEditingController(text: widget.initial?.name ?? '');
-  late LanguageLevel _level =
-      widget.initial?.level ?? LanguageLevel.intermedio;
+  late final _nameCtrl = TextEditingController(
+    text: widget.initial?.name ?? '',
+  );
+  late LanguageLevel _level = widget.initial?.level ?? LanguageLevel.intermedio;
   bool _showNameError = false;
 
   static const _suggestions = [
-    'Inglés', 'Portugués', 'Francés', 'Alemán',
-    'Italiano', 'Chino', 'Árabe', 'Japonés',
+    'Inglés',
+    'Portugués',
+    'Francés',
+    'Alemán',
+    'Italiano',
+    'Chino',
+    'Árabe',
+    'Japonés',
   ];
 
   @override
@@ -1461,13 +1510,15 @@ class _LangDialogState extends State<_LangDialog> {
               spacing: 6,
               runSpacing: 4,
               children: _suggestions
-                  .map((s) => ActionChip(
-                        label: Text(s),
-                        onPressed: () => setState(() {
-                          _nameCtrl.text = s;
-                          _showNameError = false;
-                        }),
-                      ))
+                  .map(
+                    (s) => ActionChip(
+                      label: Text(s),
+                      onPressed: () => setState(() {
+                        _nameCtrl.text = s;
+                        _showNameError = false;
+                      }),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 16),
@@ -1475,10 +1526,7 @@ class _LangDialogState extends State<_LangDialog> {
               initialValue: _level,
               decoration: const InputDecoration(labelText: 'Nivel'),
               items: LanguageLevel.values
-                  .map((l) => DropdownMenuItem(
-                        value: l,
-                        child: Text(l.label),
-                      ))
+                  .map((l) => DropdownMenuItem(value: l, child: Text(l.label)))
                   .toList(),
               onChanged: (v) {
                 if (v != null) setState(() => _level = v);
@@ -1489,8 +1537,9 @@ class _LangDialogState extends State<_LangDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             final name = _nameCtrl.text.trim();
@@ -1521,12 +1570,13 @@ class _CertDialog extends StatefulWidget {
 
 class _CertDialogState extends State<_CertDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _nameCtrl =
-      TextEditingController(text: widget.initial?.name ?? '');
-  late final _issuerCtrl =
-      TextEditingController(text: widget.initial?.issuer ?? '');
-  late final _urlCtrl =
-      TextEditingController(text: widget.initial?.url ?? '');
+  late final _nameCtrl = TextEditingController(
+    text: widget.initial?.name ?? '',
+  );
+  late final _issuerCtrl = TextEditingController(
+    text: widget.initial?.issuer ?? '',
+  );
+  late final _urlCtrl = TextEditingController(text: widget.initial?.url ?? '');
   bool _autovalidate = false;
   late int _year = widget.initial?.year ?? DateTime.now().year;
 
@@ -1544,9 +1594,11 @@ class _CertDialogState extends State<_CertDialog> {
     final years = List.generate(cur - 1980 + 1, (i) => cur - i);
 
     return AlertDialog(
-      title: Text(widget.initial == null
-          ? 'Agregar certificación'
-          : 'Editar certificación'),
+      title: Text(
+        widget.initial == null
+            ? 'Agregar certificación'
+            : 'Editar certificación',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1567,7 +1619,8 @@ class _CertDialogState extends State<_CertDialog> {
               TextFormField(
                 controller: _issuerCtrl,
                 decoration: const InputDecoration(
-                    labelText: 'Institución emisora *'),
+                  labelText: 'Institución emisora *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1575,8 +1628,7 @@ class _CertDialogState extends State<_CertDialog> {
               const SizedBox(height: 12),
               TextFormField(
                 controller: _urlCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'URL (opcional)'),
+                decoration: const InputDecoration(labelText: 'URL (opcional)'),
                 keyboardType: TextInputType.url,
               ),
               const SizedBox(height: 16),
@@ -1584,8 +1636,10 @@ class _CertDialogState extends State<_CertDialog> {
                 decoration: const InputDecoration(
                   labelText: 'Año',
                   isDense: true,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 10,
+                  ),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<int>(
@@ -1593,8 +1647,12 @@ class _CertDialogState extends State<_CertDialog> {
                     isExpanded: true,
                     isDense: true,
                     items: years
-                        .map((y) => DropdownMenuItem(
-                            value: y, child: Text(y.toString())))
+                        .map(
+                          (y) => DropdownMenuItem(
+                            value: y,
+                            child: Text(y.toString()),
+                          ),
+                        )
                         .toList(),
                     onChanged: (v) {
                       if (v != null) setState(() => _year = v);
@@ -1608,21 +1666,24 @@ class _CertDialogState extends State<_CertDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(Certification(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                name: _nameCtrl.text.trim(),
-                issuer: _issuerCtrl.text.trim(),
-                year: _year,
-                url: _urlCtrl.text.trim().isEmpty
-                    ? null
-                    : _urlCtrl.text.trim(),
-              ));
+              widget.onAdd(
+                Certification(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  name: _nameCtrl.text.trim(),
+                  issuer: _issuerCtrl.text.trim(),
+                  year: _year,
+                  url: _urlCtrl.text.trim().isEmpty
+                      ? null
+                      : _urlCtrl.text.trim(),
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1646,14 +1707,16 @@ class _ProjectDialog extends StatefulWidget {
 
 class _ProjectDialogState extends State<_ProjectDialog> {
   final _formKey = GlobalKey<FormState>();
-  late final _nameCtrl =
-      TextEditingController(text: widget.initial?.name ?? '');
-  late final _descCtrl =
-      TextEditingController(text: widget.initial?.description ?? '');
-  late final _urlCtrl =
-      TextEditingController(text: widget.initial?.url ?? '');
-  late final _contextCtrl =
-      TextEditingController(text: widget.initial?.context ?? '');
+  late final _nameCtrl = TextEditingController(
+    text: widget.initial?.name ?? '',
+  );
+  late final _descCtrl = TextEditingController(
+    text: widget.initial?.description ?? '',
+  );
+  late final _urlCtrl = TextEditingController(text: widget.initial?.url ?? '');
+  late final _contextCtrl = TextEditingController(
+    text: widget.initial?.context ?? '',
+  );
   final _techCtrl = TextEditingController();
   bool _autovalidate = false;
 
@@ -1717,7 +1780,8 @@ class _ProjectDialogState extends State<_ProjectDialog> {
     final now = DateTime.now();
     return AlertDialog(
       title: Text(
-          widget.initial == null ? 'Agregar proyecto' : 'Editar proyecto'),
+        widget.initial == null ? 'Agregar proyecto' : 'Editar proyecto',
+      ),
       content: SingleChildScrollView(
         child: Form(
           key: _formKey,
@@ -1730,8 +1794,9 @@ class _ProjectDialogState extends State<_ProjectDialog> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration:
-                    const InputDecoration(labelText: 'Nombre del proyecto *'),
+                decoration: const InputDecoration(
+                  labelText: 'Nombre del proyecto *',
+                ),
                 textCapitalization: TextCapitalization.words,
                 validator: (v) =>
                     v == null || v.trim().isEmpty ? 'Requerido' : null,
@@ -1768,8 +1833,10 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                 keyboardType: TextInputType.url,
               ),
               const SizedBox(height: 16),
-              Text('Tecnologías usadas',
-                  style: Theme.of(context).textTheme.labelMedium),
+              Text(
+                'Tecnologías usadas',
+                style: Theme.of(context).textTheme.labelMedium,
+              ),
               const SizedBox(height: 6),
               Row(
                 children: [
@@ -1800,11 +1867,16 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                   spacing: 6,
                   runSpacing: 4,
                   children: _technologies
-                      .map((t) => Chip(
-                            label: Text(t),
-                            onDeleted: () => setState(() => _technologies =
-                                _technologies.where((x) => x != t).toList()),
-                          ))
+                      .map(
+                        (t) => Chip(
+                          label: Text(t),
+                          onDeleted: () => setState(
+                            () => _technologies = _technologies
+                                .where((x) => x != t)
+                                .toList(),
+                          ),
+                        ),
+                      )
                       .toList(),
                 ),
               ],
@@ -1820,8 +1892,10 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                 label: 'Fecha de inicio (opcional)',
                 month: _startMonth ?? now.month,
                 year: _startYear ?? now.year,
-                onChanged: (m, y) =>
-                    setState(() { _startMonth = m; _startYear = y; }),
+                onChanged: (m, y) => setState(() {
+                  _startMonth = m;
+                  _startYear = y;
+                }),
               ),
               if (!_isCurrent) ...[
                 const SizedBox(height: 8),
@@ -1829,8 +1903,10 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                   label: 'Fecha de fin (opcional)',
                   month: _endMonth ?? now.month,
                   year: _endYear ?? now.year,
-                  onChanged: (m, y) =>
-                      setState(() { _endMonth = m; _endYear = y; }),
+                  onChanged: (m, y) => setState(() {
+                    _endMonth = m;
+                    _endYear = y;
+                  }),
                 ),
               ],
             ],
@@ -1839,32 +1915,35 @@ class _ProjectDialogState extends State<_ProjectDialog> {
       ),
       actions: [
         TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar')),
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         ElevatedButton(
           onPressed: () {
             setState(() => _autovalidate = true);
             if (_formKey.currentState!.validate()) {
-              widget.onAdd(Project(
-                id: widget.initial?.id ?? const Uuid().v4(),
-                name: _nameCtrl.text.trim(),
-                description: _descCtrl.text.trim(),
-                technologies: _technologies,
-                url: _urlCtrl.text.trim().isEmpty
-                    ? null
-                    : _urlCtrl.text.trim(),
-                context: _contextCtrl.text.trim().isEmpty
-                    ? null
-                    : _contextCtrl.text.trim(),
-                startDate: _startMonth != null && _startYear != null
-                    ? _fmt(_startMonth!, _startYear!)
-                    : null,
-                endDate:
-                    (!_isCurrent && _endMonth != null && _endYear != null)
-                        ? _fmt(_endMonth!, _endYear!)
-                        : null,
-                isCurrent: _isCurrent,
-              ));
+              widget.onAdd(
+                Project(
+                  id: widget.initial?.id ?? const Uuid().v4(),
+                  name: _nameCtrl.text.trim(),
+                  description: _descCtrl.text.trim(),
+                  technologies: _technologies,
+                  url: _urlCtrl.text.trim().isEmpty
+                      ? null
+                      : _urlCtrl.text.trim(),
+                  context: _contextCtrl.text.trim().isEmpty
+                      ? null
+                      : _contextCtrl.text.trim(),
+                  startDate: _startMonth != null && _startYear != null
+                      ? _fmt(_startMonth!, _startYear!)
+                      : null,
+                  endDate:
+                      (!_isCurrent && _endMonth != null && _endYear != null)
+                      ? _fmt(_endMonth!, _endYear!)
+                      : null,
+                  isCurrent: _isCurrent,
+                ),
+              );
               Navigator.pop(context);
             }
           },
@@ -1891,8 +1970,18 @@ class _MonthYearPicker extends StatelessWidget {
   });
 
   static const _months = [
-    'Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun',
-    'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic',
+    'Ene',
+    'Feb',
+    'Mar',
+    'Abr',
+    'May',
+    'Jun',
+    'Jul',
+    'Ago',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dic',
   ];
 
   @override
@@ -1902,10 +1991,12 @@ class _MonthYearPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                )),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 4),
         Row(
           children: [
@@ -1914,9 +2005,10 @@ class _MonthYearPicker extends StatelessWidget {
               child: _Dropdown<int>(
                 value: month,
                 items: List.generate(
-                    12,
-                    (i) => DropdownMenuItem(
-                        value: i + 1, child: Text(_months[i]))),
+                  12,
+                  (i) =>
+                      DropdownMenuItem(value: i + 1, child: Text(_months[i])),
+                ),
                 onChanged: (v) {
                   if (v != null) onChanged(v, year);
                 },
@@ -1928,8 +2020,10 @@ class _MonthYearPicker extends StatelessWidget {
               child: _Dropdown<int>(
                 value: year,
                 items: years
-                    .map((y) => DropdownMenuItem(
-                        value: y, child: Text(y.toString())))
+                    .map(
+                      (y) =>
+                          DropdownMenuItem(value: y, child: Text(y.toString())),
+                    )
                     .toList(),
                 onChanged: (v) {
                   if (v != null) onChanged(month, v);
@@ -1961,16 +2055,17 @@ class _YearPicker extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                )),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 4),
         _Dropdown<int>(
           value: year,
           items: years
-              .map((y) =>
-                  DropdownMenuItem(value: y, child: Text(y.toString())))
+              .map((y) => DropdownMenuItem(value: y, child: Text(y.toString())))
               .toList(),
           onChanged: (v) {
             if (v != null) onChanged(v);

@@ -10,35 +10,31 @@ abstract class EvaluationRemoteDatasource {
   Future<JobEvaluation> getEvaluation(String id);
 }
 
-class EvaluationRemoteDatasourceImpl
-    implements EvaluationRemoteDatasource {
+class EvaluationRemoteDatasourceImpl implements EvaluationRemoteDatasource {
   final FirebaseFunctions _functions;
   final FirebaseFirestore _firestore;
 
   EvaluationRemoteDatasourceImpl({
     FirebaseFunctions? functions,
     FirebaseFirestore? firestore,
-  })  : _functions = functions ??
-            FirebaseFunctions.instanceFor(
-                region: 'southamerica-east1'),
-        _firestore =
-            firestore ?? FirebaseFirestore.instance;
+  }) : _functions =
+           functions ??
+           FirebaseFunctions.instanceFor(region: 'southamerica-east1'),
+       _firestore = firestore ?? FirebaseFirestore.instance;
 
   @override
   Future<JobEvaluation> evaluate(String jobText) async {
-    final result = await _functions
-        .httpsCallable('evaluateJob')
-        .call({'jobText': jobText});
+    final result = await _functions.httpsCallable('evaluateJob').call({
+      'jobText': jobText,
+    });
 
-    final data =
-        Map<String, dynamic>.from(result.data as Map);
+    final data = Map<String, dynamic>.from(result.data as Map);
 
     // La función devuelve evaluationId, no id
     return JobEvaluation.fromJson({
       ...data,
       'id': data['evaluationId'] ?? '',
-      'userId':
-          FirebaseAuth.instance.currentUser?.uid ?? '',
+      'userId': FirebaseAuth.instance.currentUser?.uid ?? '',
       'rawJobText': jobText,
       'createdAt': DateTime.now().toIso8601String(),
     });
@@ -56,17 +52,12 @@ class EvaluationRemoteDatasourceImpl
         .limit(50)
         .get();
 
-    return snap.docs
-        .map((d) => JobEvaluation.fromJson(d.data()))
-        .toList();
+    return snap.docs.map((d) => JobEvaluation.fromJson(d.data())).toList();
   }
 
   @override
   Future<JobEvaluation> getEvaluation(String id) async {
-    final doc = await _firestore
-        .collection('evaluations')
-        .doc(id)
-        .get();
+    final doc = await _firestore.collection('evaluations').doc(id).get();
     if (!doc.exists) {
       throw Exception('Evaluación no encontrada');
     }
