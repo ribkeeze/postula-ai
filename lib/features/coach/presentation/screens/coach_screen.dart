@@ -54,7 +54,7 @@ class CoachScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  UsageChip(trigger: PaywallTrigger.coach),
+                  const UsageChip(trigger: PaywallTrigger.coach),
                 ],
               ),
             );
@@ -248,7 +248,7 @@ class _TypeBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(
           horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.12),
+        color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(

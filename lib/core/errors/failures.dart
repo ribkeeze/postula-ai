@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Jerarquía de errores de dominio.
-/// Se usan en Either<Failure, T> — nunca exponer excepciones raw a la UI.
+/// Se usan en `Either<Failure, T>` — nunca exponer excepciones raw a la UI.
 abstract class Failure extends Equatable {
   final String message;
   const Failure(this.message);

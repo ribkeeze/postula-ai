@@ -69,7 +69,7 @@ class _CvPreviewScreenState
             widgets.add(pw.SizedBox(height: 4));
             widgets.add(pw.Text(
               contactParts,
-              style: pw.TextStyle(
+              style: const pw.TextStyle(
                   fontSize: 10, color: PdfColors.grey700),
             ));
           }
@@ -78,7 +78,7 @@ class _CvPreviewScreenState
             widgets.add(pw.SizedBox(height: 2));
             widgets.add(pw.Text(
               _sanitizeForPdf(linkedIn),
-              style: pw.TextStyle(
+              style: const pw.TextStyle(
                   fontSize: 10, color: PdfColors.blue700),
             ));
           }
@@ -90,11 +90,11 @@ class _CvPreviewScreenState
                 children: [
                   pw.TextSpan(
                     text: '${_sanitizeForPdf(link.label)}: ',
-                    style: pw.TextStyle(fontSize: 10, color: PdfColors.grey800),
+                    style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey800),
                   ),
                   pw.TextSpan(
                     text: _sanitizeForPdf(link.url),
-                    style: pw.TextStyle(fontSize: 10, color: PdfColors.blue700),
+                    style: const pw.TextStyle(fontSize: 10, color: PdfColors.blue700),
                   ),
                 ],
               ),
@@ -123,7 +123,7 @@ class _CvPreviewScreenState
                 ),
                 pw.Text(
                   _sanitizeForPdf(entry.period),
-                  style: pw.TextStyle(
+                  style: const pw.TextStyle(
                       fontSize: 9,
                       color: PdfColors.grey600),
                 ),
@@ -161,7 +161,7 @@ class _CvPreviewScreenState
                 ),
                 pw.Text(
                   _sanitizeForPdf('${entry.institution} - ${entry.period}'),
-                  style: pw.TextStyle(
+                  style: const pw.TextStyle(
                       fontSize: 9,
                       color: PdfColors.grey600),
                 ),
@@ -181,7 +181,7 @@ class _CvPreviewScreenState
                 if (cert.url != null && cert.url!.isNotEmpty)
                   pw.Text(
                     _sanitizeForPdf(cert.url!),
-                    style: pw.TextStyle(fontSize: 9, color: PdfColors.blue700),
+                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.blue700),
                   ),
                 pw.SizedBox(height: 4),
               ],
@@ -220,17 +220,17 @@ class _CvPreviewScreenState
                 if (p.context != null || p.period != null)
                   pw.Text(
                     _sanitizeForPdf([if (p.context != null) p.context!, if (p.period != null) p.period!].join(' - ')),
-                    style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
+                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
                   ),
                 if (p.technologies.isNotEmpty)
                   pw.Text(
                     _sanitizeForPdf('Tecnologias: ${p.technologies.join(", ")}'),
-                    style: pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
+                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.grey600),
                   ),
                 if (p.url != null && p.url!.isNotEmpty)
                   pw.Text(
                     _sanitizeForPdf(p.url!),
-                    style: pw.TextStyle(fontSize: 9, color: PdfColors.blue700),
+                    style: const pw.TextStyle(fontSize: 9, color: PdfColors.blue700),
                   ),
                 pw.SizedBox(height: 3),
                 for (final bullet in p.bullets)
@@ -261,7 +261,7 @@ class _CvPreviewScreenState
                 ),
                 pw.Text(
                   _sanitizeForPdf(ref.contact),
-                  style: pw.TextStyle(
+                  style: const pw.TextStyle(
                       fontSize: 9, color: PdfColors.grey600),
                 ),
                 pw.SizedBox(height: 6),
@@ -311,7 +311,7 @@ class _CvPreviewScreenState
     final position =
         _sanitizeFilename(jobTitle ?? 'posicion');
     final empresa = _sanitizeFilename(company ?? 'empresa');
-    return 'CV_${name}_${position}_${empresa}.pdf';
+    return 'CV_${name}_${position}_$empresa.pdf';
   }
 
   Future<void> _generateAndSharePdf(BuildContext context,
@@ -446,7 +446,7 @@ class _CvPreviewScreenState
                     ),
                   ),
                   const SizedBox(height: 8),
-                  UsageChip(
+                  const UsageChip(
                       trigger: PaywallTrigger.cvGeneration),
                 ],
               ),

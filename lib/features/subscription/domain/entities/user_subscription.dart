@@ -33,8 +33,6 @@ abstract class UserSubscription with _$UserSubscription {
   factory UserSubscription.free(String userId) => UserSubscription(
         userId: userId,
         plan: SubscriptionPlan.free,
-        expiresAt: null,
-        revenueCatId: null,
         updatedAt: DateTime.now(),
       );
 }

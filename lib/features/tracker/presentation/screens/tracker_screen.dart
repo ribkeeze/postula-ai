@@ -45,7 +45,6 @@ class _TrackerScreenState
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(
         content: Text('${app.jobTitle} eliminado'),
-        duration: const Duration(seconds: 4),
         action: SnackBarAction(
           label: 'Deshacer',
           onPressed: () =>
@@ -62,7 +61,6 @@ class _TrackerScreenState
     return Scaffold(
       appBar: AppBar(
         title: const Text(StringsEs.trackerTitulo),
-        centerTitle: false,
       ),
       bottomNavigationBar: const BannerAdWidget(),
       body: Column(
@@ -110,7 +108,7 @@ class _TrackerScreenState
                 return ListView.separated(
                   padding: const EdgeInsets.all(16),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, __) =>
+                  separatorBuilder: (_, _) =>
                       const SizedBox(height: 0),
                   itemBuilder: (_, i) => Dismissible(
                     key: Key(filtered[i].id),
@@ -273,7 +271,7 @@ class _ApplicationCard extends ConsumerWidget {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: scoreColor.withOpacity(0.12),
+                  color: scoreColor.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -362,7 +360,6 @@ class _StatusMenu extends ConsumerWidget {
           const SnackBar(
             content:
                 Text(StringsEs.trackerEstadoActualizado),
-            duration: Duration(seconds: 4),
           ),
         );
       },

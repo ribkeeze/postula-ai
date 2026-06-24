@@ -229,7 +229,7 @@ class _ProfileScreenState
                 data: (sub) =>
                     _PlanBadge(isPremium: sub.isPremium),
                 loading: () => const SizedBox.shrink(),
-                error: (_, __) => const SizedBox.shrink(),
+                error: (_, _) => const SizedBox.shrink(),
               ),
               const SizedBox(height: 16),
               if (_isEditing)
@@ -264,10 +264,12 @@ class _ProfileScreenState
     // ─ 1. Datos de contacto ────────────────────────────────────────────────
     {
       final locParts = <String>[info.city];
-      if (info.provincia?.isNotEmpty == true)
+      if (info.provincia?.isNotEmpty == true) {
         locParts.add(info.provincia!);
-      if (info.postalCode?.isNotEmpty == true)
+      }
+      if (info.postalCode?.isNotEmpty == true) {
         locParts.add('CP ${info.postalCode}');
+      }
       locParts.add(info.country);
 
       add(_SectionCard(
@@ -690,8 +692,9 @@ class _ProfileScreenState
                 onEdit: (updated) => setState(() {
                   final idx = _experiences
                       .indexWhere((x) => x.id == e.id);
-                  if (idx != -1)
+                  if (idx != -1) {
                     _experiences[idx] = updated;
+                  }
                 }),
                 onDelete: () => setState(() => _experiences
                     .removeWhere((x) => x.id == e.id)),
@@ -789,9 +792,10 @@ class _ProfileScreenState
                             child: Text('USD')),
                       ],
                       onChanged: (v) {
-                        if (v != null)
-                          setState(
-                              () => _salaryCurrency = v);
+                        if (v != null) {
+                        setState(
+                            () => _salaryCurrency = v);
+                      }
                       },
                     ),
                   ),
@@ -874,8 +878,9 @@ class _ProfileScreenState
                           onSave: (updated) => setState(() {
                             final idx = _educations
                                 .indexWhere((x) => x.id == e.id);
-                            if (idx != -1)
+                            if (idx != -1) {
                               _educations[idx] = updated;
+                            }
                           }),
                         ),
                       ),
@@ -928,8 +933,9 @@ class _ProfileScreenState
                           onSave: (updated) => setState(() {
                             final idx = _certifications
                                 .indexWhere((x) => x.id == c.id);
-                            if (idx != -1)
+                            if (idx != -1) {
                               _certifications[idx] = updated;
+                            }
                           }),
                         ),
                       ),
@@ -982,8 +988,9 @@ class _ProfileScreenState
                           onSave: (updated) => setState(() {
                             final idx = _languages.indexWhere(
                                 (x) => x.name == l.name);
-                            if (idx != -1)
+                            if (idx != -1) {
                               _languages[idx] = updated;
+                            }
                           }),
                         ),
                       ),
@@ -1052,7 +1059,7 @@ class _ProfileScreenState
               const SizedBox(width: 8),
               ValueListenableBuilder<TextEditingValue>(
                 valueListenable: _skillCtrl,
-                builder: (_, val, __) =>
+                builder: (_, val, _) =>
                     IconButton.outlined(
                   onPressed: val.text.trim().isEmpty
                       ? null
@@ -1390,15 +1397,17 @@ class _ExperienceDialogState
   late bool _isCurrent;
 
   static int _parseMonth(String? date) {
-    if (date == null || date.length < 2)
+    if (date == null || date.length < 2) {
       return DateTime.now().month;
+    }
     return int.tryParse(date.split('/').first) ??
         DateTime.now().month;
   }
 
   static int _parseYear(String? date) {
-    if (date == null || !date.contains('/'))
+    if (date == null || !date.contains('/')) {
       return DateTime.now().year;
+    }
     return int.tryParse(date.split('/').last) ??
         DateTime.now().year;
   }
@@ -1534,8 +1543,9 @@ class _ExperienceDialogState
                             value: i + 1,
                             child: Text(months[i]))),
                     onChanged: (v) {
-                      if (v != null)
+                      if (v != null) {
                         setState(() => _startMonth = v);
+                      }
                     },
                   ),
                 ),
@@ -1550,8 +1560,9 @@ class _ExperienceDialogState
                             child: Text(y.toString())))
                         .toList(),
                     onChanged: (v) {
-                      if (v != null)
+                      if (v != null) {
                         setState(() => _startYear = v);
+                      }
                     },
                   ),
                 ),
@@ -1588,8 +1599,9 @@ class _ExperienceDialogState
                               value: i + 1,
                               child: Text(months[i]))),
                       onChanged: (v) {
-                        if (v != null)
+                        if (v != null) {
                           setState(() => _endMonth = v);
+                        }
                       },
                     ),
                   ),
@@ -1604,8 +1616,9 @@ class _ExperienceDialogState
                               child: Text(y.toString())))
                           .toList(),
                       onChanged: (v) {
-                        if (v != null)
+                        if (v != null) {
                           setState(() => _endYear = v);
+                        }
                       },
                     ),
                   ),
@@ -2108,7 +2121,7 @@ class _ChipListEditor extends StatelessWidget {
             const SizedBox(width: 8),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: controller,
-              builder: (_, val, __) => IconButton.outlined(
+              builder: (_, val, _) => IconButton.outlined(
                 onPressed: val.text.trim().isEmpty
                     ? null
                     : () {

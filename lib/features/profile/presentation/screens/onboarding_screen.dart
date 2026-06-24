@@ -462,7 +462,6 @@ class _Step1ContactInfoState extends State<_Step1ContactInfo> {
               labelText: StringsEs.perfilTelefono,
               errorText: _phoneError,
             ),
-            keyboardType: TextInputType.phone,
             inputFormatters: [LengthLimitingTextInputFormatter(15)],
             onChanged: (phone) {
               final raw = phone.number.trim();
@@ -658,7 +657,7 @@ class _ExperienceDialogState extends State<_ExperienceDialog> {
   int? _endMonth;
   int? _endYear;
   bool _isCurrent = true;
-  List<WorkReference> _references = [];
+  final List<WorkReference> _references = [];
 
   @override
   void dispose() {
@@ -1072,7 +1071,7 @@ class _Step4SkillsState extends State<_Step4Skills> {
             const SizedBox(width: 12),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _ctrl,
-              builder: (_, val, __) => IconButton.filled(
+              builder: (_, val, _) => IconButton.filled(
                 onPressed: val.text.trim().isEmpty
                     ? null
                     : () => _tryAdd(_ctrl.text),
@@ -1549,7 +1548,7 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
             const SizedBox(width: 8),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _industryCtrl,
-              builder: (_, val, __) => IconButton.outlined(
+              builder: (_, val, _) => IconButton.outlined(
                 onPressed: val.text.trim().isEmpty ? null : _addIndustry,
                 icon: const Icon(Icons.add),
               ),
@@ -1600,7 +1599,7 @@ class _Step7WorkPreferencesState extends State<_Step7WorkPreferences> {
             const SizedBox(width: 8),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: _companyCtrl,
-              builder: (_, val, __) => IconButton.outlined(
+              builder: (_, val, _) => IconButton.outlined(
                 onPressed: val.text.trim().isEmpty ? null : _addCompany,
                 icon: const Icon(Icons.add),
               ),
@@ -2041,7 +2040,7 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                   const SizedBox(width: 8),
                   ValueListenableBuilder<TextEditingValue>(
                     valueListenable: _techCtrl,
-                    builder: (_, val, __) => IconButton(
+                    builder: (_, val, _) => IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: val.text.trim().isEmpty ? null : _addTech,
                     ),

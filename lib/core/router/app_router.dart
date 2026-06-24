@@ -29,8 +29,8 @@ abstract class AppRoutes {
 
 class _RouterNotifier extends ChangeNotifier {
   _RouterNotifier(this._ref) {
-    _ref.listen<AsyncValue>(authStateProvider, (_, __) => notifyListeners());
-    _ref.listen<AsyncValue>(userProfileProvider, (_, __) => notifyListeners());
+    _ref.listen<AsyncValue>(authStateProvider, (_, _) => notifyListeners());
+    _ref.listen<AsyncValue>(userProfileProvider, (_, _) => notifyListeners());
   }
 
   final Ref _ref;
@@ -46,7 +46,7 @@ class _RouterNotifier extends ChangeNotifier {
     return authAsync.when(
       // Mientras carga — quedarse en splash, o si ya está en otra ruta no mover
       loading: () => isOnSplash ? null : null,
-      error: (_, __) => AppRoutes.onboarding,
+      error: (_, _) => AppRoutes.onboarding,
       data: (user) {
         if (user == null) {
           // No autenticado — ir a onboarding si está en ruta protegida
@@ -78,11 +78,11 @@ GoRouter appRouter(Ref ref) {
     routes: [
       GoRoute(
         path: AppRoutes.splash,
-        builder: (_, __) => const SplashScreen(),
+        builder: (_, _) => const SplashScreen(),
       ),
       GoRoute(
         path: AppRoutes.onboarding,
-        builder: (_, __) => const OnboardingScreen(),
+        builder: (_, _) => const OnboardingScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) =>
@@ -90,7 +90,7 @@ GoRouter appRouter(Ref ref) {
         routes: [
           GoRoute(
             path: AppRoutes.evaluate,
-            builder: (_, __) => const EvaluateScreen(),
+            builder: (_, _) => const EvaluateScreen(),
             routes: [
               GoRoute(
                 path: 'result',
@@ -104,21 +104,21 @@ GoRouter appRouter(Ref ref) {
           ),
           GoRoute(
             path: AppRoutes.tracker,
-            builder: (_, __) => const TrackerScreen(),
+            builder: (_, _) => const TrackerScreen(),
           ),
           GoRoute(
             path: AppRoutes.profile,
-            builder: (_, __) => const ProfileScreen(),
+            builder: (_, _) => const ProfileScreen(),
             routes: [
               GoRoute(
                 path: 'edit',
-                builder: (_, __) => const EditProfileScreen(),
+                builder: (_, _) => const EditProfileScreen(),
               ),
             ],
           ),
           GoRoute(
             path: AppRoutes.jobSearch,
-            builder: (_, __) => const JobSearchScreen(),
+            builder: (_, _) => const JobSearchScreen(),
           ),
           GoRoute(
             path: '/cv/:applicationId',

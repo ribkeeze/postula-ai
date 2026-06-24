@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -102,6 +101,8 @@ class PurchaseNotifier extends _$PurchaseNotifier {
         return false;
       }
 
+      // TODO: revenuecat package upgrade needed for new PurchaseParams API
+      // ignore: deprecated_member_use
       final purchaseResult = await Purchases.purchasePackage(monthly);
       final isPremium = purchaseResult.customerInfo
           .entitlements

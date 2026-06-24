@@ -19,8 +19,11 @@ void main() async {
 
   await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform);
+  // TODO: firebase_app_check package upgrade needed for new provider types
   await FirebaseAppCheck.instance.activate(
+    // ignore: deprecated_member_use
     androidProvider: AndroidProvider.debug,
+    // ignore: deprecated_member_use
     appleProvider: AppleProvider.debug,
   );
   await GoogleSignIn.instance
@@ -53,7 +56,6 @@ class PostulaAIApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.system,
       routerConfig: router,
       // Accesibilidad: permitir que el usuario escale texto sin romper layouts
       builder: (context, child) {

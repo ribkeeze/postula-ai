@@ -23,7 +23,6 @@ class AppTheme {
   static ThemeData light() {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: _primaryColor,
-      brightness: Brightness.light,
       primary: _primaryColor,
       secondary: _secondaryColor,
       error: _errorColor,
@@ -143,9 +142,9 @@ class AppTheme {
         color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
-          side: const BorderSide(color: Color(0xFFE5E7EB), width: 1),
+          side: const BorderSide(color: Color(0xFFE5E7EB)),
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+        margin: const EdgeInsets.symmetric(vertical: 6),
       ),
 
       // Bottom nav — grande para touch fácil
@@ -154,7 +153,7 @@ class AppTheme {
         backgroundColor: Colors.white,
         elevation: 0,
         shadowColor: Colors.black12,
-        indicatorColor: _primaryColor.withOpacity(0.12),
+        indicatorColor: _primaryColor.withValues(alpha: 0.12),
         labelTextStyle: WidgetStateProperty.all(
           const TextStyle(fontFamily: 'Inter', fontSize: 12, fontWeight: FontWeight.w500),
         ),
@@ -175,12 +174,12 @@ class AppTheme {
 
       // Colores de estado custom (disponibles via extension)
       extensions: [
-        AppColors(
+        const AppColors(
           success: _secondaryColor,
           warning: _warningColor,
-          scoreHigh: const Color(0xFF0E9F6E),
-          scoreMid: const Color(0xFFFF8A00),
-          scoreLow: const Color(0xFFE02424),
+          scoreHigh: Color(0xFF0E9F6E),
+          scoreMid: Color(0xFFFF8A00),
+          scoreLow: Color(0xFFE02424),
         ),
       ],
     );

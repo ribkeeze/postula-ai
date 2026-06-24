@@ -55,7 +55,6 @@ class _EvaluateScreenState
         backgroundColor:
             Theme.of(context).colorScheme.error,
         behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 4),
       ),
     );
   }

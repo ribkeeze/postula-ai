@@ -1,7 +1,5 @@
 /// Todas las strings visibles al usuario en un solo lugar.
 /// Preparado para internacionalización futura.
-library strings_es;
-
 abstract class StringsEs {
   // ── Generales ──────────────────────────────────────────────────────────────
   static const appName = 'PostulaAI';

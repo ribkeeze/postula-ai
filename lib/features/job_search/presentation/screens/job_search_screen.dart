@@ -442,8 +442,9 @@ class _AddPortalDialogState
               ),
               keyboardType: TextInputType.url,
               validator: (v) {
-                if (v == null || v.trim().isEmpty)
+                if (v == null || v.trim().isEmpty) {
                   return 'Requerido';
+                }
                 if (!v.contains('{query}')) {
                   return 'Debe incluir {query}';
                 }

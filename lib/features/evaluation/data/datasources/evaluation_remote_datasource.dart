@@ -67,8 +67,9 @@ class EvaluationRemoteDatasourceImpl
         .collection('evaluations')
         .doc(id)
         .get();
-    if (!doc.exists)
+    if (!doc.exists) {
       throw Exception('Evaluación no encontrada');
+    }
 
     final data = doc.data()!;
 

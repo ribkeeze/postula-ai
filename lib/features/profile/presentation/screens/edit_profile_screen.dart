@@ -539,7 +539,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     const SizedBox(width: 8),
                     ValueListenableBuilder<TextEditingValue>(
                       valueListenable: _skillCtrl,
-                      builder: (_, val, __) => IconButton.filled(
+                      builder: (_, val, _) => IconButton.filled(
                         onPressed: val.text.trim().isEmpty
                             ? null
                             : () => _tryAddSkill(_skillCtrl.text),
@@ -999,7 +999,7 @@ class _ChipListEditor extends StatelessWidget {
             const SizedBox(width: 8),
             ValueListenableBuilder<TextEditingValue>(
               valueListenable: controller,
-              builder: (_, val, __) => IconButton.outlined(
+              builder: (_, val, _) => IconButton.outlined(
                 onPressed: val.text.trim().isEmpty
                     ? null
                     : () {
@@ -1787,7 +1787,7 @@ class _ProjectDialogState extends State<_ProjectDialog> {
                   const SizedBox(width: 8),
                   ValueListenableBuilder<TextEditingValue>(
                     valueListenable: _techCtrl,
-                    builder: (_, val, __) => IconButton(
+                    builder: (_, val, _) => IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: val.text.trim().isEmpty ? null : _addTech,
                     ),
