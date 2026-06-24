@@ -2,9 +2,6 @@
 
 **La herramienta de búsqueda laboral con IA para todos los argentinos.**
 
-> career-ops demostró que la IA puede transformar la búsqueda de empleo.
-> PostulaAI lleva ese poder a quienes más lo necesitan: sin terminal, sin código, sin barreras.
-
 ---
 
 ## El problema
@@ -15,39 +12,35 @@ En Argentina, eso es una enorme cantidad de personas.
 
 ## La solución
 
-Una app Flutter (Android + iOS) que hace exactamente lo que hace career-ops — evaluar ofertas, generar CVs personalizados, preparar entrevistas — pero con una interfaz que cualquier persona puede usar desde su celular en 5 minutos.
-
-## Nombre del proyecto
-
-Opciones evaluadas:
-
-| Nombre | Pros | Contras |
-|--------|------|---------|
-| **PostulaAI** | Claro, moderno, accionable | Puede sonar técnico por el "AI" |
-| **TuLaburo** | Argentino, cercano, memorable | Muy informal, posible confusión con sitio existente |
-| **CurriculumAI** | Descriptivo | Largo, difícil de recordar |
-| **Postulá** | Simple, en castellano local | Genérico |
-
-> Nombre de trabajo: **PostulaAI**. Puede cambiarse antes del lanzamiento.
+Una app Flutter (Android + iOS) que lleva la asistencia de IA para búsqueda laboral — evaluación de ofertas, generación de CVs personalizados, preparación de entrevistas — a una interfaz mobile simple que cualquier persona puede usar desde su celular.
 
 ---
 
-## Features del MVP
+## Qué está construido y funcionando
 
-### 1. Perfil Guiado (reemplaza cv.md + profile.yml)
-Onboarding paso a paso que construye el perfil del usuario: datos personales, experiencia laboral, educación, habilidades, idiomas. Se guarda en Firestore. Se usa en todas las demás features sin que el usuario tenga que repetirlo.
+### 1. Perfil Guiado (Onboarding)
+Onboarding paso a paso que construye el perfil completo del usuario: datos personales, experiencia laboral (con referencias), educación, certificaciones, habilidades, idiomas, proyectos, expectativas salariales, modalidad preferida e industrias excluidas. Se guarda en Firestore y se reutiliza en todas las demás features.
 
 ### 2. Evaluador de Ofertas
-El usuario pega el texto de una oferta laboral (o una URL). La IA evalúa el fit con su perfil y devuelve: puntuación, fortalezas, brechas, y recomendación de si vale la pena aplicar.
+El usuario pega el texto de una oferta laboral. La IA lo compara con su perfil y devuelve un score de fit, fortalezas, brechas y una recomendación — con guardrails estrictos para no inventar experiencia que el usuario no tiene.
 
 ### 3. Generador de CV Personalizado
-Para cada oferta guardada, genera un CV PDF adaptado con las keywords del aviso. El usuario puede compartirlo o descargarlo.
+Para cualquier oferta evaluada, genera un PDF personalizado: detecta el idioma del aviso (español/inglés) y escribe el CV en ese idioma, incluye solo los proyectos, certificaciones y habilidades relevantes para ese rol, y agrega referencias y links de contacto cuando están disponibles. Se cachea para no regenerarse innecesariamente.
 
 ### 4. Pipeline de Postulaciones
-Tracker visual del estado de cada postulación: Interesado → Aplicado → Entrevista → Oferta → Rechazado. Historial completo.
+Tracker visual de cada postulación por estado (Interesado → Aplicado → Entrevista → Oferta). Swipe para eliminar con deshacer, y limpieza en cascada de datos relacionados al borrar.
 
 ### 5. Coach de Entrevistas
-Genera preguntas probables para cada oferta + ayuda al usuario a construir sus respuestas STAR basadas en su experiencia real.
+Genera preguntas probables (técnicas, conductuales, motivacionales) + tips de coaching y cosas a evitar, basado en el perfil real del candidato y los requisitos concretos del puesto. Se cachea por postulación.
+
+### 6. Suscripción / Freemium
+Límites de uso diario para evaluaciones, generación de CV y sesiones de coach en el plan gratuito. El plan premium elimina límites y publicidad, gestionado a través de RevenueCat. Los contadores de uso se aplican server-side para evitar manipulación del cliente.
+
+### 7. Búsqueda de Empleos
+Acceso rápido a los principales portales de empleo argentinos (Bumeran, ZonaJobs, LinkedIn Jobs, Computrabajo, GetOnBoard). El usuario elige qué habilidades buscar y la app abre una query prearmada en el portal seleccionado.
+
+### 8. Publicidad (Ads)
+Banner de AdMob (pantalla del tracker), interstitial (cada 2 evaluaciones) y rewarded (antes de descargar el PDF) — mostrados solo a usuarios del plan gratuito.
 
 ---
 
@@ -56,38 +49,41 @@ Genera preguntas probables para cada oferta + ayuda al usuario a construir sus r
 ```
 Flutter (Android + iOS)
   ↓
-Firebase Cloud Functions  ←→  Gemini Flash API (free tier)
+Firebase Cloud Functions (TypeScript)  ←→  Google Gemini 2.5 Flash
   ↓
-Firestore (perfiles, evaluaciones, tracker)
-Firebase Storage (PDFs generados)
-Firebase Auth (Google Sign-In + email)
+Firestore (perfiles, evaluaciones, postulaciones, CVs, sesiones de coach, suscripciones, uso)
+Firebase Auth (Google Sign-In)
 ```
 
-**¿Por qué las llamadas a IA van por Cloud Functions?**
-- La API key nunca queda expuesta en el cliente
-- Control de rate limiting y costos centralizado
-- El perfil del usuario se combina con el prompt server-side
+- **State management:** Riverpod con generación de código (`@riverpod`)
+- **Arquitectura:** Clean Architecture, feature-first (`data/ domain/ presentation/` por feature)
+- **Navegación:** go_router
+- **Manejo de errores:** `Either<Failure, T>` en dominio, `AsyncValue` en presentación
+- **Monetización:** AdMob (publicidad) + RevenueCat (suscripciones)
+- **Generación de PDF:** client-side con el paquete `pdf`
 
-**¿Por qué Gemini Flash como default?**
-- 1500 requests/día gratis en Google AI Studio
-- 1M tokens de contexto (suficiente para perfil + oferta + instrucciones)
-- Puede cambiarse a Claude o DeepSeek con un cambio de variable en Cloud Functions
+**¿Por qué las llamadas a IA van por Cloud Functions?**
+La API key de Gemini nunca llega al cliente. Los límites de uso se aplican server-side. El perfil del usuario se combina con el prompt en el backend, sin exponerlo a la app.
+
+**¿Por qué Gemini 2.5 Flash?**
+Tier gratuito generoso, ventana de contexto amplia (suficiente para un perfil completo + oferta + instrucciones), y thinking deshabilitado (`thinkingConfig: { thinkingBudget: 0 }`) para respuestas más rápidas y económicas en tareas de output estructurado como estas.
 
 ---
 
 ## Arquitectura de IA
 
-El núcleo de la app son los **modos** en `modes/`. Cada feature de IA tiene un archivo de prompt en español que define cómo razona el modelo:
+El comportamiento de la IA está definido en archivos de prompt independientes dentro de `modes/`, no hardcodeado en TypeScript:
 
 ```
 modes/
-  evaluate_es.md   → evaluación de fit con una oferta
-  cv_es.md         → generación de CV personalizado
-  coach_es.md      → preparación de entrevista
-  research_es.md   → investigación de empresa
+  evaluate_es.md   → lógica de evaluación de fit con una oferta
+  cv_es.md         → reglas de generación de CV personalizado
+  coach_es.md      → lógica de preparación de entrevistas
 ```
 
-Los Cloud Functions leen estos archivos, inyectan el perfil del usuario y el input, y llaman a la API de IA. **El mismo sistema de modos que usa career-ops, pero ejecutado server-side y consumido por una UI mobile.**
+Los Cloud Functions leen estos archivos, inyectan el perfil del usuario y el texto de la oferta, y llaman a Gemini. Separar los prompts del código facilita iterar sin tocar la lógica de la aplicación, y quedan versionados como cualquier otro archivo fuente.
+
+El texto de la oferta ingresado por el usuario se sanitiza antes de interpolarse en los prompts (`functions/src/utils/sanitize.ts`) para reducir el riesgo de prompt injection.
 
 ---
 
@@ -149,34 +145,46 @@ flutter run
 
 ```
 postula_ai/
-├── AGENTS.md                    # Contexto para agentes de IA (Claude Code, OpenCode, Gemini CLI)
+├── CLAUDE.md                    # Contexto del proyecto para agentes de IA (Claude Code)
 ├── README.md
 ├── pubspec.yaml
 ├── modes/                       # Prompts de IA por feature
 │   ├── evaluate_es.md
 │   ├── cv_es.md
-│   ├── coach_es.md
-│   └── research_es.md
-├── .ai/
-│   ├── architecture.md          # Decisiones de arquitectura
-│   └── conventions.md           # Convenciones de código
+│   └── coach_es.md
 ├── lib/
-│   ├── core/                    # Router, tema, constantes, errores
+│   ├── core/                    # Router, tema, constantes, tipos de error
 │   ├── features/
 │   │   ├── profile/             # Onboarding y perfil del usuario
 │   │   ├── evaluation/          # Evaluador de ofertas
-│   │   ├── cv_generator/        # Generador de CV PDF
 │   │   ├── tracker/             # Pipeline de postulaciones
-│   │   └── coach/               # Coach de entrevistas
-│   └── shared/                  # Widgets y providers compartidos
-├── functions/                   # Firebase Cloud Functions (Node.js/TypeScript)
+│   │   ├── cv_generator/        # Generación de CV + exportación PDF
+│   │   ├── coach/               # Coach de entrevistas
+│   │   ├── subscription/        # Lógica freemium + RevenueCat
+│   │   ├── job_search/          # Acceso rápido a portales de empleo
+│   │   └── ads/                 # Integración AdMob
+│   └── shared/                  # Providers y widgets compartidos entre features
+├── functions/                   # Firebase Cloud Functions (TypeScript)
 │   └── src/
 │       ├── index.ts
 │       ├── evaluate.ts
 │       ├── generate_cv.ts
-│       └── coach.ts
+│       ├── coach.ts
+│       └── utils/
 └── test/
 ```
+
+---
+
+## Desarrollo con IA
+
+Este proyecto fue construido en solitario, de principio a fin, usando Claude Code como parte central del flujo de desarrollo — no solo para autocompletado, sino para decisiones de arquitectura, debugging e implementación de features. El repo incluye:
+
+- `CLAUDE.md` — contexto persistente del proyecto cargado automáticamente en cada sesión
+- `.claude/skills/` — conocimiento específico por tarea para trabajo en Flutter y Cloud Functions, cargado bajo demanda
+- `.claude/agents/` — subagentes personalizados (un revisor de código de solo lectura, un explorador del codebase) para tareas enfocadas y aisladas
+
+Este setup refleja un enfoque deliberado hacia la ingeniería asistida por IA: contexto estructurado, expertise reutilizable y límites claros de las herramientas — en lugar de prompting ad-hoc.
 
 ---
 
@@ -185,18 +193,9 @@ postula_ai/
 Para cualquier empresa que contrate Flutter developers con foco en IA:
 
 - Demuestra arquitectura clean en una app real con múltiples features
-- Demuestra integración Firebase completa (Auth, Firestore, Storage, Functions)
-- Demuestra AI-native development (no solo "usé ChatGPT", sino integración real de APIs)
-- Tiene un user problem real y una solución concreta
-- Está construido para escalar (no un side project de tutorial)
+- Demuestra integración Firebase completa (Auth, Firestore, Storage, Functions, reglas de seguridad)
+- Demuestra desarrollo AI-native real: prompt engineering server-side, outputs estructurados, guardrails anti-alucinación y control de costos/uso — no solo llamar a una API una vez
+- Resuelve un problema real y bien definido de principio a fin
+- Construido con consideraciones de producción en mente: manejo de errores, accesibilidad, monetización y enforcement freemium
 
 > Este proyecto no es solo algo que ayuda a otros a conseguir trabajo — también te ayuda a conseguir el tuyo.
-
----
-
-## Roadmap
-
-**MVP (mes 1-2):** Perfil + Evaluador + Tracker básico  
-**V1 (mes 3):** Generador de CV PDF + Coach básico  
-**V1.5 (mes 4):** Pulido UX, accesibilidad, onboarding simplificado para usuarios mayores  
-**V2:** Portal scanner (equivalente al scan de career-ops), búsqueda de ofertas integrada
