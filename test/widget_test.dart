@@ -12,17 +12,14 @@ void main() {
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) =>
-              const Scaffold(body: Text('smoke-test')),
+          builder: (context, state) => const Scaffold(body: Text('smoke-test')),
         ),
       ],
     );
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [
-          appRouterProvider.overrideWithValue(fakeRouter),
-        ],
+        overrides: [appRouterProvider.overrideWithValue(fakeRouter)],
         child: const PostulaAIApp(),
       ),
     );
