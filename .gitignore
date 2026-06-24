@@ -43,3 +43,5 @@ android/key.properties
 ios/Pods/
 ios/.symlinks/
 **/*.xcuserstate
+.ai/
+flutter-dev-workflow.md
