@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Perfil: solo el propio usuario puede leer y escribir
+    match /profiles/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Evaluaciones: solo el propio usuario
+    match /evaluations/{evaluationId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      // Escritura solo via Cloud Functions (admin SDK ignora estas reglas)
+      allow write: if false;
+    }
+
+    // Postulaciones (tracker): solo el propio usuario
+    match /applications/{applicationId} {
+      allow read: if request.auth != null &&
+        request.auth.uid == resource.data.userId;
+      // El estado sí puede ser actualizado por el cliente
+      allow update: if request.auth != null &&
+        request.auth.uid == resource.data.userId &&
+        request.resource.data.diff(resource.data).affectedKeys()
+          .hasOnly(['status', 'updatedAt', 'notes']);
+      allow write: if false;
+    }
+
+    // Suscripciones: solo lectura para el propio usuario
+    // Escritura solo via Cloud Functions o webhooks de RevenueCat
+    match /subscriptions/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    // Uso diario: solo lectura para el propio usuario
+    match /usage/{userId}/daily/{date} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    // Sesiones de coach: solo el propio usuario puede leer
+    match /coachSessions/{sessionId} {
+      allow read: if request.auth != null &&
+        (resource == null || request.auth.uid == resource.data.userId);
+      allow write: if false;
+    }
+
+    // CVs generados: solo el propio usuario puede leer
+    match /cvs/{cvId} {
+      allow read: if request.auth != null && 
+        (resource == null || request.auth.uid == resource.data.userId);
+      allow write: if false;
+    }
+  }
+}

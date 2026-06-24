@@ -1,0 +1,45 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+*.g.dart
+*.freezed.dart
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+functions/lib/
+
+# Secrets
+.env
+google-services.json
+GoogleService-Info.plist
+lib/firebase_options.dart
+functions/.env
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+
+# Functions
+functions/node_modules/
+
+# Android signing
+android/key.properties
+*.jks
+*.keystore
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+**/*.xcuserstate

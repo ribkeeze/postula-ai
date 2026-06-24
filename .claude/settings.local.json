@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -n \"Future.*authenticate\\\\|static.*instance\\\\|Future.*signIn\" ~/.pub-cache/hosted/pub.dev/google_sign_in-7.2.0/lib/google_sign_in.dart 2>/dev/null | head -20)",
+      "Read(//Users/ribkeeze/.pub-cache/hosted/pub.dev/google_sign_in-7.2.0/lib/**)",
+      "Bash(grep -n \"CardTheme\\\\|CardThemeData\" ~/.pub-cache/hosted/pub.dev/flutter-*/packages/flutter/lib/src/material/card_theme.dart 2>/dev/null | head -5; grep -rn \"cardTheme.*CardTheme\\\\b\" ~/.pub-cache/hosted/pub.dev/flutter-*/packages/flutter/lib/src/material/theme_data.dart 2>/dev/null | head -5)",
+      "Read(//Users/ribkeeze/.pub-cache/hosted/pub.dev/**)",
+      "Bash(grep -rn \"CardTheme\\\\b\\\\|CardThemeData\\\\b\" \"/Users/ribkeeze/flutter/packages/flutter/lib/src/material/theme_data.dart\" 2>/dev/null | head -10)",
+      "Read(//Users/ribkeeze/flutter/packages/flutter/lib/src/material/**)",
+      "Bash(flutter analyze *)",
+      "Bash(flutter devices *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(flutter run *)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(adb logcat *)",
+      "Read(//Users/ribkeeze/Library/Android/sdk/platform-tools/**)",
+      "Read(//Users/ribkeeze/Library/Android/**)",
+      "Bash(~/Library/Android/sdk/platform-tools/adb logcat *)",
+      "Bash(dart run *)",
+      "Bash(npm run *)",
+      "Bash(firebase deploy *)"
+    ]
+  }
+}
