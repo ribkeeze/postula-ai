@@ -109,7 +109,7 @@ jobs:
         run: dart format --set-exit-if-changed lib/ test/
 
       - name: Run unit & widget tests
-        run: flutter test test/unit test/widget --coverage
+        run: flutter test test/unit test/widget_test.dart --coverage
 
       - name: Check coverage threshold (70%)
         run: |
