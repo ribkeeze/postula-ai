@@ -2079,8 +2079,9 @@ class _ProjectDialogState extends State<_ProjectDialog> {
   void _addTech() {
     final v = _techCtrl.text.trim();
     if (v.isEmpty ||
-        _technologies.any((t) => t.toLowerCase() == v.toLowerCase()))
+        _technologies.any((t) => t.toLowerCase() == v.toLowerCase())) {
       return;
+    }
     setState(() => _technologies = [..._technologies, v]);
     _techCtrl.clear();
   }
