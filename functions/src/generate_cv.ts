@@ -36,7 +36,7 @@ export const generateCv = onCall(
       const usageDoc = await db.collection("usage").doc(userId).collection("daily").doc(todayKey).get();
       const cvCount = usageDoc.data()?.cvGenerated || 0;
       if (cvCount >= FREE_CV_LIMIT) {
-        throw new HttpsError("resource-exhausted", "Límite diario de CV alcanzado.");
+        throw new HttpsError("resource-exhausted", "DAILY_LIMIT");
       }
     }
 
@@ -129,7 +129,7 @@ Genera el CV personalizado en el formato JSON especificado.
       responseText = result.response.text();
     } catch (e: any) {
       const is429 = e?.status === 429 || e?.message?.includes("429");
-      if (is429) throw new HttpsError("resource-exhausted", "El servicio de IA está ocupado. Esperá unos segundos y volvé a intentar.");
+      if (is429) throw new HttpsError("unavailable", "AI_BUSY");
       console.error("Gemini error (generateCv):", e);
       throw new HttpsError("internal", "Error al generar el CV con IA.");
     }

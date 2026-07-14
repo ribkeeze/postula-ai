@@ -106,10 +106,7 @@ export const evaluateJob = onCall(
       console.log(`Usage check — userId: ${userId}, todayKey: ${todayKey}, currentCount: ${currentCount}, exists: ${usageDoc.exists}`);
 
       if (currentCount >= FREE_LIMITS.evaluations) {
-        throw new HttpsError(
-          "resource-exhausted",
-          `Límite diario alcanzado. Tenés ${FREE_LIMITS.evaluations} evaluaciones gratuitas por día. Activá Premium para continuar.`
-        );
+        throw new HttpsError("resource-exhausted", "DAILY_LIMIT");
       }
     }
 
@@ -155,10 +152,7 @@ export const evaluateJob = onCall(
     } catch (e: any) {
       const is429 = e?.status === 429 || e?.message?.includes("429");
       if (is429) {
-        throw new HttpsError(
-          "resource-exhausted",
-          "El servicio de IA está ocupado. Esperá unos segundos y volvé a intentar."
-        );
+        throw new HttpsError("unavailable", "AI_BUSY");
       }
       console.error("Gemini error:", e);
       throw new HttpsError("internal", "Error al procesar la oferta con IA.");

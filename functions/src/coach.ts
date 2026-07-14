@@ -28,7 +28,7 @@ export const prepareCoach = onCall(
       const usageDoc = await db.collection("usage").doc(userId).collection("daily").doc(todayKey).get();
       const coachCount = usageDoc.data()?.coachSessions || 0;
       if (coachCount >= FREE_COACH_LIMIT) {
-        throw new HttpsError("resource-exhausted", "Límite diario de sesiones de coach alcanzado.");
+        throw new HttpsError("resource-exhausted", "DAILY_LIMIT");
       }
     }
 
@@ -118,7 +118,7 @@ Genera la preparacion para la entrevista en el formato JSON especificado.
       responseText = result.response.text();
     } catch (e: any) {
       const is429 = e?.status === 429 || e?.message?.includes("429");
-      if (is429) throw new HttpsError("resource-exhausted", "El servicio de IA está ocupado. Esperá unos segundos y volvé a intentar.");
+      if (is429) throw new HttpsError("unavailable", "AI_BUSY");
       console.error("Gemini error (prepareCoach):", e);
       throw new HttpsError("internal", "Error al preparar el coach con IA.");
     }
