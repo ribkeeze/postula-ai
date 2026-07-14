@@ -40,7 +40,10 @@ Límites de uso diario para evaluaciones, generación de CV y sesiones de coach 
 Acceso rápido a los principales portales de empleo argentinos (Bumeran, ZonaJobs, LinkedIn Jobs, Computrabajo, GetOnBoard). El usuario elige qué habilidades buscar y la app abre una query prearmada en el portal seleccionado.
 
 ### 8. Publicidad (Ads)
-Banner de AdMob (pantalla del tracker), interstitial (cada 2 evaluaciones) y rewarded (antes de descargar el PDF) — mostrados solo a usuarios del plan gratuito.
+Banner de AdMob (pantalla del tracker), interstitial (cada 2 evaluaciones) y rewarded (antes de descargar o compartir el PDF) — mostrados solo a usuarios del plan gratuito.
+
+### 9. Pantallas Legales
+Política de privacidad y Términos de uso, accesibles desde el login (antes de crear cuenta) y desde el perfil del usuario. Sin autenticación requerida.
 
 ---
 
@@ -169,7 +172,8 @@ postula_ai/
 │   │   ├── coach/               # Coach de entrevistas
 │   │   ├── subscription/        # Lógica freemium + RevenueCat
 │   │   ├── job_search/          # Acceso rápido a portales de empleo
-│   │   └── ads/                 # Integración AdMob
+│   │   ├── ads/                 # Integración AdMob
+│   │   └── legal/               # Política de privacidad y Términos de uso
 │   └── shared/                  # Providers y widgets compartidos entre features
 ├── functions/                   # Firebase Cloud Functions (TypeScript)
 │   └── src/

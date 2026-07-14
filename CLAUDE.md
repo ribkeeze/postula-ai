@@ -34,7 +34,7 @@ evaluations: 3/day · cvGenerated: 1/day · coachSessions: 3/day
 ## Ads
 BannerAdWidget: bottomNavigationBar of TrackerScreen (free only)
 Interstitial: every 2 evaluations (free only)
-Rewarded: before PDF download (free only)
+Rewarded: before PDF download or share (free only)
 
 ## Cloud Functions (functions/src/, TypeScript, southamerica-east1)
 Model: `gemini-2.5-flash` + `thinkingConfig:{thinkingBudget:0}`
@@ -44,6 +44,11 @@ Functions: evaluateJob · generateCv (caches cvs/) · prepareCoach (caches coach
 
 ## Features (8 tabs: evaluate/tracker/job-search/profile)
 profile · evaluation · tracker · cv_generator · coach · subscription · job_search · ads · legal
+
+## Legal (lib/features/legal/)
+Routes: `/privacy` (PrivacyPolicyScreen) · `/terms` (TermsOfServiceScreen)
+Both outside ShellRoute — no bottom nav. Accessible without auth (legal routes exempt from redirect).
+Entry points: tappable links in LoginScreen footer · Legal section card in ProfileScreen read mode.
 
 ## Commands
 ```bash

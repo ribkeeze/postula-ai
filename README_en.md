@@ -42,7 +42,10 @@ Daily usage limits for evaluations, CV generation, and coach sessions on the fre
 Quick-access list of major Argentine job boards (Bumeran, ZonaJobs, LinkedIn Jobs, Computrabajo, GetOnBoard). Users pick which of their skills to search for and the app opens a pre-built search query in the selected portal.
 
 ### 8. Ads
-AdMob banner (tracker screen), interstitial (every 2 evaluations), and rewarded ads (before PDF download) — shown only to free-tier users.
+AdMob banner (tracker screen), interstitial (every 2 evaluations), and rewarded ads (before PDF download or share) — shown only to free-tier users.
+
+### 9. Legal Screens
+Privacy policy and Terms of service screens, accessible from the login screen (before creating an account) and from the user profile. No authentication required.
 
 ---
 
@@ -110,7 +113,8 @@ postula_ai/
 │   │   ├── coach/             # Interview prep
 │   │   ├── subscription/      # Freemium logic + RevenueCat
 │   │   ├── job_search/        # Job portal quick-access
-│   │   └── ads/               # AdMob integration
+│   │   ├── ads/               # AdMob integration
+│   │   └── legal/             # Privacy policy and Terms of service
 │   └── shared/                # Cross-feature providers and widgets
 ├── functions/                 # Firebase Cloud Functions (TypeScript)
 │   └── src/
