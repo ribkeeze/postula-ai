@@ -17,8 +17,14 @@ class EvaluationRepositoryImpl implements EvaluationRepository {
       final result = await _datasource.evaluate(jobText);
       return Right(result);
     } on FirebaseFunctionsException catch (e) {
-      if (e.code == 'resource-exhausted') return const Left(LimitExceededFailure());
-      if (e.code == 'unavailable') return const Left(ServerFailure('El servicio de IA está ocupado. Intentá en unos segundos.'));
+      if (e.code == 'resource-exhausted')
+        return const Left(LimitExceededFailure());
+      if (e.code == 'unavailable')
+        return const Left(
+          ServerFailure(
+            'El servicio de IA está ocupado. Intentá en unos segundos.',
+          ),
+        );
       if (e.code == 'unauthenticated') return const Left(AuthFailure());
       if (e.code == 'not-found') return const Left(NotFoundFailure());
       return const Left(ServerFailure());

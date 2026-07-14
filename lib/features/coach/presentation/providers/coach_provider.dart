@@ -79,7 +79,9 @@ class CoachNotifier extends _$CoachNotifier {
       if (msg.contains('resource-exhausted') || msg.contains('DAILY_LIMIT')) {
         f = const LimitExceededFailure();
       } else if (msg.contains('unavailable') || msg.contains('AI_BUSY')) {
-        f = const ServerFailure('El servicio de IA está ocupado. Intentá en unos segundos.');
+        f = const ServerFailure(
+          'El servicio de IA está ocupado. Intentá en unos segundos.',
+        );
       } else if (msg.contains('unauthenticated')) {
         f = const AuthFailure();
       } else if (msg.contains('not-found')) {

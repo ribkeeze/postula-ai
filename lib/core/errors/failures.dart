@@ -56,7 +56,9 @@ class ValidationFailure extends Failure {
 String friendlyError(Object e) {
   if (e is Failure) return e.message;
   final msg = e.toString().toLowerCase();
-  if (msg.contains('resource-exhausted') || msg.contains('limitexceeded') || msg.contains('daily_limit')) {
+  if (msg.contains('resource-exhausted') ||
+      msg.contains('limitexceeded') ||
+      msg.contains('daily_limit')) {
     return 'Alcanzaste tu límite diario. Volvé mañana o activá Premium.';
   }
   if (msg.contains('unavailable') || msg.contains('ai_busy')) {
