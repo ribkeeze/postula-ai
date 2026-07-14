@@ -53,7 +53,7 @@ export const generateCv = onCall(
     const profile = profileDoc.data()!;
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       systemInstruction: CV_PROMPT,
       generationConfig: {
         temperature: 0.4,

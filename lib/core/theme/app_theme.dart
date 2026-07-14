@@ -28,7 +28,9 @@ class AppTheme {
   static const _surfaceContainerDark = Color(0xFF374151); // gray-700
   static const _onSurfaceDark = Color(0xFFF1F5F9); // slate-100
   static const _onSurfaceVariantDark = Color(0xFF94A3B8); // slate-400
-  static const _primaryDark = Color(0xFF60A5FA); // blue-400 — contraste 5.2:1 sobre gray-900
+  static const _primaryDark = Color(
+    0xFF60A5FA,
+  ); // blue-400 — contraste 5.2:1 sobre gray-900
   static const _secondaryDark = Color(0xFF34D399); // emerald-400
 
   static ThemeData light() {
@@ -464,14 +466,8 @@ class AppTheme {
           fontWeight: FontWeight.w400,
           color: _onSurfaceVariantDark,
         ),
-        hintStyle: const TextStyle(
-          fontSize: 16,
-          color: _onSurfaceVariantDark,
-        ),
-        errorStyle: const TextStyle(
-          fontSize: 14,
-          color: Color(0xFFF87171),
-        ),
+        hintStyle: const TextStyle(fontSize: 16, color: _onSurfaceVariantDark),
+        errorStyle: const TextStyle(fontSize: 14, color: Color(0xFFF87171)),
       ),
 
       cardTheme: CardThemeData(

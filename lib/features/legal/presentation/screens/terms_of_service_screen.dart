@@ -8,9 +8,7 @@ class TermsOfServiceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(StringsEs.legalTerminosTitulo),
-      ),
+      appBar: AppBar(title: const Text(StringsEs.legalTerminosTitulo)),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
         children: const [
@@ -24,8 +22,7 @@ class TermsOfServiceScreen extends StatelessWidget {
                 'no uses el servicio.',
           ),
           _Section(
-            title:
-                '2. Los resultados de la IA son sugerencias',
+            title: '2. Los resultados de la IA son sugerencias',
             body:
                 'PostulaAI usa IA generativa (Google Gemini) para producir '
                 'evaluaciones de ofertas, CVs y preguntas de entrevista. '
@@ -124,14 +121,12 @@ class _Section extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleSmall
-                ?.copyWith(fontWeight: FontWeight.w600),
+            style: Theme.of(
+              context,
+            ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 6),
-          Text(
-            body,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          Text(body, style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

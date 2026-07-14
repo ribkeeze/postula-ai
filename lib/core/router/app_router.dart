@@ -44,7 +44,8 @@ class _RouterNotifier extends ChangeNotifier {
     final loc = state.matchedLocation;
     final isOnSplash = loc == AppRoutes.splash;
     final isOnOnboarding = loc == AppRoutes.onboarding;
-    final isPublic = isOnSplash ||
+    final isPublic =
+        isOnSplash ||
         isOnOnboarding ||
         loc == AppRoutes.privacy ||
         loc == AppRoutes.terms;

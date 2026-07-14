@@ -43,7 +43,7 @@ export const prepareCoach = onCall(
     const profile = profileDoc.data() || {};
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       systemInstruction: COACH_PROMPT,
       generationConfig: {
         temperature: 0.5,

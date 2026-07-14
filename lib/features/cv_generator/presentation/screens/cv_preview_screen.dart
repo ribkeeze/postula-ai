@@ -85,9 +85,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
 
     if (!RewardedAdManager.isAdLoaded) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(StringsEs.adRewardedNoDisponible),
-        ),
+        const SnackBar(content: Text(StringsEs.adRewardedNoDisponible)),
       );
       RewardedAdManager.loadAd();
       return;
@@ -103,9 +101,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
         } else {
           setState(() => _isGeneratingPdf = false);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(StringsEs.adRewardedVerParaDescargar),
-            ),
+            const SnackBar(content: Text(StringsEs.adRewardedVerParaDescargar)),
           );
         }
       },
@@ -785,13 +781,9 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
                       onPressed: _isGeneratingPdf
                           ? null
                           : () => _withRewardedAdGate(
-                                context,
-                                () => _generateAndSharePdf(
-                                  context,
-                                  cv,
-                                  profile,
-                                ),
-                              ),
+                              context,
+                              () => _generateAndSharePdf(context, cv, profile),
+                            ),
                       icon: _isGeneratingPdf
                           ? const SizedBox(
                               width: 16,
@@ -807,13 +799,9 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
                     onPressed: _isGeneratingPdf
                         ? null
                         : () => _withRewardedAdGate(
-                              context,
-                              () => _generateAndDownloadPdf(
-                                context,
-                                cv,
-                                profile,
-                              ),
-                            ),
+                            context,
+                            () => _generateAndDownloadPdf(context, cv, profile),
+                          ),
                     icon: const Icon(Icons.download),
                     tooltip: StringsEs.cvDescargarPDF,
                   ),

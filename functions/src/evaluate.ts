@@ -127,7 +127,7 @@ export const evaluateJob = onCall(
 
     // ── 3. Llamar a Gemini con retry ─────────────────────────────────────────
     // const model = genAI.getGenerativeModel({
-    //   model: "gemini-2.5-flash", // gemini-2.0-flash no disponible en free tier southamerica
+    //   model: "gemini-2.0-flash",
     //   systemInstruction: EVALUATE_PROMPT,
     //   generationConfig: {
     //     temperature: 0.3,
@@ -136,7 +136,7 @@ export const evaluateJob = onCall(
     //   },
     // });
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
+      model: "gemini-2.0-flash",
       systemInstruction: EVALUATE_PROMPT,
       generationConfig: {
         temperature: 0.3,

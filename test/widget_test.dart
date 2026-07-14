@@ -26,6 +26,5 @@ void main() {
 
     // App shell (theme, MaterialApp.router) built successfully
     expect(find.byType(MaterialApp), findsOneWidget);
-
   });
 }

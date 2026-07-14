@@ -101,8 +101,9 @@ class PurchaseNotifier extends _$PurchaseNotifier {
         return false;
       }
 
-      final purchaseResult =
-          await Purchases.purchase(PurchaseParams.package(monthly));
+      final purchaseResult = await Purchases.purchase(
+        PurchaseParams.package(monthly),
+      );
       final isPremium = purchaseResult.customerInfo.entitlements.active
           .containsKey(_premiumEntitlementId);
 

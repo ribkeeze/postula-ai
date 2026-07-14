@@ -37,7 +37,7 @@ Interstitial: every 2 evaluations (free only)
 Rewarded: before PDF download or share (free only)
 
 ## Cloud Functions (functions/src/, TypeScript, southamerica-east1)
-Model: `gemini-2.5-flash` + `thinkingConfig:{thinkingBudget:0}`
+Model: `gemini-2.0-flash` + `thinkingConfig:{thinkingBudget:0}`
 Prompts: `modes/*.md` — never hardcode in .ts
 Error pattern: catch 429 → resource-exhausted HttpsError; rethrow HttpsError; else internal
 Functions: evaluateJob · generateCv (caches cvs/) · prepareCoach (caches coachSessions/) · cleanupOldUsage (scheduled)

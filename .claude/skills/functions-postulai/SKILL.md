@@ -10,7 +10,7 @@ model: inherit
 ## Project Context
 Cloud Functions in TypeScript at functions/src/.
 Region: southamerica-east1
-AI Model: gemini-2.5-flash with thinkingConfig: { thinkingBudget: 0 }
+AI Model: gemini-2.0-flash with thinkingConfig: { thinkingBudget: 0 }
 AI Prompts: modes/*.md files (never hardcode prompts in .ts files)
 
 ## Functions
@@ -33,7 +33,7 @@ AI Prompts: modes/*.md files (never hardcode prompts in .ts files)
 ## Gemini Model Config (ALL functions)
 ```typescript
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
+  model: "gemini-2.0-flash",
   systemInstruction: PROMPT,
   generationConfig: {
     temperature: 0.3,

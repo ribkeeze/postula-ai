@@ -14,8 +14,7 @@ class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() =>
-      _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
@@ -42,14 +41,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   Future<void> _signInWithGoogle() async {
     setState(() => _loading = true);
     try {
-      final googleUser = await GoogleSignIn.instance
-          .authenticate();
+      final googleUser = await GoogleSignIn.instance.authenticate();
       final googleAuth = googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
-      final userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
       final user = userCredential.user;
       if (user == null || !mounted) return;
 
@@ -57,10 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final result = await repo.isProfileComplete(user.uid);
       if (!mounted) return;
 
-      final isComplete = result.fold(
-        (_) => false,
-        (v) => v,
-      );
+      final isComplete = result.fold((_) => false, (v) => v);
       if (isComplete) {
         context.go(AppRoutes.evaluate);
       }
@@ -73,9 +69,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         // Usuario canceló — no es un error, no mostrar nada
       } else {
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(friendlyError(e))),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(friendlyError(e))));
         }
       }
     } finally {
@@ -97,10 +93,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(24),
-                child: Image.asset(
-                  'assets/icon/icon.png',
-                  height: 120,
-                ),
+                child: Image.asset('assets/icon/icon.png', height: 120),
               ),
               const SizedBox(height: 20),
               Text(
@@ -113,9 +106,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 8),
               Text(
                 'Tu asistente de búsqueda laboral con IA',
-                style: tt.bodyLarge?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
+                style: tt.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 64),
@@ -128,14 +119,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   child: ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: cs.surface,
-                      foregroundColor: const Color(
-                        0xFF1F2937,
-                      ),
+                      foregroundColor: const Color(0xFF1F2937),
                       elevation: 1,
                       shadowColor: Colors.black26,
-                      side: BorderSide(
-                        color: cs.outlineVariant,
-                      ),
+                      side: BorderSide(color: cs.outlineVariant),
                     ),
                     icon: Icon(
                       Icons.g_mobiledata,
@@ -158,20 +145,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               RichText(
                 textAlign: TextAlign.center,
                 text: TextSpan(
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: cs.onSurfaceVariant,
-                  ),
+                  style: TextStyle(fontSize: 12, color: cs.onSurfaceVariant),
                   children: [
-                    const TextSpan(
-                      text: 'Al continuar aceptás los ',
-                    ),
+                    const TextSpan(text: 'Al continuar aceptás los '),
                     TextSpan(
                       text: StringsEs.legalTerminosTitulo,
                       style: TextStyle(
                         color: cs.primary,
-                        decoration:
-                            TextDecoration.underline,
+                        decoration: TextDecoration.underline,
                         decorationColor: cs.primary,
                       ),
                       recognizer: _termsRecognizer,
@@ -181,8 +162,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       text: StringsEs.legalPrivacidadTitulo,
                       style: TextStyle(
                         color: cs.primary,
-                        decoration:
-                            TextDecoration.underline,
+                        decoration: TextDecoration.underline,
                         decorationColor: cs.primary,
                       ),
                       recognizer: _privacyRecognizer,
