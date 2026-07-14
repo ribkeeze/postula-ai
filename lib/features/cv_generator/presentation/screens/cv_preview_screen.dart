@@ -14,6 +14,8 @@ import '../../../../core/constants/strings_es.dart';
 import '../../../../core/errors/failures.dart';
 import '../../../../shared/widgets/app_widgets.dart';
 import '../../../../shared/widgets/usage_gate.dart';
+import '../../../ads/data/datasources/admob_datasource.dart';
+import '../../../ads/presentation/providers/ads_provider.dart';
 import '../../../profile/domain/entities/user_profile.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../subscription/presentation/providers/subscription_provider.dart';
@@ -33,8 +35,86 @@ class CvPreviewScreen extends ConsumerStatefulWidget {
 class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
   bool _isGeneratingPdf = false;
 
+  static const _titlesEs = {
+    'summary': 'Resumen Profesional',
+    'experience': 'Experiencia Laboral',
+    'education': 'Educacion',
+    'certifications': 'Certificaciones',
+    'skills': 'Habilidades',
+    'languages': 'Idiomas',
+    'projects': 'Proyectos Destacados',
+    'references': 'Referencias',
+    'technologies': 'Tecnologias',
+  };
+
+  static const _titlesEn = {
+    'summary': 'Professional Summary',
+    'experience': 'Work Experience',
+    'education': 'Education',
+    'certifications': 'Certifications',
+    'skills': 'Skills',
+    'languages': 'Languages',
+    'projects': 'Featured Projects',
+    'references': 'References',
+    'technologies': 'Technologies',
+  };
+
+  bool _isEnglishCv(GeneratedCv cv) {
+    if (cv.language != null) return cv.language == 'en';
+    // Fallback for CVs generated before the language field was added
+    final text = cv.personalizedSummary.toLowerCase();
+    const indicators = ['experience', 'skills', 'role', 'team', 'position'];
+    return indicators.where(text.contains).length >= 2;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    RewardedAdManager.loadAd();
+  }
+
+  Future<void> _withRewardedAdGate(
+    BuildContext context,
+    Future<void> Function() action,
+  ) async {
+    final showAds = ref.read(shouldShowAdsProvider);
+    if (!showAds) {
+      await action();
+      return;
+    }
+
+    if (!RewardedAdManager.isAdLoaded) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(StringsEs.adRewardedNoDisponible),
+        ),
+      );
+      RewardedAdManager.loadAd();
+      return;
+    }
+
+    setState(() => _isGeneratingPdf = true);
+    await RewardedAdManager.show(
+      onComplete: (earned) async {
+        if (!mounted) return;
+        if (earned) {
+          setState(() => _isGeneratingPdf = false);
+          await action();
+        } else {
+          setState(() => _isGeneratingPdf = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(StringsEs.adRewardedVerParaDescargar),
+            ),
+          );
+        }
+      },
+    );
+  }
+
   Future<List<int>> _buildPdf(GeneratedCv cv, UserProfile? profile) async {
     final pdf = pw.Document();
+    final t = _isEnglishCv(cv) ? _titlesEn : _titlesEs;
     final name = _sanitizeForPdf(profile?.personalInfo.fullName ?? '');
     final location = _formatLocation(profile?.personalInfo);
     final contactParts = _sanitizeForPdf(
@@ -119,7 +199,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
 
           // Resumen Profesional
           widgets.addAll(
-            _pdfSection('Resumen Profesional', [
+            _pdfSection(t['summary']!, [
               pw.Text(
                 _sanitizeForPdf(cv.personalizedSummary),
                 style: const pw.TextStyle(fontSize: 10),
@@ -130,7 +210,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Experiencia Laboral
           if (cv.workExperience.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Experiencia Laboral', [
+              _pdfSection(t['experience']!, [
                 for (final entry in cv.workExperience) ...[
                   pw.Text(
                     _sanitizeForPdf('${entry.position} - ${entry.company}'),
@@ -169,7 +249,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Educacion
           if (cv.education.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Educacion', [
+              _pdfSection(t['education']!, [
                 for (final entry in cv.education) ...[
                   pw.Text(
                     _sanitizeForPdf(
@@ -196,7 +276,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Certificaciones
           if (cv.certifications.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Certificaciones', [
+              _pdfSection(t['certifications']!, [
                 for (final cert in cv.certifications) ...[
                   pw.Text(
                     _sanitizeForPdf(
@@ -221,7 +301,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Habilidades
           if (cv.skillsHighlighted.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Habilidades', [
+              _pdfSection(t['skills']!, [
                 pw.Text(
                   _sanitizeForPdf(cv.skillsHighlighted.join(', ')),
                   style: const pw.TextStyle(fontSize: 10),
@@ -233,7 +313,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Idiomas
           if (cv.languages.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Idiomas', [
+              _pdfSection(t['languages']!, [
                 for (final lang in cv.languages)
                   pw.Text(
                     '- ${_sanitizeForPdf(lang)}',
@@ -246,7 +326,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Proyectos Destacados
           if (cv.projects.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Proyectos Destacados', [
+              _pdfSection(t['projects']!, [
                 for (final p in cv.projects) ...[
                   pw.Text(
                     _sanitizeForPdf(p.name),
@@ -271,7 +351,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
                   if (p.technologies.isNotEmpty)
                     pw.Text(
                       _sanitizeForPdf(
-                        'Tecnologias: ${p.technologies.join(", ")}',
+                        '${t['technologies']}: ${p.technologies.join(", ")}',
                       ),
                       style: const pw.TextStyle(
                         fontSize: 9,
@@ -309,7 +389,7 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
           // Referencias
           if (cv.references.isNotEmpty) {
             widgets.addAll(
-              _pdfSection('Referencias', [
+              _pdfSection(t['references']!, [
                 for (final ref in cv.references) ...[
                   pw.Text(
                     _sanitizeForPdf(
@@ -704,7 +784,14 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _isGeneratingPdf
                           ? null
-                          : () => _generateAndSharePdf(context, cv, profile),
+                          : () => _withRewardedAdGate(
+                                context,
+                                () => _generateAndSharePdf(
+                                  context,
+                                  cv,
+                                  profile,
+                                ),
+                              ),
                       icon: _isGeneratingPdf
                           ? const SizedBox(
                               width: 16,
@@ -719,9 +806,16 @@ class _CvPreviewScreenState extends ConsumerState<CvPreviewScreen> {
                   IconButton.outlined(
                     onPressed: _isGeneratingPdf
                         ? null
-                        : () => _generateAndDownloadPdf(context, cv, profile),
+                        : () => _withRewardedAdGate(
+                              context,
+                              () => _generateAndDownloadPdf(
+                                context,
+                                cv,
+                                profile,
+                              ),
+                            ),
                     icon: const Icon(Icons.download),
-                    tooltip: 'Descargar PDF',
+                    tooltip: StringsEs.cvDescargarPDF,
                   ),
                   const SizedBox(width: 8),
                   IconButton.outlined(

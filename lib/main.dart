@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
@@ -14,18 +18,28 @@ import 'firebase_options.dart';
 const _webClientId =
     '714384703131-0ggnv7mro9htkk955sdkte2i249dm1o3.apps.googleusercontent.com';
 
+const _revenueCatAndroidKey = 'test_nYUcYyzJdjlfVhLZbUBlnpdBViJ';
+const _revenueCatIosKey = 'test_nYUcYyzJdjlfVhLZbUBlnpdBViJ';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // TODO: firebase_app_check package upgrade needed for new provider types
   await FirebaseAppCheck.instance.activate(
-    // ignore: deprecated_member_use
-    androidProvider: AndroidProvider.debug,
-    // ignore: deprecated_member_use
-    appleProvider: AppleProvider.debug,
+    providerAndroid: kReleaseMode
+        ? const AndroidPlayIntegrityProvider()
+        : const AndroidDebugProvider(),
+    providerApple: kReleaseMode
+        ? const AppleDeviceCheckProvider()
+        : const AppleDebugProvider(),
   );
   await GoogleSignIn.instance.initialize(serverClientId: _webClientId);
+
+  await Purchases.configure(
+    PurchasesConfiguration(
+      Platform.isIOS ? _revenueCatIosKey : _revenueCatAndroidKey,
+    ),
+  );
 
   await MobileAds.instance.initialize();
 

@@ -101,9 +101,8 @@ class PurchaseNotifier extends _$PurchaseNotifier {
         return false;
       }
 
-      // TODO: revenuecat package upgrade needed for new PurchaseParams API
-      // ignore: deprecated_member_use
-      final purchaseResult = await Purchases.purchasePackage(monthly);
+      final purchaseResult =
+          await Purchases.purchase(PurchaseParams.package(monthly));
       final isPremium = purchaseResult.customerInfo.entitlements.active
           .containsKey(_premiumEntitlementId);
 

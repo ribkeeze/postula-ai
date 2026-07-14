@@ -162,6 +162,7 @@ Genera el CV personalizado en el formato JSON especificado.
         ...cvData,
         evaluationId,
         userId,
+        language: jobLanguage,
         generatedAt: admin.firestore.FieldValue.serverTimestamp(),
       });
     } catch (e: any) {

@@ -17,7 +17,7 @@ abstract class GeneratedCv with _$GeneratedCv {
     @Default([]) List<CvLink> links,
     @Default([]) List<CvReference> references,
     @Default([]) List<CvProject> projects,
-    String? storageUrl,
+    String? language,
   }) = _GeneratedCv;
 
   factory GeneratedCv.fromJson(Map<String, dynamic> json) =>
