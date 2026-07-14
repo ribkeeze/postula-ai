@@ -7,6 +7,8 @@ import '../../features/cv_generator/presentation/screens/cv_preview_screen.dart'
 import '../../features/evaluation/presentation/screens/evaluate_screen.dart';
 import '../../features/evaluation/presentation/screens/evaluation_result_screen.dart';
 import '../../features/job_search/presentation/screens/job_search_screen.dart';
+import '../../features/legal/presentation/screens/privacy_policy_screen.dart';
+import '../../features/legal/presentation/screens/terms_of_service_screen.dart';
 import '../../features/profile/presentation/screens/edit_profile_screen.dart';
 import '../../features/profile/presentation/screens/onboarding_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
@@ -25,6 +27,8 @@ abstract class AppRoutes {
   static const tracker = '/tracker';
   static const profile = '/profile';
   static const jobSearch = '/job-search';
+  static const privacy = '/privacy';
+  static const terms = '/terms';
 }
 
 class _RouterNotifier extends ChangeNotifier {
@@ -40,7 +44,11 @@ class _RouterNotifier extends ChangeNotifier {
     final loc = state.matchedLocation;
     final isOnSplash = loc == AppRoutes.splash;
     final isOnOnboarding = loc == AppRoutes.onboarding;
-    final isProtected = !isOnSplash && !isOnOnboarding;
+    final isPublic = isOnSplash ||
+        isOnOnboarding ||
+        loc == AppRoutes.privacy ||
+        loc == AppRoutes.terms;
+    final isProtected = !isPublic;
 
     return authAsync.when(
       // Mientras carga — quedarse en splash, o si ya está en otra ruta no mover
@@ -79,6 +87,14 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.onboarding,
         builder: (_, _) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.privacy,
+        builder: (_, _) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.terms,
+        builder: (_, _) => const TermsOfServiceScreen(),
       ),
       ShellRoute(
         builder: (context, state, child) => HomeScreen(child: child),

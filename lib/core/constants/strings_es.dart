@@ -182,7 +182,16 @@ abstract class StringsEs {
 
   static const usoSinLimite = 'Sin límite · Premium';
 
+  // ── Legal ──────────────────────────────────────────────────────────────────
+  static const legalTitulo = 'Legal';
+  static const legalTerminosTitulo = 'Términos de uso';
+  static const legalPrivacidadTitulo = 'Política de privacidad';
+
   // ── Anuncios ───────────────────────────────────────────────────────────────
   static const adLabel = 'Publicidad';
   static const adQuitarAnuncios = 'Quitar anuncios con Premium';
+  static const adRewardedVerParaDescargar =
+      'Mirá el anuncio completo para descargar el PDF.';
+  static const adRewardedNoDisponible =
+      'Anuncio no disponible. Intentá de nuevo en unos segundos.';
 }

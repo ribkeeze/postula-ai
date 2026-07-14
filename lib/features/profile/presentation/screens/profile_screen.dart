@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../../core/constants/strings_es.dart';
 import '../../../../core/errors/failures.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../shared/providers/auth_provider.dart';
 import '../../../../shared/widgets/app_widgets.dart';
 import '../../domain/entities/user_profile.dart';
@@ -588,6 +589,30 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       );
     }
+
+    // ─ Legal ──────────────────────────────────────────────────────────────────
+    add(
+      _SectionCard(
+        title: StringsEs.legalTitulo,
+        icon: Icons.gavel_outlined,
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: const Text(StringsEs.legalTerminosTitulo),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.terms),
+          ),
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            dense: true,
+            title: const Text(StringsEs.legalPrivacidadTitulo),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.privacy),
+          ),
+        ],
+      ),
+    );
 
     sections.addAll([
       const SizedBox(height: 12),
