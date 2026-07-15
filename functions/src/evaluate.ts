@@ -124,7 +124,7 @@ export const evaluateJob = onCall(
 
     // ── 3. Llamar a Gemini con retry ─────────────────────────────────────────
     // const model = genAI.getGenerativeModel({
-    //   model: "gemini-2.0-flash",
+    //   model: "gemini-3.1-flash-lite",
     //   systemInstruction: EVALUATE_PROMPT,
     //   generationConfig: {
     //     temperature: 0.3,
@@ -133,14 +133,12 @@ export const evaluateJob = onCall(
     //   },
     // });
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.1-flash-lite",
       systemInstruction: EVALUATE_PROMPT,
       generationConfig: {
         temperature: 0.3,
         maxOutputTokens: 3000,
         responseMimeType: "application/json",
-        // @ts-ignore — thinkingConfig no está en los tipos del SDK aún
-        thinkingConfig: { thinkingBudget: 0 },
       },
     });
 
@@ -222,6 +220,8 @@ export const evaluateJob = onCall(
     return { evaluationId, ...evaluation };
   } catch (error: any) {
     if (error instanceof HttpsError) throw error;
+    const is429 = error?.status === 429 || error?.message?.includes('429');
+    if (is429) throw new HttpsError('unavailable', 'AI_BUSY');
     console.error("Unhandled error (evaluateJob):", error);
     throw new HttpsError("internal", error?.message || "Error inesperado.");
   }

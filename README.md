@@ -52,7 +52,7 @@ Política de privacidad y Términos de uso, accesibles desde el login (antes de 
 ```
 Flutter (Android + iOS)
   ↓
-Firebase Cloud Functions (TypeScript)  ←→  Google Gemini 2.5 Flash
+Firebase Cloud Functions (TypeScript)  ←→  Google Gemini 3.1 Flash Lite
   ↓
 Firestore (perfiles, evaluaciones, postulaciones, CVs, sesiones de coach, suscripciones, uso)
 Firebase Auth (Google Sign-In)
@@ -68,7 +68,7 @@ Firebase Auth (Google Sign-In)
 **¿Por qué las llamadas a IA van por Cloud Functions?**
 La API key de Gemini nunca llega al cliente. Los límites de uso se aplican server-side. El perfil del usuario se combina con el prompt en el backend, sin exponerlo a la app.
 
-**¿Por qué Gemini 2.5 Flash?**
+**¿Por qué Gemini 3.1 Flash Lite?**
 Tier gratuito generoso, ventana de contexto amplia (suficiente para un perfil completo + oferta + instrucciones), y thinking deshabilitado (`thinkingConfig: { thinkingBudget: 0 }`) para respuestas más rápidas y económicas en tareas de output estructurado como estas.
 
 ---

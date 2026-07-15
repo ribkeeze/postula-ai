@@ -86,7 +86,7 @@ dev_dependencies:
   firebase_auth_mocks: ^0.15.1
 
 flutter_launcher_icons:
-  android: true
+  android: false
   ios: false
   image_path: "assets/icon/icon.png"
   adaptive_icon_background: "#1A56DB"
@@ -97,7 +97,7 @@ flutter_native_splash:
   image: assets/icon/icon_foreground.png
   android_12:
     color: "#1A56DB"
-    image: assets/icon/icon_foreground.png
+    image: assets/icon/icon_foreground_android12.png
 
 flutter:
   uses-material-design: true

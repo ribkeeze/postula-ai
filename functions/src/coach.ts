@@ -43,14 +43,12 @@ export const prepareCoach = onCall(
     const profile = profileDoc.data() || {};
 
     const model = genAI.getGenerativeModel({
-      model: "gemini-2.0-flash",
+      model: "gemini-3.1-flash-lite",
       systemInstruction: COACH_PROMPT,
       generationConfig: {
         temperature: 0.5,
         maxOutputTokens: 2000,
         responseMimeType: "application/json",
-        // @ts-ignore — thinkingConfig no está en los tipos del SDK aún
-        thinkingConfig: { thinkingBudget: 0 },
       },
     });
 
@@ -161,6 +159,8 @@ Genera la preparacion para la entrevista en el formato JSON especificado.
     return coachData;
   } catch (error: any) {
     if (error instanceof HttpsError) throw error;
+    const is429 = error?.status === 429 || error?.message?.includes('429');
+    if (is429) throw new HttpsError('unavailable', 'AI_BUSY');
     console.error("Unhandled error (prepareCoach):", error);
     throw new HttpsError("internal", error?.message || "Error inesperado.");
   }

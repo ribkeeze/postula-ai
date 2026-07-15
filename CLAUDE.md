@@ -1,10 +1,10 @@
 # PostulaAI
 
 Flutter (Android/iOS) job search app for Argentina. No terminal needed.
-Backend: Firebase. AI: Gemini 2.5 Flash via Cloud Functions. Monetization: AdMob + RevenueCat.
+Backend: Firebase. AI: Gemini 3.1 Flash Lite via Cloud Functions. Monetization: AdMob + RevenueCat.
 
 ## Stack
-Flutter + Riverpod codegen + go_router + Firebase + Gemini 2.5 Flash + Clean Architecture feature-first.
+Flutter + Riverpod codegen + go_router + Firebase + Gemini 3.1 Flash Lite + Clean Architecture feature-first.
 
 ## Architecture
 Feature-first. Each feature: `data/datasources/ data/repositories/ domain/entities/ domain/repositories/ domain/usecases/ presentation/providers/ presentation/screens/ presentation/widgets/`
@@ -37,7 +37,7 @@ Interstitial: every 2 evaluations (free only)
 Rewarded: before PDF download or share (free only)
 
 ## Cloud Functions (functions/src/, TypeScript, southamerica-east1)
-Model: `gemini-2.0-flash` + `thinkingConfig:{thinkingBudget:0}`
+Model: `gemini-3.1-flash-lite`
 Prompts: `modes/*.md` — never hardcode in .ts
 Error pattern: catch 429 → resource-exhausted HttpsError; rethrow HttpsError; else internal
 Functions: evaluateJob · generateCv (caches cvs/) · prepareCoach (caches coachSessions/) · cleanupOldUsage (scheduled)
