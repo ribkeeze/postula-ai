@@ -18,6 +18,14 @@ A Flutter app (Android + iOS) that brings AI-assisted job search — offer evalu
 
 ---
 
+## Screenshots
+
+| Login | Evaluate offer | Result | Personalized CV | Applications | Coach |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| ![Login](docs/screenshots/06_login.png) | ![Evaluate](docs/screenshots/01_evaluate.png) | ![Result](docs/screenshots/02_result.png) | ![CV](docs/screenshots/03_cv_preview.png) | ![Tracker](docs/screenshots/04_tracker.png) | ![Coach](docs/screenshots/05_coach.png) |
+
+---
+
 ## What's built and working
 
 ### 1. Guided Profile (Onboarding)

@@ -16,6 +16,14 @@ Una app Flutter (Android + iOS) que lleva la asistencia de IA para búsqueda lab
 
 ---
 
+## Capturas de pantalla
+
+| Login | Evaluar oferta | Resultado | CV personalizado | Postulaciones | Coach |
+|:---:|:---:|:---:|:---:|:---:|:---:|
+| ![Login](docs/screenshots/06_login.png) | ![Evaluar](docs/screenshots/01_evaluate.png) | ![Resultado](docs/screenshots/02_result.png) | ![CV](docs/screenshots/03_cv_preview.png) | ![Tracker](docs/screenshots/04_tracker.png) | ![Coach](docs/screenshots/05_coach.png) |
+
+---
+
 ## Qué está construido y funcionando
 
 ### 1. Perfil Guiado (Onboarding)
